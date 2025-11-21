@@ -107,16 +107,20 @@ This repository organizes skills into categories to make it easier to find and i
 |----------|-------------|
 | **open-source** | General open-source package development and maintenance |
 | **r-lib** | R package development with the r-lib ecosystem |
+
+<!-- Other ideas for categories
+
 | **tidyverse** | Tidyverse-specific package development |
 | **shiny** | Shiny app development and deployment |
 | **quarto** | Quarto document creation and publishing |
 | **connect** | Posit Connect deployment and management |
+-->
 
 ## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on creating new skills.
 
-**We highly recommend using Anthropic's [skill-creator](https://github.com/anthropics/skills) skill** to help you build high-quality skills.
+**We highly recommend using Anthropic's [skill-creator](https://github.com/anthropics/skills) skill** to help you build high-quality skills. Skills should be grouped together by category, but the category groups are flexible. Feel free to propose new categories as needed.
 
 ## License
 
