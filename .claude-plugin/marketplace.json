@@ -10,7 +10,7 @@
   },
   "plugins": [
     {
-      "name": "open-source-skills",
+      "name": "open-source",
       "description": "Collection of skills for general open-source package development and maintenance",
       "source": "./",
       "strict": false,
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "name": "r-lib-skills",
+      "name": "r-lib",
       "description": "Collection of skills for R package developers",
       "source": "./",
       "strict": false,
@@ -28,7 +28,7 @@
       ]
     },
     {
-      "name": "tidyverse-skills",
+      "name": "tidyverse",
       "description": "Collection of skills for tidyverse users and developers",
       "source": "./",
       "strict": false,
