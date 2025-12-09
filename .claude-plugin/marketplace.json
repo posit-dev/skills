@@ -24,7 +24,8 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./r-lib/testing-r-packages"
+        "./r-lib/testing-r-packages",
+        "./r-lib/cli"
       ]
     },
     {
