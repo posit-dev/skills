@@ -6,7 +6,7 @@ Guide for converting blogdown (Hugo-based) sites to Quarto websites or blogs.
 
 Key differences:
 
-1. Configuration: `config.toml` → `_quarto.yml`
+1. Configuration: `config.toml` or `config.yaml` → `_quarto.yml`
 2. Content: Hugo templates → Quarto layouts
 3. Shortcodes: Hugo → Quarto shortcodes
 4. Themes: Hugo themes → Quarto themes
@@ -15,7 +15,7 @@ Key differences:
 
 ### 1. Create Quarto Config
 
-Replace `config.toml` with `_quarto.yml`:
+Replace `config.toml` or `config.yaml` with `_quarto.yml`:
 
 ```yaml
 project:
@@ -74,7 +74,7 @@ categories:
 ### blogdown
 
 ```txt
-config.toml
+config.toml (or config.yaml)
 content/
   _index.md
   about.md
@@ -105,7 +105,7 @@ _site/
 
 ### Basic Site Config
 
-#### Blogdown (config.toml)
+#### Blogdown (`config.toml`)
 
 ```toml
 baseURL = "https://example.com/"
@@ -116,22 +116,47 @@ theme = "hugo-theme"
   description = "Site description"
   author = "Author Name"
 
-[menu]
-  [[menu.main]]
-    name = "Home"
-    url = "/"
-    weight = 1
-  [[menu.main]]
-    name = "About"
-    url = "/about/"
-    weight = 2
-  [[menu.main]]
-    name = "Blog"
-    url = "/post/"
-    weight = 3
+[[menu.main]]
+  name = "Home"
+  url = "/"
+  weight = 1
+
+[[menu.main]]
+  name = "About"
+  url = "/about/"
+  weight = 2
+
+[[menu.main]]
+  name = "Blog"
+  url = "/post/"
+  weight = 3
 ```
 
-#### Quarto (_quarto.yml)
+#### Blogdown (`config.yaml`)
+
+```yaml
+baseURL: "https://example.com/"
+title: "My Site"
+theme: "hugo-theme"
+
+params:
+  description: "Site description"
+  author: "Author Name"
+
+menu:
+  main:
+    - name: "Home"
+      url: "/"
+      weight: 1
+    - name: "About"
+      url: "/about/"
+      weight: 2
+    - name: "Blog"
+      url: "/post/"
+      weight: 3
+```
+
+#### Quarto (`_quarto.yml`)
 
 ```yaml
 project:
@@ -160,16 +185,27 @@ author: "Author Name"
 
 ### Navigation
 
-#### Blogdown
+#### Blogdown (`config.toml`)
 
 ```toml
-[menu]
-  [[menu.main]]
-    name = "Blog"
-    url = "/post/"
-  [[menu.main]]
-    name = "About"
-    url = "/about/"
+[[menu.main]]
+  name = "Blog"
+  url = "/post/"
+
+[[menu.main]]
+  name = "About"
+  url = "/about/"
+```
+
+#### Blogdown (`config.yaml`)
+
+```yaml
+menu:
+  main:
+    - name: "Blog"
+      url: "/post/"
+    - name: "About"
+      url: "/about/"
 ```
 
 #### Quarto
@@ -432,6 +468,12 @@ In `config.toml`:
 
 ```toml
 disqusShortname = "mysite"
+```
+
+Or in `config.yaml`:
+
+```yaml
+disqusShortname: "mysite"
 ```
 
 ### Quarto
