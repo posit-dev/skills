@@ -88,9 +88,15 @@ date: today
 format: html
 ```
 
-### Code Cell Syntax
+### Code Cell Options Syntax
 
-Quarto uses hashpipe (`#|`) syntax for code cell options. Options use **dashes, not dots** (e.g., `fig-cap` not `fig.cap`).
+Quarto uses the language's comment symbol + `|` for cell options. Options use **dashes, not dots** (e.g., `fig-cap` not `fig.cap`).
+
+| Language     | Syntax |
+| ------------ | ------ |
+| R, Python    | `#\|`  |
+| Mermaid      | `%%\|` |
+| Graphviz/DOT | `//\|` |
 
 ```r
 #| label: fig-example
@@ -125,12 +131,12 @@ execute:
 
 Labels must start with a type prefix. Reference with `@`:
 
-| Type     | Prefix | Example Label        | Reference        |
-| -------- | ------ | -------------------- | ---------------- |
-| Figure   | `fig-` | `#| label: fig-plot` | `@fig-plot`      |
-| Table    | `tbl-` | `#| label: tbl-data` | `@tbl-data`      |
-| Section  | `sec-` | `{#sec-intro}`       | `@sec-intro`     |
-| Equation | `eq-`  | `{#eq-model}`        | `@eq-model`      |
+| Type     | Prefix | Example Label         | Reference        |
+| -------- | ------ | --------------------- | ---------------- |
+| Figure   | `fig-` | `#\| label: fig-plot` | `@fig-plot`      |
+| Table    | `tbl-` | `#\| label: tbl-data` | `@tbl-data`      |
+| Section  | `sec-` | `{#sec-intro}`        | `@sec-intro`     |
+| Equation | `eq-`  | `{#eq-model}`         | `@eq-model`      |
 
 Example:
 

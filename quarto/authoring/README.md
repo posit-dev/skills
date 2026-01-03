@@ -11,7 +11,7 @@ This skill provides best practices for writing Quarto documents (.qmd) and conve
 - Writing new Quarto documents with best practices.
 - Converting R Markdown (.Rmd) files to Quarto (.qmd).
 - Migrating bookdown, blogdown, xaringan, or distill projects.
-- Understanding Quarto's hashpipe (`#|`) code cell syntax.
+- Understanding Quarto's cell options syntax (comment symbol + `|`).
 - Setting up cross-references for figures, tables, sections, and equations.
 - Using Quarto-specific features like callouts, divs, and spans.
 - Configuring YAML frontmatter for documents and projects.
@@ -28,7 +28,13 @@ date: today
 format: html
 ```
 
-### Code Cells with Hashpipe Syntax
+### Code Cell Options Syntax
+
+Quarto uses the language's comment symbol + `|` for cell options:
+
+- R/Python: `#|`
+- Mermaid: `%%|`
+- Graphviz/DOT: `//|`
 
 ```r
 #| label: fig-example
