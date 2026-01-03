@@ -8,13 +8,13 @@ This category contains skills that help with creating, styling, and publishing Q
 
 ## Available Skills
 
+- **[authoring](./authoring/)** - Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions.
 - **[brand-yml](../brand-yml/)** - Create and apply brand.yml files for consistent styling across Quarto projects. Supports HTML documents, dashboards, RevealJS presentations, Typst PDFs, websites, and more with automatic brand discovery and theme layering.
 
 ## Potential Skills
 
 This category could include skills for:
 
-- Document authoring best practices
 - Publishing workflows
 - Extension development
 - Template creation
