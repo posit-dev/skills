@@ -96,3 +96,7 @@ This is a note.
 - [Quarto Guide](https://quarto.org/docs/guide/)
 - [Quarto Extensions](https://quarto.org/docs/extensions/)
 - [Community Extensions List](https://m.canouil.dev/quarto-extensions/)
+
+## Authors
+
+- [Mickaël CANOUIL](https://github.com/mcanouil)
