@@ -74,6 +74,9 @@ Use: [references/yaml-frontmatter.md](references/yaml-frontmatter.md)
 Task: Find and use extensions
 Use: [references/extensions.md](references/extensions.md)
 
+Task: Apply markdown linting rules
+Use: [references/markdown-linting.md](references/markdown-linting.md)
+
 ## QMD Essentials
 
 ### Basic Document Structure
@@ -299,6 +302,7 @@ format:
 - [references/divs-and-spans.md](references/divs-and-spans.md) - Fenced divs, spans, raw blocks
 - [references/yaml-frontmatter.md](references/yaml-frontmatter.md) - Document and project YAML
 - [references/extensions.md](references/extensions.md) - Using and finding extensions
+- [references/markdown-linting.md](references/markdown-linting.md) - Markdown linting rules for Quarto
 
 ### Conversion Guides
 
