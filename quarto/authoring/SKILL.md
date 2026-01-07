@@ -92,15 +92,23 @@ format: html
 Content goes here.
 ````
 
+A Quarto document consists of two main parts:
+
+1. **YAML Frontmatter**: Metadata and configuration at the top, enclosed by `---`.
+2. **Markdown Content**: Main body using standard markdown syntax.
+
 ### Code Cell Options Syntax
+
+A code cell starts with triple backticks and a language identifier between curly braces.
+Code cells are code blocks that can be executed to produce output.
 
 Quarto uses the language's comment symbol + `|` for cell options. Options use **dashes, not dots** (e.g., `fig-cap` not `fig.cap`).
 
 | Language     | Syntax |
 | ------------ | ------ |
-| R, Python    | `#\|`  |
-| Mermaid      | `%%\|` |
-| Graphviz/DOT | `//\|` |
+| R, Python    | `#|`   |
+| Mermaid      | `%%|`  |
+| Graphviz/DOT | `//|`  |
 
 ````markdown
 ```{r}
@@ -139,8 +147,8 @@ Labels must start with a type prefix. Reference with `@`:
 
 | Type     | Prefix | Example Label         | Reference        |
 | -------- | ------ | --------------------- | ---------------- |
-| Figure   | `fig-` | `#\| label: fig-plot` | `@fig-plot`      |
-| Table    | `tbl-` | `#\| label: tbl-data` | `@tbl-data`      |
+| Figure   | `fig-` | `#| label: fig-plot`  | `@fig-plot`      |
+| Table    | `tbl-` | `#| label: tbl-data`  | `@tbl-data`      |
 | Section  | `sec-` | `{#sec-intro}`        | `@sec-intro`     |
 | Equation | `eq-`  | `{#eq-model}`         | `@eq-model`      |
 
