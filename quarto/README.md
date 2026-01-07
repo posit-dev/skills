@@ -42,8 +42,6 @@ See the main [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines on adding new 
 
 Comprehensive guidance for Quarto document authoring and R Markdown migration.
 
-#### Overview
-
 This skill provides best practices for writing Quarto documents (.qmd) and converting existing R Markdown projects to Quarto. It covers the full range of Quarto authoring features including code cells, cross-references, figures, tables, citations, callouts, diagrams, and more.
 
 #### When to Use This Skill
@@ -137,6 +135,7 @@ This is a note.
 - [Quarto Documentation](https://quarto.org/docs/)
 - [Quarto Guide](https://quarto.org/docs/guide/)
 - [Quarto Extensions](https://quarto.org/docs/extensions/)
+- [Quarto CLI Code](https://github.com/quarto-dev/quarto-cli)
 - [Community Extensions List](https://m.canouil.dev/quarto-extensions/)
 
 #### Authors
