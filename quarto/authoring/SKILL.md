@@ -97,6 +97,22 @@ A Quarto document consists of two main parts:
 1. **YAML Frontmatter**: Metadata and configuration at the top, enclosed by `---`.
 2. **Markdown Content**: Main body using standard markdown syntax.
 
+### Divs and Spans
+
+Divs use fenced syntax with three colons:
+
+````markdown
+::: {.class-name}
+Content inside the div.
+:::
+````
+
+Spans use bracketed syntax:
+
+````markdown
+This is [important text]{.highlight}.
+````
+
 ### Code Cell Options Syntax
 
 A code cell starts with triple backticks and a language identifier between curly braces.
@@ -133,7 +149,7 @@ Common execution options:
 | `error`   | Show errors       | `true`, `false`           |
 | `include` | Include in output | `true`, `false`           |
 
-Set document-level defaults in YAML:
+Set document-level defaults in YAML front matter:
 
 ```yaml
 execute:
@@ -155,6 +171,22 @@ Labels must start with a type prefix. Reference with `@`:
 Example:
 
 ````markdown
+::: {#fig-plot}
+A plot.
+
+A caption for the plot.
+:::
+
+See @fig-plot for the results.
+````
+
+````markdown
+```{r}
+#| label: fig-plot
+#| fig-cap: "A caption for the plot."
+plot(1)
+```
+
 See @fig-plot for the results.
 ````
 
@@ -174,22 +206,6 @@ This is a note callout.
 This is a warning with a custom title.
 
 :::
-````
-
-### Divs and Spans
-
-Divs use fenced syntax with three colons:
-
-````markdown
-::: {.class-name}
-Content inside the div.
-:::
-````
-
-Spans use bracketed syntax:
-
-````markdown
-This is [important text]{.highlight}.
 ````
 
 ### Figures
