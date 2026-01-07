@@ -169,7 +169,7 @@ Some text.
 
 ```python
 code_here()
-````
+```
 
 More text.
 ````
