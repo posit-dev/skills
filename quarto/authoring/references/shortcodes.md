@@ -6,15 +6,15 @@ Shortcodes are special commands that expand into content at render time. Quarto 
 
 Shortcodes use double curly braces with angle brackets:
 
-```markdown
+````markdown
 {{< shortcode-name argument >}}
-```
+````
 
 Or with named parameters:
 
-```markdown
+````markdown
 {{< shortcode-name param="value" >}}
-```
+````
 
 ## Video
 
@@ -22,31 +22,31 @@ Embed videos from various sources:
 
 ### YouTube
 
-```markdown
+````markdown
 {{< video https://www.youtube.com/embed/VIDEO_ID >}}
-```
+````
 
 Or with just the ID:
 
-```markdown
+````markdown
 {{< video https://youtu.be/VIDEO_ID >}}
-```
+````
 
 ### Vimeo
 
-```markdown
+````markdown
 {{< video https://vimeo.com/VIDEO_ID >}}
-```
+````
 
 ### Local Video
 
-```markdown
+````markdown
 {{< video video.mp4 >}}
-```
+````
 
 ### Video Options
 
-```markdown
+````markdown
 {{< video https://youtu.be/VIDEO_ID
 title="Video Title"
 start="30"
@@ -54,7 +54,7 @@ aspect-ratio="16x9"
 width="100%"
 
 > }}
-```
+````
 
 Options:
 
@@ -69,23 +69,23 @@ Include content from other files:
 
 ### Basic Include
 
-```markdown
+````markdown
 {{< include _content.qmd >}}
-```
+````
 
 ### Include Section
 
 Include only part of a file:
 
-```markdown
+````markdown
 {{< include _content.qmd#section-id >}}
-```
+````
 
 ### Include with Path
 
-```markdown
+````markdown
 {{< include path/to/file.qmd >}}
-```
+````
 
 ### Usage Notes
 
@@ -99,15 +99,15 @@ Embed output from Jupyter notebooks:
 
 ### Embed Cell Output
 
-```markdown
+````markdown
 {{< embed notebook.ipynb#cell-id >}}
-```
+````
 
 ### Embed with Options
 
-```markdown
+````markdown
 {{< embed notebook.ipynb#fig-plot echo=true >}}
-```
+````
 
 Options:
 
@@ -121,16 +121,16 @@ Cell IDs are set in notebook metadata or automatically generated.
 
 Access document metadata:
 
-```markdown
+````markdown
 The title is: {{< meta title >}}
 Author: {{< meta author >}}
-```
+````
 
 ### Nested Metadata
 
-```markdown
+````markdown
 {{< meta format.html.theme >}}
-```
+````
 
 ### In Code Blocks
 
@@ -157,10 +157,10 @@ company: Acme Corp
 
 ### Use Variables
 
-```markdown
+````markdown
 Current version: {{< var version >}}
 Published by {{< var company >}}.
-```
+````
 
 ### Nested Variables
 
@@ -170,36 +170,36 @@ contact:
   phone: 555-1234
 ```
 
-```markdown
+````markdown
 Email: {{< var contact.email >}}
-```
+````
 
 ## Env
 
 Access environment variables:
 
-```markdown
+````markdown
 Home directory: {{< env HOME >}}
 User: {{< env USER >}}
-```
+````
 
 ### Default Value
 
-```markdown
+````markdown
 {{< env MY_VAR default="not set" >}}
-```
+````
 
 ## Pagebreak
 
 Insert a page break:
 
-```markdown
+````markdown
 Content before.
 
 {{< pagebreak >}}
 
 Content after (on new page in PDF).
-```
+````
 
 Works across formats (PDF, Word, HTML print).
 
@@ -207,65 +207,65 @@ Works across formats (PDF, Word, HTML print).
 
 Describe keyboard shortcuts:
 
-```markdown
+````markdown
 Press {{< kbd Ctrl+C >}} to copy.
 Save with {{< kbd Cmd+S >}} on Mac.
-```
+````
 
 ### Multiple Keys
 
-```markdown
+````markdown
 {{< kbd Ctrl+Shift+P >}}
 {{< kbd Cmd-Option-Esc >}}
-```
+````
 
 ## Lipsum
 
 Generate placeholder text:
 
-```markdown
+````markdown
 {{< lipsum 1 >}}
-```
+````
 
 Generates one paragraph of Lorem Ipsum.
 
 ### Multiple Paragraphs
 
-```markdown
+````markdown
 {{< lipsum 3 >}}
-```
+````
 
 ## Placeholder
 
 Generate placeholder images:
 
-```markdown
+````markdown
 {{< placeholder 400 300 >}}
-```
+````
 
 Creates a 400x300 placeholder image.
 
 ### With Format
 
-```markdown
+````markdown
 {{< placeholder 400 300 format=svg >}}
-```
+````
 
 ## Version
 
 Show Quarto version:
 
-```markdown
+````markdown
 Built with Quarto {{< version >}}.
-```
+````
 
 ## Contents
 
 Rearrange document content:
 
-```markdown
+````markdown
 {{< contents heading >}}
-```
+````
 
 Shows content under a specific heading. Useful for reorganizing included content.
 
@@ -273,7 +273,7 @@ Shows content under a specific heading. Useful for reorganizing included content
 
 Shortcodes can be format-specific:
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html"}
 {{< video video.mp4 >}}
 :::
@@ -281,7 +281,7 @@ Shortcodes can be format-specific:
 ::: {.content-visible when-format="pdf"}
 See video at: https://example.com/video
 :::
-```
+````
 
 ## Custom Shortcodes
 
@@ -298,9 +298,9 @@ _extensions/
 
 Shortcodes work in inline code and code blocks:
 
-```markdown
+````markdown
 `{{< meta title >}}`
-```
+````
 
 ```yaml
 version: {{< var version >}}
@@ -310,9 +310,9 @@ version: {{< var version >}}
 
 To show shortcode syntax without executing:
 
-```markdown
+````markdown
 {{{< shortcode >}}}`
-```
+````
 
 Or use raw block:
 
@@ -326,7 +326,7 @@ Or use raw block:
 
 ### Documentation Site
 
-```markdown
+````markdown
 # {{< meta title >}} v{{< var version >}}
 
 {{< include _installation.qmd >}}
@@ -345,7 +345,7 @@ Or use raw block:
 ## Appendix
 
 {{< include _appendix.qmd >}}
-```
+````
 
 ### Project Variables
 
@@ -360,11 +360,11 @@ product:
 
 Document:
 
-```markdown
+````markdown
 # {{< var product.name >}}
 
 Version {{< var product.version >}} - Copyright {{< var product.year >}}
-```
+````
 
 ## Resources
 

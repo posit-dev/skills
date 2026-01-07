@@ -6,10 +6,10 @@ Quarto uses Pandoc's citation system with support for BibTeX, CSL styles, and fl
 
 ### Basic Citations
 
-```markdown
+````markdown
 According to @smith2020, the results indicate...
 The study showed significant results [@smith2020].
-```
+````
 
 ### Variations
 
@@ -23,36 +23,36 @@ The study showed significant results [@smith2020].
 
 ### Multiple Citations
 
-```markdown
+````markdown
 Several studies [@smith2020; @jones2021] found...
 [@smith2020; @jones2021; @williams2022]
-```
+````
 
 ### Citation with Locators
 
-```markdown
+````markdown
 @smith2020 [p. 33]
 @smith2020 [chap. 2]
 [@smith2020, pp. 10-15]
 [@smith2020, fig. 3]
-```
+````
 
 Common locators: `p.`, `pp.`, `chap.`, `sec.`, `fig.`, `eq.`, `vol.`.
 
 ### In-Text vs Parenthetical
 
-```markdown
+````markdown
 @smith2020 says... → Smith (2020) says...
 As shown by @smith2020... → As shown by Smith (2020)...
 The results [@smith2020]... → The results (Smith 2020)...
-```
+````
 
 ### Prefix and Suffix
 
-```markdown
+````markdown
 [see @smith2020, pp. 10-15, for discussion]
 → (see Smith 2020, pp. 10-15, for discussion)
-```
+````
 
 ## Bibliography Configuration
 
@@ -127,7 +127,7 @@ csl: vancouver.csl
 
 By default, bibliography appears at end. Control placement:
 
-```markdown
+````markdown
 ## References
 
 ::: {#refs}
@@ -136,31 +136,29 @@ By default, bibliography appears at end. Control placement:
 ## Appendix
 
 Additional content after references.
-```
+````
 
 ### Suppress Bibliography
 
 ```yaml
----
 suppress-bibliography: true
----
 ```
 
 ## Footnotes
 
 ### Inline Footnotes
 
-```markdown
+````markdown
 This is text with a footnote.^[This is the footnote content.]
-```
+````
 
 ### Reference Footnotes
 
-```markdown
+````markdown
 This is text with a footnote.[^1]
 
 [^1]: This is the footnote content.
-```
+````
 
 ### Multi-Paragraph Footnotes
 
@@ -171,7 +169,7 @@ This is text with a footnote.[^1]
 
     And can include code:
 
-    ```r
+    ```{.r}
     x <- 1
     ```
 ````
@@ -319,7 +317,7 @@ Consistent key format:
 
 ### Academic Paper
 
-```markdown
+````markdown
 ---
 title: "My Paper"
 bibliography: references.bib
@@ -336,7 +334,7 @@ As @williams2022 [p. 45] argues, the methodology...
 
 ::: {#refs}
 :::
-```
+````
 
 ### Technical Report
 

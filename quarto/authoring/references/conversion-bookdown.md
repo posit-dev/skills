@@ -46,17 +46,17 @@ for f in *.Rmd; do mv "$f" "${f%.Rmd}.qmd"; done
 
 #### Bookdown
 
-```markdown
+````markdown
 See Figure \@ref(fig:myplot)
 See Table \@ref(tab:mytable)
 ````
 
 #### Quarto
 
-```markdown
+````markdown
 See @fig-myplot
 See @tbl-mytable
-```
+````
 
 ## Configuration Mapping
 
@@ -127,9 +127,9 @@ book:
 
 Add `{.unnumbered}` to exclude from numbering:
 
-```markdown
+````markdown
 # Preface {.unnumbered}
-```
+````
 
 ## Cross-Reference Conversion
 
@@ -211,19 +211,19 @@ See @eq-line.
 
 #### bookdown
 
-```markdown
+````markdown
 # Introduction {#intro}
 
 See Section \@ref(intro).
-```
+````
 
 #### Quarto
 
-```markdown
+````markdown
 # Introduction {#sec-intro}
 
 See @sec-intro.
-```
+````
 
 ### Theorems
 
@@ -270,7 +270,7 @@ Proof here.
 
 ### Quarto
 
-```markdown
+````markdown
 ::: {#thm-main}
 
 ## Main Theorem
@@ -290,7 +290,7 @@ Lemma statement.
 ::: {.proof}
 Proof here.
 :::
-```
+````
 
 Supported types: `thm`, `lem`, `cor`, `prp`, `cnj`, `def`, `exm`, `exr`.
 
@@ -306,11 +306,11 @@ This is a note.
 
 ### Quarto
 
-```markdown
+````markdown
 ::: {.callout-note}
 This is a note.
 :::
-```
+````
 
 ## Output Formats
 

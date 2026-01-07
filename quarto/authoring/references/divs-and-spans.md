@@ -6,43 +6,43 @@ Divs and spans are Pandoc's fenced syntax for applying classes, IDs, and attribu
 
 ### Basic Syntax
 
-```markdown
+````markdown
 ::: {.class-name}
 Content inside the div.
 :::
-```
+````
 
 Three colons open, three colons close.
 
 ### Multiple Classes
 
-```markdown
+````markdown
 ::: {.class1 .class2}
 Content with multiple classes.
 :::
-```
+````
 
 ### With ID
 
-```markdown
+````markdown
 ::: {#my-id .my-class}
 Content with ID and class.
 :::
-```
+````
 
 ### With Attributes
 
-```markdown
+````markdown
 ::: {.my-class key="value" data-info="something"}
 Content with attributes.
 :::
-```
+````
 
 ## Nested Divs
 
 Use more colons for outer div:
 
-```markdown
+````markdown
 ::: {.outer}
 Outer content.
 
@@ -52,11 +52,11 @@ Inner content.
 
 More outer content.
 :::
-```
+````
 
 Or use different numbers:
 
-```markdown
+````markdown
 ::: {.level1}
 ::: {.level2}
 ::: {.level3}
@@ -64,43 +64,43 @@ Deeply nested.
 :::
 :::
 :::
-```
+````
 
 ## Spans
 
 ### Basic Syntax
 
-```markdown
+````markdown
 This is [styled text]{.highlight}.
-```
+````
 
 ### Multiple Classes
 
-```markdown
+````markdown
 [Important]{.bold .red}
-```
+````
 
 ### With ID
 
-```markdown
+````markdown
 [Target text]{#target-id}
-```
+````
 
 ### With Attributes
 
-```markdown
+````markdown
 [Text]{.class key="value"}
-```
+````
 
 ## Common Div Uses
 
 ### Custom Styling
 
-```markdown
+````markdown
 ::: {.callout-box}
 Important information here.
 :::
-```
+````
 
 With CSS:
 
@@ -114,7 +114,7 @@ With CSS:
 
 ### Columns
 
-```markdown
+````markdown
 ::: {.columns}
 
 ::: {.column width="50%"}
@@ -126,23 +126,23 @@ Right column.
 :::
 
 :::
-```
+````
 
 ### Centering
 
-```markdown
+````markdown
 ::: {.center}
 Centered content.
 :::
-```
+````
 
 ### Hiding Content
 
-```markdown
+````markdown
 ::: {.hidden}
 This won't appear.
 :::
-```
+````
 
 ## Raw Content Blocks
 
@@ -180,15 +180,15 @@ Raw LaTeX content.
 
 ### Inline Raw Content
 
-```markdown
+`arkdown
 Text with `<br>`{=html} line break.
-```
+````
 
 ## Layout Divs
 
 ### Tabsets
 
-```markdown
+````markdown
 ::: {.panel-tabset}
 
 ## Tab 1
@@ -200,21 +200,21 @@ Tab 1 content.
 Tab 2 content.
 
 :::
-```
+````
 
 ### Columns with Layout
 
-```markdown
+````markdown
 ::: {layout-ncol=2}
 ![](image1.png)
 
 ![](image2.png)
 :::
-```
+````
 
 ### Complex Layout
 
-```markdown
+````markdown
 ::: {layout="[[1,1], [1]]"}
 First cell.
 
@@ -222,93 +222,93 @@ Second cell.
 
 Full-width cell.
 :::
-```
+````
 
 ## Conditional Divs
 
 ### Format-Specific
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html"}
 HTML-only content.
 :::
-```
+````
 
 ### Hidden for Format
 
-```markdown
+````markdown
 ::: {.content-hidden when-format="pdf"}
 Hidden in PDF.
 :::
-```
+````
 
 ## Special Divs
 
 ### Callouts
 
-```markdown
+````markdown
 ::: {.callout-note}
 Note content.
 :::
-```
+````
 
 ### Cross-Referenceable
 
-```markdown
+````markdown
 ::: {#fig-diagram}
 ![](diagram.png)
 
 Figure caption.
 :::
-```
+````
 
 ### Theorems
 
-```markdown
+````markdown
 ::: {#thm-main}
 Theorem statement.
 :::
-```
+````
 
 ### Proof
 
-```markdown
+````markdown
 ::: {.proof}
 Proof content.
 :::
-```
+````
 
 ## Span Uses
 
 ### Inline Styling
 
-```markdown
+````markdown
 This is [red text]{style="color: red;"}.
-```
+````
 
 ### Class Application
 
-```markdown
+````markdown
 The [key term]{.term} is defined as...
-```
+````
 
 ### Small Caps
 
-```markdown
+````markdown
 [Small Caps Text]{.smallcaps}
-```
+````
 
 ### Underline
 
-```markdown
+````markdown
 [Underlined text]{.underline}
-```
+````
 
 ### Keyboard Input
 
-```markdown
+````markdown
 Press [Ctrl]{.kbd}+[C]{.kbd} to copy.
-```
+````
 
 ## Custom CSS Classes
 
@@ -333,13 +333,13 @@ Define in CSS/SCSS:
 
 Use in document:
 
-```markdown
+````markdown
 This is [very important]{.important}.
 
 The `function` takes [two arguments]{.code-highlight}.
 
 [Additional context]{.margin-note}
-```
+````
 
 ## Attributes Reference
 
@@ -355,11 +355,11 @@ The `function` takes [two arguments]{.code-highlight}.
 
 ### Data Attributes
 
-```markdown
+````markdown
 ::: {data-value="42" data-type="number"}
 Content with data attributes.
 :::
-```
+````
 
 Access in JavaScript:
 
@@ -397,11 +397,11 @@ Special classes:
 
 ### Styled Aside
 
-```markdown
+````markdown
 ::: {.aside .note}
 This is a side note with additional context.
 :::
-```
+````
 
 ### Code with Caption
 
@@ -420,7 +420,7 @@ Example Python function.
 
 ### Multi-Column Layout
 
-```markdown
+````markdown
 ::: {.columns}
 
 ::: {.column width="33%"}
@@ -439,7 +439,7 @@ Third column content.
 :::
 
 :::
-```
+````
 
 ## Resources
 

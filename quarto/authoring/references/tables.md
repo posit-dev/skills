@@ -6,23 +6,23 @@ Quarto supports multiple table formats including pipe tables, list tables, and c
 
 The most common table format:
 
-```markdown
+````markdown
 | Column 1 | Column 2 | Column 3 |
 | -------- | -------- | -------- |
 | Row 1    | Data     | More     |
 | Row 2    | Data     | More     |
-```
+````
 
 ### Column Alignment
 
 Use colons to specify alignment:
 
-```markdown
+````markdown
 | Left    | Center  |   Right |
 | :------ | :-----: | ------: |
 | Left    | Center  |   Right |
 | aligned | aligned | aligned |
-```
+````
 
 - `:---` Left align
 - `:---:` Center align
@@ -30,13 +30,13 @@ Use colons to specify alignment:
 
 ### With Caption
 
-```markdown
+````markdown
 | Column 1 | Column 2 |
 | -------- | -------- |
 | Data     | Data     |
 
 : Table caption {#tbl-example}
-```
+````
 
 Reference with `@tbl-example`.
 
@@ -46,23 +46,23 @@ Reference with `@tbl-example`.
 
 More dashes = wider column:
 
-```markdown
+````markdown
 | Narrow | Wide Column |
 | ------ | ----------- |
 | A      | B           |
-```
+````
 
 This creates approximately 33%/67% split.
 
 ### Explicit Widths
 
-```markdown
+````markdown
 | Column 1 | Column 2 |
 | -------- | -------- |
 | Data     | Data     |
 
 : Caption {tbl-colwidths="[25,75]"}
-```
+````
 
 ### Document Level
 
@@ -127,7 +127,7 @@ Table caption here.
 
 ### Header Configuration
 
-```markdown
+````markdown
 ::: {.list-table header-rows=1 header-cols=1}
 
 - - 
@@ -138,13 +138,13 @@ Table caption here.
   - Data 2
 
 :::
-```
+````
 
 Set `header-rows=0` for tables without headers.
 
 ### List Table Alignment
 
-```markdown
+````markdown
 ::: {.list-table aligns=l,c,r}
 
 - - Left
@@ -158,13 +158,13 @@ Set `header-rows=0` for tables without headers.
   - Right Content 2
 
 :::
-```
+````
 
 Alignment options: `l` (left), `c` (center), `r` (right), `d` (default).
 
 ### List Table Widths
 
-```markdown
+````markdown
 ::: {.list-table widths="30,70"}
 
 - - Narrow
@@ -173,13 +173,13 @@ Alignment options: `l` (left), `c` (center), `r` (right), `d` (default).
   - Wide Content
 
 :::
-```
+````
 
 ### Cell-Level Alignment
 
 Override column alignment for individual cells:
 
-```markdown
+````markdown
 ::: {.list-table}
 
 - - Column 1
@@ -190,13 +190,13 @@ Override column alignment for individual cells:
   - []{align=c}Centered cell
 
 :::
-```
+````
 
 ### Row and Column Spans
 
 Use empty spans with `colspan` or `rowspan`:
 
-```markdown
+````markdown
 ::: {.list-table}
 
 - - Column A
@@ -214,13 +214,13 @@ Use empty spans with `colspan` or `rowspan`:
   - Data 4
 
 :::
-```
+````
 
 ### Row Attributes
 
 Apply attributes to entire rows using an empty span:
 
-```markdown
+````markdown
 ::: {.list-table}
 
 - - Column 1
@@ -231,13 +231,13 @@ Apply attributes to entire rows using an empty span:
   - Content
 
 :::
-```
+````
 
 ### Empty Cells
 
 Use a lone `-` for empty cells:
 
-```markdown
+````markdown
 ::: {.list-table}
 
 - - Column A
@@ -248,7 +248,7 @@ Use a lone `-` for empty cells:
   - Data
 
 :::
-```
+````
 
 ### Complex Cell Content
 
@@ -345,7 +345,7 @@ Options: `top`, `bottom`, `margin`.
 
 Multiple tables with shared caption:
 
-```markdown
+````markdown
 ::: {#tbl-panel layout-ncol=2}
 
 | A   | B   |
@@ -364,7 +364,7 @@ Combined tables.
 :::
 
 See @tbl-panel, including @tbl-first.
-```
+````
 
 ### From Code
 
@@ -386,13 +386,13 @@ knitr::kable(detail_df)
 
 Add Bootstrap classes for styling:
 
-```markdown
+````markdown
 | A   | B   |
 | --- | --- |
 | 1   | 2   |
 
 : Styled table {.striped .hover}
-```
+````
 
 Available classes:
 
@@ -407,13 +407,13 @@ Available classes:
 
 ### Combining Classes
 
-```markdown
+````markdown
 | A   | B   |
 | --- | --- |
 | 1   | 2   |
 
 : Table {.striped .hover .bordered}
-```
+````
 
 ### Disable Striping for Code Tables
 
@@ -480,7 +480,7 @@ html-table-processing: none
 
 Same as figures:
 
-```markdown
+````markdown
 ::: {layout-ncol=2}
 
 | A   | B   |
@@ -492,7 +492,7 @@ Same as figures:
 | 3   | 4   |
 
 :::
-```
+````
 
 ## Long Tables
 
@@ -511,7 +511,7 @@ knitr::kable(long_data, longtable = TRUE)
 
 Tables are referenced with `tbl-` prefix:
 
-```markdown
+````markdown
 | Data |
 | ---- |
 | 1    |
@@ -519,7 +519,7 @@ Tables are referenced with `tbl-` prefix:
 : Summary {#tbl-summary}
 
 See @tbl-summary for details.
-```
+````
 
 ## Resources
 

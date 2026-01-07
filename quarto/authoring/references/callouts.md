@@ -8,49 +8,49 @@ Quarto provides five built-in callout types:
 
 ### Note
 
-```markdown
+````markdown
 ::: {.callout-note}
 This is a note callout.
 :::
-```
+````
 
 ### Warning
 
-```markdown
+````markdown
 ::: {.callout-warning}
 This is a warning callout.
 :::
-```
+````
 
 ### Important
 
-```markdown
+````markdown
 ::: {.callout-important}
 This is an important callout.
 :::
-```
+````
 
 ### Tip
 
-```markdown
+````markdown
 ::: {.callout-tip}
 This is a tip callout.
 :::
-```
+````
 
 ### Caution
 
-```markdown
+````markdown
 ::: {.callout-caution}
 This is a caution callout.
 :::
-```
+````
 
 ## Custom Titles
 
 Use a heading for custom title:
 
-```markdown
+````markdown
 ::: {.callout-note}
 
 ## Custom Title Here
@@ -58,15 +58,15 @@ Use a heading for custom title:
 Content of the callout.
 
 :::
-```
+````
 
 Or use `title` attribute:
 
-```markdown
+````markdown
 ::: {.callout-note title="My Custom Title"}
 Content of the callout.
 :::
-```
+````
 
 ## Appearance Options
 
@@ -76,31 +76,31 @@ Three appearance styles:
 
 Colored header with icon:
 
-```markdown
+````markdown
 ::: {.callout-note}
 Default appearance.
 :::
-```
+````
 
 ### Simple
 
 Lighter, no colored header:
 
-```markdown
+````markdown
 ::: {.callout-note appearance="simple"}
 Simple appearance.
 :::
-```
+````
 
 ### Minimal
 
 Borders only, no header background or icon:
 
-```markdown
+````markdown
 ::: {.callout-note appearance="minimal"}
 Minimal appearance.
 :::
-```
+````
 
 ### Document Default
 
@@ -116,7 +116,7 @@ Make callouts expandable/collapsible:
 
 ### Collapsed by Default
 
-```markdown
+````markdown
 ::: {.callout-tip collapse="true"}
 
 ## Expand for Details
@@ -124,11 +124,11 @@ Make callouts expandable/collapsible:
 Hidden content revealed on click.
 
 :::
-```
+````
 
 ### Expanded by Default
 
-```markdown
+````markdown
 ::: {.callout-tip collapse="false"}
 
 ## Click to Collapse
@@ -136,7 +136,7 @@ Hidden content revealed on click.
 Content visible initially but can be collapsed.
 
 :::
-```
+````
 
 Note: `collapse="false"` makes it collapsible but expanded initially. Without `collapse`, the callout is not collapsible.
 
@@ -144,11 +144,11 @@ Note: `collapse="false"` makes it collapsible but expanded initially. Without `c
 
 ### Disable Icon
 
-```markdown
+````markdown
 ::: {.callout-note icon="false"}
 No icon on this callout.
 :::
-```
+````
 
 ### Document Default
 
@@ -160,7 +160,7 @@ callout-icon: false
 
 Add an ID to reference callouts:
 
-```markdown
+````markdown
 ::: {#nte-important .callout-note}
 
 ## Important Information
@@ -170,7 +170,7 @@ This callout can be referenced.
 :::
 
 See @nte-important for details.
-```
+````
 
 ### Callout Prefixes
 
@@ -184,7 +184,7 @@ See @nte-important for details.
 
 ### Example
 
-```markdown
+````markdown
 ::: {#tip-shortcut .callout-tip}
 
 ## Keyboard Shortcut
@@ -201,7 +201,7 @@ Back up your data first.
 :::
 
 See @tip-shortcut for the shortcut and @wrn-data for the warning.
-```
+````
 
 ## Complex Content
 
@@ -209,7 +209,7 @@ Callouts can contain any content:
 
 ### Lists
 
-```markdown
+````markdown
 ::: {.callout-note}
 
 ## Steps to Follow
@@ -219,7 +219,7 @@ Callouts can contain any content:
 3. Third step
 
 :::
-```
+````
 
 ### Code
 
@@ -228,29 +228,38 @@ Callouts can contain any content:
 
 ## Code Example
 
+```{r}
+x <- 1 + 1
+```
+
+## Code Block Example
+
 ```r
 x <- 1 + 1
 ```
 
+Or
+
+```{.r}
+x <- 1 + 1
 ```
 
 :::
-```
 ````
 
 ### Multiple Paragraphs
 
-```markdown
+````markdown
 ::: {.callout-important}
 First paragraph.
 
 Second paragraph with **bold** text.
 :::
-```
+````
 
 ### Images
 
-```markdown
+````markdown
 ::: {.callout-note}
 
 ## Visual Guide
@@ -258,13 +267,13 @@ Second paragraph with **bold** text.
 ![Diagram](diagram.png)
 
 :::
-```
+````
 
 ## Nested Callouts
 
 Callouts can be nested (use more colons for outer):
 
-```markdown
+````markdown
 ::: {.callout-note}
 
 ## Outer Callout
@@ -274,7 +283,7 @@ Nested callout.
 :::
 
 :::
-```
+````
 
 ## Format-Specific Options
 
@@ -335,7 +344,7 @@ $callout-color-tip: #00cc66;
 
 ### Installation Guide
 
-```markdown
+````markdown
 ::: {.callout-note}
 
 ## Prerequisites
@@ -359,11 +368,11 @@ Back up your existing installation before proceeding.
 If you encounter errors, try clearing your cache.
 
 :::
-```
+````
 
 ### Documentation
 
-```markdown
+````markdown
 ::: {.callout-important}
 
 ## Breaking Change
@@ -380,7 +389,7 @@ See migration guide below.
 This API may change in future versions.
 
 :::
-```
+````
 
 ## Resources
 

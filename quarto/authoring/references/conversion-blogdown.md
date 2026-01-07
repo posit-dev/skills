@@ -271,29 +271,29 @@ draft: false
 
 #### Hugo
 
-```markdown
+````markdown
 {{</* figure src="image.png" caption="Caption" */>}}
-```
+````
 
 #### Quarto
 
-```markdown
+````markdown
 ![Caption](image.png)
-```
+````
 
 ### Tweet
 
 #### Hugo
 
-```markdown
+````markdown
 {{</* tweet user="username" id="1234567890" */>}}
-```
+````
 
 #### Quarto (with extension)
 
-```markdown
+````markdown
 {{< tweet username 1234567890 >}}
-```
+````
 
 Install extension: `quarto add sellorm/quarto-social-embeds`
 
@@ -301,35 +301,43 @@ Install extension: `quarto add sellorm/quarto-social-embeds`
 
 #### Hugo
 
-```markdown
+````markdown
 {{</* youtube VIDEO_ID */>}}
 ```
 
 #### Quarto
 
-```markdown
+````markdown
 {{< video https://www.youtube.com/embed/VIDEO_ID >}}
-```
+````
 
 ### Gist
 
 #### Hugo
 
-```markdown
+````markdown
 {{</* gist user gist_id */>}}
-```
+````
 
 ### Highlight
 
 #### Hugo
 
-```markdown
+````markdown
 {{</* highlight r */>}}
 code here
 {{</* /highlight */>}}
 ```
 
 #### Quarto
+
+````markdown
+```{.r}
+code here
+```
+````
+
+or
 
 ````markdown
 ```r
@@ -341,15 +349,15 @@ code here
 
 #### Hugo
 
-```markdown
+````markdown
 [Link]({{</* ref "other-post.md" */>}})
 ````
 
 #### Quarto
 
-```markdown
+````markdown
 [Link](other-post.qmd)
-```
+````
 
 ## Taxonomies
 
@@ -441,12 +449,12 @@ Enable in listing:
 
 - `blog.qmd`
 
-  ```markdown
+  ````markdown
   ---
   listing:
     feed: true
   ---
-  ```
+  ````
 
 Or in `_quarto.yml`:
 

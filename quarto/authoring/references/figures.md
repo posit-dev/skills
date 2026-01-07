@@ -6,23 +6,23 @@ Quarto provides comprehensive support for figures including sizing, layout, subf
 
 ### Markdown Images
 
-```markdown
+````markdown
 ![Caption text](image.png)
-```
+````
 
 ### With Attributes
 
-```markdown
+````markdown
 ![Caption text](image.png){width=50%}
-```
+````
 
 ### Cross-Referenceable Figure
 
-```markdown
+````markdown
 ![Caption text](image.png){#fig-example}
 
 See @fig-example.
-```
+````
 
 ## Figure Attributes
 
@@ -39,26 +39,26 @@ Common attributes for images:
 
 Multiple units supported:
 
-```markdown
+````markdown
 ![](image.png){width=50%}
 ![](image.png){width=400px}
 ![](image.png){width=4in}
 ![](image.png){width=10cm}
-```
+````
 
 ### Alignment
 
-```markdown
+````markdown
 ![Left aligned](image.png){fig-align="left"}
 ![Centered](image.png){fig-align="center"}
 ![Right aligned](image.png){fig-align="right"}
-```
+````
 
 ### Alt Text for Accessibility
 
-```markdown
+````markdown
 ![Caption](image.png){fig-alt="Detailed description for screen readers"}
-```
+````
 
 Alt text differs from caption - it describes the image content for accessibility.
 
@@ -112,7 +112,7 @@ plt.show()
 
 Group multiple images with a shared caption:
 
-```markdown
+````markdown
 ::: {#fig-comparison layout-ncol=2}
 
 ![First image](image1.png){#fig-first}
@@ -123,7 +123,7 @@ Comparison of two approaches.
 :::
 
 See @fig-comparison, particularly @fig-first.
-```
+````
 
 ### From Code
 
@@ -147,13 +147,13 @@ For arranging multiple figures, use layout divs. See [layout.md](layout.md) for 
 
 ### Basic Layout
 
-```markdown
+````markdown
 ::: {layout-ncol=2}
 ![](image1.png)
 
 ![](image2.png)
 :::
-```
+````
 
 ### Layout Attributes
 
@@ -168,7 +168,7 @@ For arranging multiple figures, use layout divs. See [layout.md](layout.md) for 
 
 For images without individual captions:
 
-```markdown
+````markdown
 ::: {#fig-panel layout-ncol=2}
 ![](plot1.png)
 
@@ -176,7 +176,7 @@ For images without individual captions:
 
 Multiple plots in a panel.
 :::
-```
+````
 
 ## Caption Location
 
@@ -204,25 +204,25 @@ Options: `top`, `bottom`, `margin`.
 
 Enable click-to-zoom for images (HTML only):
 
-```markdown
+````markdown
 ![](image.png){.lightbox}
-```
+````
 
 Or for a group:
 
-```markdown
+````markdown
 ::: {.lightbox}
 ![](image1.png)
 
 ![](image2.png)
 :::
-```
+````
 
 ### Lightbox Options
 
-```markdown
+````markdown
 ![](image.png){.lightbox group="gallery" description="Detailed view"}
-```
+````
 
 ### Enable Globally
 
@@ -243,28 +243,28 @@ lightbox:
 
 Make images clickable:
 
-```markdown
+````markdown
 [![Caption](thumbnail.png)](fullsize.png)
-```
+````
 
 Or link to URL:
 
-```markdown
+````markdown
 [![Logo](logo.png)](https://example.com)
-```
+````
 
 ## Figure Divs
 
 For complex figure content:
 
-```markdown
+````markdown
 ::: {#fig-custom}
 
 <iframe src="interactive.html"></iframe>
 
 Custom interactive figure.
 :::
-```
+````
 
 ## Document Defaults
 

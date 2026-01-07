@@ -44,7 +44,7 @@ format:
 
 Replace `---` with headers:
 
-```markdown
+````markdown
 # xaringan
 
 ---
@@ -64,7 +64,7 @@ Content
 Content
 
 ## Next Slide
-```
+````
 
 ## YAML Conversion
 
@@ -84,7 +84,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-````
+```
 
 #### Quarto
 
@@ -119,7 +119,7 @@ format:
 
 Uses `---` to separate slides:
 
-```markdown
+````markdown
 # First Slide
 
 Content
@@ -135,13 +135,13 @@ More content
 class: center, middle
 
 # Centered Slide
-```
+````
 
 ### Quarto
 
 Uses headers (level 1 or 2):
 
-```markdown
+````markdown
 # First Slide
 
 Content
@@ -151,7 +151,7 @@ Content
 More content
 
 ## Centered Slide {.center}
-```
+````
 
 Or with explicit separators:
 
@@ -167,7 +167,7 @@ format:
 
 Uses `--` within a slide:
 
-```markdown
+````markdown
 # Incremental
 
 - ## First point
@@ -175,13 +175,13 @@ Uses `--` within a slide:
 - ## Second point
 
 - Third point
-```
+````
 
 ### Quarto
 
 Use incremental class:
 
-```markdown
+````markdown
 ## Incremental
 
 ::: {.incremental}
@@ -191,7 +191,7 @@ Use incremental class:
 - Third point
 
 :::
-```
+````
 
 Or globally:
 
@@ -203,12 +203,12 @@ format:
 
 Per-slide opt-out:
 
-```markdown
+````markdown
 ## Non-Incremental {.nonincremental}
 
 - All at once
 - All at once
-```
+````
 
 ## Speaker Notes
 
@@ -216,7 +216,7 @@ Per-slide opt-out:
 
 Uses `???`:
 
-```markdown
+````markdown
 # Slide Title
 
 Content here.
@@ -225,13 +225,13 @@ Content here.
 
 Speaker notes go here.
 They can span multiple lines.
-```
+````
 
 ### Quarto
 
 Uses notes div:
 
-```markdown
+````markdown
 ## Slide Title
 
 Content here.
@@ -240,13 +240,13 @@ Content here.
 Speaker notes go here.
 They can span multiple lines.
 :::
-```
+````
 
 ## Two-Column Layouts
 
 ### xaringan
 
-```markdown
+````markdown
 .pull-left[
 Left content
 ]
@@ -254,11 +254,11 @@ Left content
 .pull-right[
 Right content
 ]
-```
+````
 
 ### Quarto
 
-```markdown
+````markdown
 ::: {.columns}
 
 ::: {.column width="50%"}
@@ -270,33 +270,33 @@ Right content
 :::
 
 :::
-```
+````
 
 ## Slide Classes
 
 ### xaringan
 
-```markdown
+````markdown
 ---
 
 class: inverse, center, middle
 
 # Dark Slide
-```
+````
 
 ### Quarto
 
-```markdown
+````markdown
 ## Dark Slide {.inverse .center .middle}
 
 Or use theme variants.
-```
+````
 
 Background options:
 
-```markdown
+````markdown
 ## Slide with Background {background-color="black"}
-```
+````
 
 ## Code Highlighting
 
@@ -362,15 +362,15 @@ $link-color: #007bff;
 
 ### xaringan
 
-```markdown
+````markdown
 .animated.fadeIn[
 Content fades in
 ]
-```
+````
 
 ### Quarto
 
-```markdown
+````markdown
 ::: {.fragment .fade-in}
 Content fades in
 :::
@@ -388,29 +388,29 @@ Fragment types:
 
 ### xaringan
 
-```markdown
+````markdown
 ![](image.png)
 
 .center[
 ![](centered.png)
 ]
-```
+````
 
 ### Quarto
 
-```markdown
+````markdown
 ![](image.png)
 
 ![](centered.png){fig-align="center"}
-```
+````
 
 ### Full-Screen Background
 
-```markdown
+````markdown
 ## {background-image="image.jpg" background-size="cover"}
 
 Content overlaid on image.
-```
+````
 
 ## Special Slides
 
@@ -420,17 +420,17 @@ Automatic in Quarto from YAML.
 
 ### Section Headers
 
-```markdown
+````markdown
 # Section Title {.section}
-```
+````
 
 ### Thank You Slide
 
-```markdown
+````markdown
 ## Thank You! {.center .middle}
 
 Questions?
-```
+````
 
 ## Common xaringan Features
 
@@ -498,7 +498,7 @@ quarto render slides.qmd
 
 ### xaringan
 
-```markdown
+````markdown
 ---
 title: "My Talk"
 output: xaringan::moon_reader
@@ -524,11 +524,11 @@ Remember to pause here.
 class: inverse, center
 
 # Thank You!
-```
+````
 
 ### Quarto
 
-```markdown
+````markdown
 ---
 title: "My Talk"
 format: revealjs
@@ -552,7 +552,7 @@ Remember to pause here.
 :::
 
 ## Thank You! {.inverse .center}
-```
+````
 
 ## Resources
 

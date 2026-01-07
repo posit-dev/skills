@@ -20,67 +20,67 @@ Quarto provides column classes for controlling content width and placement, incl
 
 Standard content width:
 
-```markdown
+````markdown
 ::: {.column-body}
 Default body-width content.
 :::
-```
+````
 
 ### Body Outset
 
 Slightly wider than body:
 
-```markdown
+````markdown
 ::: {.column-body-outset}
 ![Wide image](wide.png)
 :::
-```
+````
 
 ### Page Width
 
 Extends to page margins:
 
-```markdown
+````markdown
 ::: {.column-page}
 ![Page-width image](panorama.png)
 :::
-```
+````
 
 ### Screen Width
 
 Full browser width (no margins):
 
-```markdown
+````markdown
 ::: {.column-screen}
 ![Full-width image](banner.png)
 :::
-```
+````
 
 ### Screen Inset
 
 Full width with small margins:
 
-```markdown
+````markdown
 ::: {.column-screen-inset}
 Content with small margins.
 :::
-```
+````
 
 ### Shaded Screen Inset
 
 With background shading:
 
-```markdown
+````markdown
 ::: {.column-screen-inset-shaded}
 Shaded full-width content.
 :::
-```
+````
 
 ## Directional Variants
 
 Each column class has left/right variants:
 
-```markdown
+````markdown
 ::: {.column-body-outset-left}
 Extends left only.
 :::
@@ -92,17 +92,17 @@ Extends to right page margin.
 ::: {.column-screen-left}
 Full width on left side.
 :::
-```
+````
 
 ## Margin Content
 
 ### Text in Margin
 
-```markdown
+````markdown
 ::: {.column-margin}
 This appears in the right margin.
 :::
-```
+````
 
 ### Figures in Margin
 
@@ -117,11 +117,11 @@ plot(1:10)
 
 Or for markdown images:
 
-```markdown
+````markdown
 ::: {.column-margin}
 ![Margin image](small.png)
 :::
-```
+````
 
 ### Tables in Margin
 
@@ -136,7 +136,7 @@ knitr::kable(small_data)
 
 ### Mixed Content
 
-```markdown
+````markdown
 Main text here.
 
 ::: {.column-margin}
@@ -256,7 +256,7 @@ format:
 
 Create side-by-side columns:
 
-```markdown
+````markdown
 ::: {.columns}
 
 ::: {.column width="50%"}
@@ -268,11 +268,11 @@ Right column content.
 :::
 
 :::
-```
+````
 
 ### Unequal Columns
 
-```markdown
+````markdown
 ::: {.columns}
 
 ::: {.column width="30%"}
@@ -284,7 +284,7 @@ Wide column.
 :::
 
 :::
-```
+````
 
 ## Content Layout Divs
 
@@ -292,29 +292,29 @@ Arrange any content (images, tables, text) in grid layouts.
 
 ### Column Layout
 
-```markdown
+````markdown
 ::: {layout-ncol=2}
 ![](image1.png)
 
 ![](image2.png)
 :::
-```
+````
 
 ### Row Layout
 
-```markdown
+````markdown
 ::: {layout-nrow=2}
 Content 1.
 
 Content 2.
 :::
-```
+````
 
 ### Complex Layouts
 
 Use layout array for precise control. Values represent relative widths:
 
-```markdown
+````markdown
 ::: {layout="[[1,1], [1]]"}
 First row, left.
 
@@ -322,13 +322,13 @@ First row, right.
 
 Second row, full width.
 :::
-```
+````
 
 ### With Spacing
 
 Negative values add spacing between elements:
 
-```markdown
+````markdown
 ::: {layout="[[40,-20,40], [100]]"}
 Content 1.
 
@@ -336,17 +336,17 @@ Content 2.
 
 Full width below.
 :::
-```
+````
 
 ### Vertical Alignment
 
-```markdown
+````markdown
 ::: {layout-ncol=2 layout-valign="bottom"}
 Tall content.
 
 Short content.
 :::
-```
+````
 
 Options: `top`, `center`, `bottom`.
 
@@ -363,7 +363,7 @@ Options: `top`, `center`, `bottom`.
 
 Create tabbed content:
 
-```markdown
+````markdown
 ::: {.panel-tabset}
 
 ## Tab 1
@@ -375,7 +375,7 @@ Content for tab 1.
 Content for tab 2.
 
 :::
-```
+````
 
 ### With Groups
 
@@ -404,11 +404,11 @@ Tabs with same group stay synchronized.
 
 For inline margin notes:
 
-```markdown
+````markdown
 Main text content.
 [This is an aside that appears in the margin.]{.aside}
 More main text.
-```
+````
 
 ## PDF Layout
 

@@ -8,31 +8,31 @@ Quarto allows content to be shown or hidden based on output format, metadata, or
 
 Show content only for specific formats:
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html"}
 This only appears in HTML output.
 :::
-```
+````
 
 ### Content Hidden
 
 Hide content for specific formats:
 
-```markdown
+````markdown
 ::: {.content-hidden when-format="pdf"}
 This appears everywhere except PDF.
 :::
-```
+````
 
 ### Unless Format
 
 Show unless a specific format:
 
-```markdown
+````markdown
 ::: {.content-visible unless-format="html"}
 This appears in PDF, DOCX, etc., but not HTML.
 :::
-```
+````
 
 ## Format Values
 
@@ -61,40 +61,40 @@ Quarto groups related formats:
 
 ### Example with Aliases
 
-```markdown
+````markdown
 ::: {.content-visible when-format="pdf"}
 This appears in PDF, LaTeX, and Beamer.
 :::
-```
+````
 
 ## Multiple Formats
 
 ### Either Format
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html"}
 ::: {.content-visible when-format="revealjs"}
 This appears in HTML or RevealJS.
 :::
 :::
-```
+````
 
 Or use aliases:
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html"}
 Appears in all HTML-based formats.
 :::
-```
+````
 
 ## Inline Conditions
 
 For inline content, use spans:
 
-```markdown
+````markdown
 View the [interactive version]{.content-visible when-format="html"}
 [figure]{.content-visible when-format="pdf"}.
-```
+````
 
 ## Metadata-Based Conditions
 
@@ -102,11 +102,11 @@ View the [interactive version]{.content-visible when-format="html"}
 
 Show based on metadata values:
 
-```markdown
+````markdown
 ::: {.content-visible when-meta="draft"}
 DRAFT - Not for distribution.
 :::
-```
+````
 
 With YAML:
 
@@ -116,19 +116,19 @@ draft: true
 
 ### Unless Meta
 
-```markdown
+````markdown
 ::: {.content-visible unless-meta="draft"}
 Final version content.
 :::
-```
+````
 
 ### Nested Metadata
 
-```markdown
+````markdown
 ::: {.content-visible when-meta="params.show-advanced"}
 Advanced content here.
 :::
-```
+````
 
 YAML:
 
@@ -153,7 +153,7 @@ profile:
 
 ### Profile-Specific Content
 
-```markdown
+````markdown
 ::: {.content-visible when-profile="development"}
 Debug information here.
 :::
@@ -161,7 +161,7 @@ Debug information here.
 ::: {.content-visible when-profile="production"}
 Production content only.
 :::
-```
+````
 
 ### Using Profiles
 
@@ -231,7 +231,7 @@ See [QUARTO_EXECUTE_INFO](https://quarto.org/docs/advanced/quarto-execute-info.h
 
 Include different files based on format:
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html"}
 
 {{< include _interactive-content.qmd >}}
@@ -243,7 +243,7 @@ Include different files based on format:
 {{< include _static-content.qmd >}}
 
 :::
-```
+````
 
 ## Conditional YAML
 
@@ -265,17 +265,17 @@ format:
 
 ### Combining Conditions
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html" when-meta="interactive"}
 Interactive HTML content.
 :::
-```
+````
 
 Both conditions must be true.
 
 ### Nested Conditions
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html"}
 
 ::: {.content-visible when-meta="advanced"}
@@ -285,7 +285,7 @@ Advanced HTML content.
 Basic HTML content.
 
 :::
-```
+````
 
 ## Practical Examples
 
@@ -310,7 +310,7 @@ Visit https://example.com/install to download.
 
 ### Draft Watermark
 
-```markdown
+````markdown
 ---
 draft: true
 ---
@@ -324,7 +324,7 @@ This document is a draft and not for distribution.
 
 :::
 :::
-```
+````
 
 ### Development vs Production
 
@@ -380,7 +380,7 @@ plot(data$x, data$y)
 
 Use includes for shared content:
 
-```markdown
+````markdown
 ::: {.content-visible when-format="html"}
 
 {{< include _html-version.qmd >}}
@@ -392,7 +392,7 @@ Use includes for shared content:
 {{< include _pdf-version.qmd >}}
 
 :::
-```
+````
 
 ### Testing Conditions
 

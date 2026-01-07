@@ -136,32 +136,32 @@ bibliography: references.bib
 
 Or with R Markdown:
 
-```markdown
+````markdown
 ::: {.l-body-outset}
 Wide content here.
 :::
-```
+````
 
 ### Quarto
 
-```markdown
+````markdown
 ::: {.column-margin}
 This content appears in the margin.
 :::
-```
+````
 
 Or inline:
 
-```markdown
+````markdown
 Main text here.
 [This appears in the margin.]{.aside}
-```
+````
 
 ## Layout Classes
 
 ### distill
 
-```markdown
+````markdown
 ::: {.l-body}
 Default body width.
 :::
@@ -181,11 +181,11 @@ Full screen width.
 ::: {.l-screen-inset}
 Screen width with padding.
 :::
-```
+````
 
 ### Quarto
 
-```markdown
+````markdown
 ::: {.column-body}
 Default body width.
 :::
@@ -205,7 +205,7 @@ Full screen width.
 ::: {.column-screen-inset}
 Screen width with padding.
 :::
-```
+````
 
 ### Layout Mapping
 
@@ -244,7 +244,7 @@ plot(1:10)
 
 ### distill
 
-```markdown
+````markdown
 ## Appendix
 
 ### Acknowledgments
@@ -254,11 +254,11 @@ Thanks to...
 ### Author Contributions
 
 Author A did...
-```
+````
 
 ### Quarto
 
-```markdown
+````markdown
 ## Acknowledgments {.appendix}
 
 Thanks to...
@@ -266,18 +266,18 @@ Thanks to...
 ## Author Contributions {.appendix}
 
 Author A did...
-```
+````
 
 Or use an appendix section:
 
-```markdown
+````markdown
 ::: {#appendix}
 
 ## Additional Details
 
 More content here.
 :::
-```
+````
 
 ## Code Display
 
@@ -364,7 +364,7 @@ format:
 
 - `index.qmd`
 
-  ```markdown
+  ````markdown
   ---
   title: "My Blog"
   listing:
@@ -372,7 +372,7 @@ format:
     type: default
     sort: "date desc"
   ---
-  ```
+  ````
 
 ## Post Frontmatter
 

@@ -81,12 +81,16 @@ Use: [references/markdown-linting.md](references/markdown-linting.md)
 
 ### Basic Document Structure
 
-```yaml
+````markdown
+---
 title: "Document Title"
 author: "Author Name"
 date: today
 format: html
-```
+---
+
+Content goes here.
+````
 
 ### Code Cell Options Syntax
 
@@ -98,7 +102,8 @@ Quarto uses the language's comment symbol + `|` for cell options. Options use **
 | Mermaid      | `%%\|` |
 | Graphviz/DOT | `//\|` |
 
-```r
+````markdown
+```{r}
 #| label: fig-example
 #| echo: false
 #| fig-cap: "A scatter plot example."
@@ -107,6 +112,7 @@ Quarto uses the language's comment symbol + `|` for cell options. Options use **
 
 plot(x, y)
 ```
+````
 
 Common execution options:
 
@@ -140,15 +146,15 @@ Labels must start with a type prefix. Reference with `@`:
 
 Example:
 
-```markdown
+````markdown
 See @fig-plot for the results.
-```
+````
 
 ### Callout Blocks
 
 Five types: `note`, `warning`, `important`, `tip`, `caution`.
 
-```markdown
+````markdown
 ::: {.callout-note}
 This is a note callout.
 :::
@@ -160,35 +166,35 @@ This is a note callout.
 This is a warning with a custom title.
 
 :::
-```
+````
 
 ### Divs and Spans
 
 Divs use fenced syntax with three colons:
 
-```markdown
+````markdown
 ::: {.class-name}
 Content inside the div.
 :::
-```
+````
 
 Spans use bracketed syntax:
 
-```markdown
+````markdown
 This is [important text]{.highlight}.
-```
+````
 
 ### Figures
 
 Basic figure with caption:
 
-```markdown
+````markdown
 ![Caption text](image.png){#fig-name fig-alt="Alt text"}
-```
+````
 
 Subfigures:
 
-```markdown
+````markdown
 ::: {#fig-group layout-ncol=2}
 ![Sub caption 1](image1.png){#fig-sub1}
 
@@ -196,29 +202,29 @@ Subfigures:
 
 Main caption for the group.
 :::
-```
+````
 
 ### Tables
 
 Pipe table with caption:
 
-```markdown
+````markdown
 | Column 1 | Column 2 |
 | -------- | -------- |
 | Data 1   | Data 2   |
 
 : Table caption {#tbl-example}
-```
+````
 
 ### Citations
 
 Basic syntax:
 
-```markdown
+````markdown
 According to @smith2020, the results show...
 Multiple citations [@smith2020; @jones2021].
 Parenthetical only [-@smith2020].
-```
+````
 
 Configure in YAML:
 
@@ -254,7 +260,7 @@ format:
 
 ### Creating a RevealJS Presentation
 
-```markdown
+````markdown
 ---
 title: "My Presentation"
 format: revealjs
@@ -267,7 +273,7 @@ Content here.
 ## Second Slide
 
 More content.
-```
+````
 
 ### Setting Up a Quarto Project
 

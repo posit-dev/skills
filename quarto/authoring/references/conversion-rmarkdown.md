@@ -230,23 +230,23 @@ Or keep setup chunk for R-specific options.
 
 ### R Markdown
 
-```markdown
+````markdown
 The value is `r mean(x)`.
-```
+````
 
 ### Quarto
 
 Same syntax works:
 
-```markdown
+````markdown
 The value is `r mean(x)`.
-```
+````
 
 Or with explicit language:
 
-```markdown
+````markdown
 The value is `{r} mean(x)`.
-```
+````
 
 ## Cross-References
 
@@ -320,11 +320,13 @@ Quarto doesn't require these packages, but they're useful for:
 
 Most R Markdown features work in Quarto. Check:
 
-```r
+````markdown
+```{r}
 # Works in both
 knitr::kable()
 knitr::include_graphics()
 ```
+````
 
 ## Step-by-Step Conversion
 

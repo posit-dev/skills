@@ -36,29 +36,31 @@ Quarto uses the language's comment symbol + `|` for cell options:
 - Mermaid: `%%|`
 - Graphviz/DOT: `//|`
 
-```r
+````markdown
+```{r}
 #| label: fig-example
 #| echo: false
 #| fig-cap: "Example figure."
 
 plot(1:10)
 ```
+````
 
 **Important:** Quarto options use dashes, not dots (e.g., `fig-cap` not `fig.cap`).
 
 ### Cross-References
 
-```markdown
+````markdown
 See @fig-example for the results.
-```
+````
 
 ### Callouts
 
-```markdown
+````markdown
 ::: {.callout-note}
 This is a note.
 :::
-```
+````
 
 ## Reference Documentation
 

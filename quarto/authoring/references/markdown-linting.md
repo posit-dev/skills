@@ -9,94 +9,94 @@ These guidelines are based on [markdownlint](https://github.com/markdownlint/mar
 
 Header levels should only increment by one level at a time.
 
-```markdown
+````markdown
 # Header 1
 
 ## Header 2
 
 ### Header 3
-```
+````
 
 Not:
 
-```markdown
+````markdown
 # Header 1
 
 ### Header 3
-```
+````
 
 ### MD003: Header Style
 
 Use ATX-style headers (`#`) consistently.
 
-```markdown
+````markdown
 # ATX Header
 
 ## Another Header
-```
+````
 
 Not setext style:
 
-```markdown
+````markdown
 Setext Header
 =============
-```
+````
 
 ### MD018: Space After Hash
 
 Use exactly one space after the hash in headers.
 
-```markdown
+````markdown
 # Header
-```
+````
 
 Not:
 
-```markdown
+````markdown
 #Header
 #  Header
-```
+````
 
 ### MD022: Blank Lines Around Headers
 
 Headers should be surrounded by blank lines.
 
-```markdown
+````markdown
 Some text.
 
 ## Header
 
 More text.
-```
+````
 
 ### MD023: Headers at Line Start
 
 Headers must start at the beginning of the line.
 
-```markdown
+````markdown
 ## Header
-```
+````
 
 Not:
 
-```markdown
+````markdown
   ## Indented Header
-```
+````
 
 ### MD026: No Trailing Punctuation
 
 Headers should not end with punctuation (except `?`).
 
-```markdown
+````markdown
 ## What is Quarto?
-```
+````
 
 Not:
 
-```markdown
+````markdown
 ## Introduction.
 ## Summary:
-```
+````
 
 ## Lists
 
@@ -104,19 +104,19 @@ Not:
 
 Use consistent unordered list markers throughout the document.
 
-```markdown
+````markdown
 - Item 1
 - Item 2
 - Item 3
-```
+````
 
 Not:
 
-```markdown
+````markdown
 - Item 1
 * Item 2
 + Item 3
-```
+````
 
 ### MD005: Consistent List Indentation
 
@@ -130,33 +130,33 @@ Top-level list items should start at the beginning of the line.
 
 Nested list items should use consistent indentation (2 spaces recommended for Quarto).
 
-```markdown
+````markdown
 - Parent item
   - Child item
     - Grandchild item
-```
+````
 
 ### MD030: Space After List Marker
 
 Use exactly one space after list markers.
 
-```markdown
+````markdown
 - Item
 1. Numbered item
-```
+````
 
 ### MD032: Blank Lines Around Lists
 
 Lists should be surrounded by blank lines.
 
-```markdown
+````markdown
 Some text.
 
 - Item 1
 - Item 2
 
 More text.
-```
+````
 
 ## Code Blocks
 
@@ -169,7 +169,7 @@ Some text.
 
 ```python
 code_here()
-```
+````
 
 More text.
 ````
@@ -218,21 +218,21 @@ Use spaces instead of hard tabs for indentation.
 
 Do not use multiple consecutive blank lines.
 
-```markdown
+````markdown
 Some text.
 
 More text.
-```
+````
 
 Not:
 
-```markdown
+````markdown
 Some text.
 
 
 
 More text.
-```
+````
 
 ### MD047: Single Newline at End
 
@@ -244,43 +244,43 @@ Files should end with a single newline character.
 
 Use correct link syntax (not reversed).
 
-```markdown
+````markdown
 [text](url)
-```
+````
 
 Not:
 
-```markdown
+````markdown
 (url)[text]
-```
+````
 
 ### MD034: No Bare URLs
 
 Use proper link syntax instead of bare URLs in text.
 
-```markdown
+````markdown
 Visit [Quarto](https://quarto.org) for more information.
-```
+````
 
 Not:
 
-```markdown
+````markdown
 Visit https://quarto.org for more information.
-```
+````
 
 ### MD039: No Spaces in Link Text
 
 Do not use spaces inside link text brackets.
 
-```markdown
+````markdown
 [link text](url)
-```
+````
 
 Not:
 
-```markdown
+````markdown
 [ link text ](url)
-```
+````
 
 ### MD042: No Empty Links
 
@@ -290,15 +290,15 @@ Links should have a valid destination.
 
 Images should have alternate text for accessibility.
 
-```markdown
+````markdown
 ![Description of image](image.png)
-```
+````
 
 Not:
 
-```markdown
+````markdown
 ![](image.png)
-```
+````
 
 ## Emphasis and Formatting
 
@@ -306,39 +306,39 @@ Not:
 
 Do not use spaces inside emphasis markers.
 
-```markdown
+````markdown
 **bold text**
 *italic text*
-```
+````
 
 Not:
 
-```markdown
+````markdown
 ** bold text **
 * italic text *
-```
+````
 
 ### MD038: No Spaces in Code Spans
 
 Do not use spaces inside inline code spans.
 
-```markdown
+````markdown
 Use `code` here.
-```
+````
 
 Not:
 
-```markdown
+````markdown
 Use ` code ` here.
-```
+````
 
 ### MD049: Consistent Emphasis Style
 
 Use consistent emphasis style (asterisks or underscores).
 
-```markdown
+````markdown
 *italic* and **bold**
-```
+````
 
 ## Quarto-Specific Allowances
 
@@ -403,7 +403,7 @@ globs:
 
 When using Quarto fenced divs, ensure proper formatting:
 
-```markdown
+````markdown
 Some text.
 
 ::: {.callout-note}
@@ -411,7 +411,7 @@ Note content here.
 :::
 
 More text.
-```
+````
 
 Key points:
 

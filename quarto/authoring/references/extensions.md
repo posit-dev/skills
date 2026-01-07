@@ -70,9 +70,9 @@ filters:
 
 After installing, use in document:
 
-```markdown
+````markdown
 {{< fa brands github >}} # Font Awesome icon
-```
+````
 
 ### Format Extensions
 
@@ -147,10 +147,10 @@ Location: `~/.local/share/quarto/extensions/`
 quarto add quarto-ext/fontawesome
 ```
 
-```markdown
+````markdown
 {{< fa brands github >}} GitHub
 {{< fa solid envelope >}} Email
-```
+````
 
 ### Lightbox
 
@@ -168,9 +168,9 @@ lightbox: true
 quarto add quarto-ext/include-code-files
 ```
 
-```markdown
+````markdown
 {{< include-code example.py >}}
-```
+````
 
 ### Fancy Text
 
@@ -178,9 +178,9 @@ quarto add quarto-ext/include-code-files
 quarto add quarto-ext/fancy-text
 ```
 
-```markdown
+````markdown
 {{< lipsum 1 >}}
-```
+````
 
 ### Social Cards
 
@@ -188,9 +188,9 @@ quarto add quarto-ext/fancy-text
 quarto add gadenbuie/quarto-social-embeds
 ```
 
-```markdown
+````markdown
 {{< tweet user=username id=123456789 >}}
-```
+````
 
 ## Extension Configuration
 
@@ -245,9 +245,9 @@ return {
 
 ### Use
 
-```markdown
+````markdown
 {{< my-shortcode "Hello" >}}
-```
+````
 
 ## Troubleshooting
 
