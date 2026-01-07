@@ -182,7 +182,7 @@ execute:
 
 ## Document-Level Defaults
 
-Set defaults for all code cells in YAML frontmatter:
+Set defaults for all code cells in YAML front matter:
 
 ```yaml
 title: "My Document"
@@ -216,7 +216,7 @@ Control how code is displayed in HTML output:
 
 ### Code Folding
 
-In YAML frontmatter:
+In YAML front matter:
 
 ```yaml
 format:

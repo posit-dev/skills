@@ -364,7 +364,7 @@ The following rules are typically disabled for Quarto:
 | ----- | ----------------------------------------------- |
 | MD024 | Repeated headers are common in structured docs. |
 | MD025 | Quarto docs may have multiple H1 headers.       |
-| MD041 | Quarto uses YAML frontmatter, not H1 first.     |
+| MD041 | Quarto uses YAML front matter, not H1 first.     |
 
 ## Configuration
 

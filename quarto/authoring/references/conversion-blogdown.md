@@ -45,7 +45,7 @@ for f in content/**/*.Rmd; do
 done
 ```
 
-### 3. Update Frontmatter
+### 3. Update Front Matter
 
 #### Blogdown
 
@@ -251,7 +251,7 @@ posts/
     index.qmd
 ```
 
-### Post Frontmatter
+### Post Front Matter
 
 ```yaml
 title: "Post Title"
@@ -572,7 +572,7 @@ Create `blog.qmd` with listing configuration.
 For each post:
 
 1. Rename `.Rmd` to `.qmd`.
-2. Update frontmatter.
+2. Update front matter.
 3. Convert Hugo shortcodes.
 4. Update internal links.
 

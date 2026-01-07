@@ -7,7 +7,7 @@ description: >
   blogdown, xaringan, or distill projects to Quarto, (4) Understanding Quarto's
   code cell syntax with hashpipe (#|) options, (5) Setting up cross-references
   for figures, tables, sections, and equations, (6) Using Quarto-specific markdown
-  features like callouts, divs, and spans, (7) Configuring YAML frontmatter for
+  features like callouts, divs, and spans, (7) Configuring YAML front matter for
   documents and projects, (8) Finding and using Quarto extensions.
 ---
 
@@ -68,8 +68,8 @@ Use: [references/conditional-content.md](references/conditional-content.md)
 Task: Use divs and spans
 Use: [references/divs-and-spans.md](references/divs-and-spans.md)
 
-Task: Configure YAML frontmatter
-Use: [references/yaml-frontmatter.md](references/yaml-frontmatter.md)
+Task: Configure YAML front matter
+Use: [references/yaml-front matter.md](references/yaml-front matter.md)
 
 Task: Find and use extensions
 Use: [references/extensions.md](references/extensions.md)
@@ -94,7 +94,7 @@ Content goes here.
 
 A Quarto document consists of two main parts:
 
-1. **YAML Frontmatter**: Metadata and configuration at the top, enclosed by `---`.
+1. **YAML Front Matter**: Metadata and configuration at the top, enclosed by `---`.
 2. **Markdown Content**: Main body using standard markdown syntax.
 
 ### Divs and Spans
@@ -336,7 +336,7 @@ format:
 - [references/shortcodes.md](references/shortcodes.md) - Built-in shortcodes
 - [references/conditional-content.md](references/conditional-content.md) - Format-specific content
 - [references/divs-and-spans.md](references/divs-and-spans.md) - Fenced divs, spans, raw blocks
-- [references/yaml-frontmatter.md](references/yaml-frontmatter.md) - Document and project YAML
+- [references/yaml-front matter.md](references/yaml-front matter.md) - Document and project YAML
 - [references/extensions.md](references/extensions.md) - Using and finding extensions
 - [references/markdown-linting.md](references/markdown-linting.md) - Markdown linting rules for Quarto
 

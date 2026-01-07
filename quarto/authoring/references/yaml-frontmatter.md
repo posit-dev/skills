@@ -1,6 +1,6 @@
-# YAML Frontmatter
+# YAML Front Matter
 
-YAML frontmatter configures document metadata, format options, and execution settings.
+YAML front matter configures document metadata, format options, and execution settings.
 
 ## Basic Document YAML
 

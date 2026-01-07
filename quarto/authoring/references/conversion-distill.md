@@ -374,7 +374,7 @@ format:
   ---
   ````
 
-## Post Frontmatter
+## Post Front Matter
 
 ### distill
 
@@ -445,7 +445,7 @@ license:
 1. Create `_quarto.yml` from `_site.yml`.
 2. Rename post directories (optional).
 3. Rename `.Rmd` files to `.qmd` or `index.qmd`.
-4. Update post frontmatter.
+4. Update post front matter.
 5. Create listing page for blog index.
 6. Migrate about page.
 

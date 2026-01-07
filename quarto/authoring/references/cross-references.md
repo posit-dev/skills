@@ -258,7 +258,7 @@ See @vid-demo.
 
 ## Cross-Reference Options
 
-Configure in YAML frontmatter:
+Configure in YAML front matter:
 
 ```yaml
 crossref:
