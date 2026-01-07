@@ -52,55 +52,18 @@ This skill provides best practices for writing Quarto documents (.qmd) and conve
 - Understanding Quarto's cell options syntax (comment symbol + `|`).
 - Setting up cross-references for figures, tables, sections, and equations.
 - Using Quarto-specific features like callouts, divs, and spans.
-- Configuring YAML frontmatter for documents and projects.
+- Configuring YAML front matter for documents and projects.
 - Finding and using Quarto extensions.
 
-#### Quick Start
+#### Maintenance
 
-##### Basic Document
+- Review skill content when new Quarto versions are released.
+- Check the [Quarto changelog](https://github.com/quarto-dev/quarto-cli/blob/main/news/) for breaking changes and new features.
+- Cross-check syntax examples against [Quarto Documentation](https://quarto.org/).
+- Update examples to reflect current best practices.
+- Remove deprecated syntax or features.
 
-```yaml
-title: "My Document"
-author: "Author Name"
-date: today
-format: html
-```
-
-##### Code Cell Options Syntax
-
-Quarto uses the language's comment symbol + `|` for cell options:
-
-- R/Python: `#|`
-- Mermaid: `%%|`
-- Graphviz/DOT: `//|`
-
-````markdown
-```{r}
-#| label: fig-example
-#| echo: false
-#| fig-cap: "Example figure."
-
-plot(1:10)
-```
-````
-
-**Important:** Quarto options use dashes, not dots (e.g., `fig-cap` not `fig.cap`).
-
-##### Cross-References
-
-````markdown
-See @fig-example for the results.
-````
-
-##### Callouts
-
-````markdown
-::: {.callout-note}
-This is a note.
-:::
-````
-
-#### Reference Documentation
+#### Skills Reference Documentation
 
 ##### Quarto Features
 
@@ -137,14 +100,6 @@ This is a note.
 - [Quarto Extensions](https://quarto.org/docs/extensions/)
 - [Quarto CLI Code](https://github.com/quarto-dev/quarto-cli)
 - [Community Extensions List](https://m.canouil.dev/quarto-extensions/)
-
-#### Maintenance
-
-- Review skill content when new Quarto versions are released.
-- Check the [Quarto changelog](https://github.com/quarto-dev/quarto-cli/blob/main/news/) for breaking changes and new features.
-- Cross-check syntax examples against [Quarto Documentation](https://quarto.org/).
-- Update examples to reflect current best practices.
-- Remove deprecated syntax or features.
 
 #### Authors
 
