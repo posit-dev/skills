@@ -122,11 +122,9 @@ Code cells are code blocks that can be executed to produce output.
 
 Quarto uses the language's comment symbol + `|` for cell options. Options use **dashes, not dots** (e.g., `fig-cap` not `fig.cap`).
 
-| Language     | Syntax |
-| ------------ | ------ |
-| R, Python    | `#|`   |
-| Mermaid      | `%%|`  |
-| Graphviz/DOT | `//|`  |
+- R, Python: `#|`
+- Mermaid: `%%|`
+- Graphviz/DOT: `//|`
 
 ````markdown
 ```{r}
@@ -165,12 +163,10 @@ Details: [references/code-cells.md](references/code-cells.md)
 
 Labels must start with a type prefix. Reference with `@`:
 
-| Type     | Prefix | Example Label         | Reference        |
-| -------- | ------ | --------------------- | ---------------- |
-| Figure   | `fig-` | `#| label: fig-plot`  | `@fig-plot`      |
-| Table    | `tbl-` | `#| label: tbl-data`  | `@tbl-data`      |
-| Section  | `sec-` | `{#sec-intro}`        | `@sec-intro`     |
-| Equation | `eq-`  | `{#eq-model}`         | `@eq-model`      |
+- Figure: `fig-` prefix, e.g., `#| label: fig-plot` → `@fig-plot`
+- Table: `tbl-` prefix, e.g., `#| label: tbl-data` → `@tbl-data`
+- Section: `sec-` prefix, e.g., `{#sec-intro}` → `@sec-intro`
+- Equation: `eq-` prefix, e.g., `{#eq-model}` → `@eq-model`
 
 Example:
 

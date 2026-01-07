@@ -318,14 +318,12 @@ crossref:
 
 ## bookdown Migration
 
-| bookdown          | Quarto                                |
-| ----------------- | ------------------------------------- |
-| `\@ref(fig:name)` | `@fig-name`                           |
-| `\@ref(tab:name)` | `@tbl-name`                           |
-| `\@ref(eq:name)`  | `@eq-name`                            |
-| `\@ref(thm:name)` | `@thm-name`                           |
-| `(#fig:name)`     | `{#fig-name}` or `#| label: fig-name` |
-| `(#tab:name)`     | `{#tbl-name}` or `#| label: tbl-name` |
+- `\@ref(fig:name)` → `@fig-name`
+- `\@ref(tab:name)` → `@tbl-name`
+- `\@ref(eq:name)` → `@eq-name`
+- `\@ref(thm:name)` → `@thm-name`
+- `(#fig:name)` → `{#fig-name}` or `#| label: fig-name`
+- `(#tab:name)` → `{#tbl-name}` or `#| label: tbl-name`
 
 Note: Quarto uses `tbl-` prefix (not `tab-`) for tables.
 
