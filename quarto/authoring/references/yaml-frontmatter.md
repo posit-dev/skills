@@ -1,6 +1,7 @@
 # YAML Front Matter
 
 YAML front matter configures document metadata, format options, and execution settings.
+It's located at the top of a document and is enclosed by `---`.
 
 ## Basic Document YAML
 
