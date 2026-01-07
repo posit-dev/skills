@@ -69,7 +69,7 @@ Task: Use divs and spans
 Use: [references/divs-and-spans.md](references/divs-and-spans.md)
 
 Task: Configure YAML front matter
-Use: [references/yaml-front matter.md](references/yaml-front matter.md)
+Use: [references/yaml-front-matter.md](references/yaml-front-matter.md)
 
 Task: Find and use extensions
 Use: [references/extensions.md](references/extensions.md)
@@ -336,7 +336,7 @@ format:
 - [references/shortcodes.md](references/shortcodes.md) - Built-in shortcodes
 - [references/conditional-content.md](references/conditional-content.md) - Format-specific content
 - [references/divs-and-spans.md](references/divs-and-spans.md) - Fenced divs, spans, raw blocks
-- [references/yaml-front matter.md](references/yaml-front matter.md) - Document and project YAML
+- [references/yaml-front-matter.md](references/yaml-front-matter.md) - Document and project YAML
 - [references/extensions.md](references/extensions.md) - Using and finding extensions
 - [references/markdown-linting.md](references/markdown-linting.md) - Markdown linting rules for Quarto
 

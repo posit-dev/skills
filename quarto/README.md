@@ -117,7 +117,7 @@ This is a note.
 | [shortcodes.md](references/shortcodes.md)                   | Built-in shortcodes                              |
 | [conditional-content.md](references/conditional-content.md) | Format-specific content                          |
 | [divs-and-spans.md](references/divs-and-spans.md)           | Fenced divs, spans, raw blocks                   |
-| [yaml-frontmatter.md](references/yaml-frontmatter.md)       | Document and project YAML                        |
+| [yaml-front-matter.md](references/yaml-front-matter.md)     | Document and project YAML                        |
 | [extensions.md](references/extensions.md)                   | Using and finding extensions                     |
 
 ##### Migration Guides
