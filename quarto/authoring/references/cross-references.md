@@ -27,6 +27,33 @@ All cross-referenceable elements require a label starting with a type prefix:
 | Important callout | `imp-` | `imp-key`        | `@imp-key`        |
 | Caution callout   | `cau-` | `cau-danger`     | `@cau-danger`     |
 
+## Recommended Syntax
+
+For consistency, prefer using div syntax for cross-referenceable elements:
+
+````markdown
+::: {#tbl-example}
+
+| Column 1 | Column 2 |
+| -------- | -------- |
+| Data     | Data     |
+
+Table caption.
+:::
+````
+
+Instead of inline caption syntax:
+
+````markdown
+| Column 1 | Column 2 |
+| -------- | -------- |
+| Data     | Data     |
+
+: Table caption. {#tbl-example}
+````
+
+Both syntaxes work, but div syntax provides a more consistent pattern across all element types (figures, tables, theorems, etc.).
+
 ## Reference Syntax
 
 Use `@` followed by the label to create a reference:
