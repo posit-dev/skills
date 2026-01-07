@@ -138,6 +138,14 @@ This is a note.
 - [Quarto CLI Code](https://github.com/quarto-dev/quarto-cli)
 - [Community Extensions List](https://m.canouil.dev/quarto-extensions/)
 
+#### Maintenance
+
+- Review skill content when new Quarto versions are released.
+- Check the [Quarto changelog](https://github.com/quarto-dev/quarto-cli/blob/main/news/) for breaking changes and new features.
+- Cross-check syntax examples against [Quarto Documentation](https://quarto.org/).
+- Update examples to reflect current best practices.
+- Remove deprecated syntax or features.
+
 #### Authors
 
 - [Mickaël CANOUIL](https://github.com/mcanouil)
