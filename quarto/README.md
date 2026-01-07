@@ -34,6 +34,8 @@ See the main [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines on adding new 
 - [brand.yml project](https://posit-dev.github.io/brand-yml/)
 - [Quarto extensions](https://quarto.org/docs/extensions/)
 
+---
+
 ## Skills
 
 ### Quarto Authoring Skill
@@ -104,31 +106,31 @@ This is a note.
 
 ##### Quarto Features
 
-| Reference                                                   | Description                                      |
-| ----------------------------------------------------------- | ------------------------------------------------ |
-| [code-cells.md](references/code-cells.md)                   | Hashpipe syntax, execution options, code display |
-| [cross-references.md](references/cross-references.md)       | Labels, prefixes, all reference types            |
-| [figures.md](references/figures.md)                         | Figures, subfigures, layouts, lightbox           |
-| [tables.md](references/tables.md)                           | Pipe tables, grid tables, styling                |
-| [citations.md](references/citations.md)                     | Bibliography, CSL, footnotes                     |
-| [callouts.md](references/callouts.md)                       | Callout types, appearance, collapsible           |
-| [diagrams.md](references/diagrams.md)                       | Mermaid, Graphviz/DOT diagrams                   |
-| [layout.md](references/layout.md)                           | Column classes, margin content                   |
-| [shortcodes.md](references/shortcodes.md)                   | Built-in shortcodes                              |
-| [conditional-content.md](references/conditional-content.md) | Format-specific content                          |
-| [divs-and-spans.md](references/divs-and-spans.md)           | Fenced divs, spans, raw blocks                   |
-| [yaml-front-matter.md](references/yaml-front-matter.md)     | Document and project YAML                        |
-| [extensions.md](references/extensions.md)                   | Using and finding extensions                     |
+| Reference                                                             | Description                                      |
+| --------------------------------------------------------------------- | ------------------------------------------------ |
+| [code-cells.md](authoring/references/code-cells.md)                   | Hashpipe syntax, execution options, code display |
+| [cross-references.md](authoring/references/cross-references.md)       | Labels, prefixes, all reference types            |
+| [figures.md](authoring/references/figures.md)                         | Figures, subfigures, layouts, lightbox           |
+| [tables.md](authoring/references/tables.md)                           | Pipe tables, grid tables, styling                |
+| [citations.md](authoring/references/citations.md)                     | Bibliography, CSL, footnotes                     |
+| [callouts.md](authoring/references/callouts.md)                       | Callout types, appearance, collapsible           |
+| [diagrams.md](authoring/references/diagrams.md)                       | Mermaid, Graphviz/DOT diagrams                   |
+| [layout.md](authoring/references/layout.md)                           | Column classes, margin content                   |
+| [shortcodes.md](authoring/references/shortcodes.md)                   | Built-in shortcodes                              |
+| [conditional-content.md](authoring/references/conditional-content.md) | Format-specific content                          |
+| [divs-and-spans.md](authoring/references/divs-and-spans.md)           | Fenced divs, spans, raw blocks                   |
+| [yaml-front-matter.md](authoring/references/yaml-front-matter.md)     | Document and project YAML                        |
+| [extensions.md](authoring/references/extensions.md)                   | Using and finding extensions                     |
 
 ##### Migration Guides
 
-| Reference                                                     | Description                |
-| ------------------------------------------------------------- | -------------------------- |
-| [conversion-rmarkdown.md](references/conversion-rmarkdown.md) | R Markdown to Quarto       |
-| [conversion-bookdown.md](references/conversion-bookdown.md)   | bookdown to Quarto         |
-| [conversion-xaringan.md](references/conversion-xaringan.md)   | xaringan to RevealJS       |
-| [conversion-distill.md](references/conversion-distill.md)     | distill to Quarto          |
-| [conversion-blogdown.md](references/conversion-blogdown.md)   | blogdown to Quarto website |
+| Reference                                                               | Description                |
+| ----------------------------------------------------------------------- | -------------------------- |
+| [conversion-rmarkdown.md](authoring/references/conversion-rmarkdown.md) | R Markdown to Quarto       |
+| [conversion-bookdown.md](authoring/references/conversion-bookdown.md)   | bookdown to Quarto         |
+| [conversion-xaringan.md](authoring/references/conversion-xaringan.md)   | xaringan to RevealJS       |
+| [conversion-distill.md](authoring/references/conversion-distill.md)     | distill to Quarto          |
+| [conversion-blogdown.md](authoring/references/conversion-blogdown.md)   | blogdown to Quarto website |
 
 #### External Resources
 
