@@ -31,11 +31,14 @@ Use colons to specify alignment:
 ### With Caption
 
 ````markdown
+::: {#tbl-example}
+
 | Column 1 | Column 2 |
 | -------- | -------- |
 | Data     | Data     |
 
-: Table caption {#tbl-example}
+Table caption.
+:::
 ````
 
 Reference with `@tbl-example`.
@@ -348,17 +351,23 @@ Multiple tables with shared caption:
 ````markdown
 ::: {#tbl-panel layout-ncol=2}
 
+::: {#tbl-first}
+
 | A   | B   |
 | --- | --- |
 | 1   | 2   |
 
-: First {#tbl-first}
+First.
+:::
+
+::: {#tbl-second}
 
 | C   | D   |
 | --- | --- |
 | 3   | 4   |
 
-: Second {#tbl-second}
+Second.
+:::
 
 Combined tables.
 :::
@@ -387,11 +396,14 @@ knitr::kable(detail_df)
 Add Bootstrap classes for styling:
 
 ````markdown
+::: {#tbl-styled .striped .hover}
+
 | A   | B   |
 | --- | --- |
 | 1   | 2   |
 
-: Styled table {.striped .hover}
+Styled table.
+:::
 ````
 
 Available classes:
@@ -408,11 +420,14 @@ Available classes:
 ### Combining Classes
 
 ````markdown
+::: {#tbl-combined .striped .hover .bordered}
+
 | A   | B   |
 | --- | --- |
 | 1   | 2   |
 
-: Table {.striped .hover .bordered}
+Table caption.
+:::
 ````
 
 ### Disable Striping for Code Tables
@@ -512,11 +527,14 @@ knitr::kable(long_data, longtable = TRUE)
 Tables are referenced with `tbl-` prefix:
 
 ````markdown
+::: {#tbl-summary}
+
 | Data |
 | ---- |
 | 1    |
 
-: Summary {#tbl-summary}
+Summary.
+:::
 
 See @tbl-summary for details.
 ````

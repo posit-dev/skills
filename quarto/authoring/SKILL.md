@@ -243,11 +243,14 @@ Details: [references/figures.md](references/figures.md)
 Pipe table with caption:
 
 ````markdown
+::: {#tbl-example}
+
 | Column 1 | Column 2 |
 | -------- | -------- |
 | Data 1   | Data 2   |
 
-: Table caption {#tbl-example}
+Table caption.
+:::
 ````
 
 Details: [references/tables.md](references/tables.md)

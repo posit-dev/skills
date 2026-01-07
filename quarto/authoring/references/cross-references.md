@@ -146,11 +146,14 @@ Reference: `See @tbl-summary.`
 ### Markdown Tables
 
 ````markdown
+::: {#tbl-data}
+
 | Col 1 | Col 2 |
 | ----- | ----- |
 | A     | B     |
 
-: Summary data {#tbl-data}
+Summary data.
+:::
 
 See @tbl-data for details.
 ````
@@ -160,17 +163,23 @@ See @tbl-data for details.
 ````markdown
 ::: {#tbl-panel layout-ncol=2}
 
+::: {#tbl-first}
+
 | Col A |
 | ----- |
 | 1     |
 
-: First table {#tbl-first}
+First table.
+:::
+
+::: {#tbl-second}
 
 | Col B |
 | ----- |
 | 2     |
 
-: Second table {#tbl-second}
+Second table.
+:::
 
 Combined tables.
 :::
