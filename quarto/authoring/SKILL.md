@@ -113,6 +113,8 @@ Spans use bracketed syntax:
 This is [important text]{.highlight}.
 ````
 
+Details: [references/divs-and-spans.md](references/divs-and-spans.md)
+
 ### Code Cell Options Syntax
 
 A code cell starts with triple backticks and a language identifier between curly braces.
@@ -157,6 +159,8 @@ execute:
   warning: false
 ```
 
+Details: [references/code-cells.md](references/code-cells.md)
+
 ### Cross-References
 
 Labels must start with a type prefix. Reference with `@`:
@@ -190,6 +194,8 @@ plot(1)
 See @fig-plot for the results.
 ````
 
+Details: [references/cross-references.md](references/cross-references.md)
+
 ### Callout Blocks
 
 Five types: `note`, `warning`, `important`, `tip`, `caution`.
@@ -207,6 +213,8 @@ This is a warning with a custom title.
 
 :::
 ````
+
+Details: [references/callouts.md](references/callouts.md)
 
 ### Figures
 
@@ -228,6 +236,8 @@ Main caption for the group.
 :::
 ````
 
+Details: [references/figures.md](references/figures.md)
+
 ### Tables
 
 Pipe table with caption:
@@ -239,6 +249,8 @@ Pipe table with caption:
 
 : Table caption {#tbl-example}
 ````
+
+Details: [references/tables.md](references/tables.md)
 
 ### Citations
 
@@ -256,6 +268,8 @@ Configure in YAML:
 bibliography: references.bib
 csl: apa.csl
 ```
+
+Details: [references/citations.md](references/citations.md)
 
 ## Common Workflows
 
