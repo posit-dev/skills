@@ -23,7 +23,7 @@ Work through these items systematically:
 
 1. **Create NEWS.md**: Run `usethis::use_news_md()` if not already present
 2. **Create cran-comments.md**: Run `usethis::use_cran_comments()` if not already present
-3. **Update install instructions**: Review README for aspirational install instructions (usually `install.packages("pkgname")`)
+3. **Update README**: Review README for aspirational install instructions (usually `install.packages("pkgname")`). If using README.Rmd, run `devtools::build_readme()` to re-render README.md
 4. **Proofread DESCRIPTION**: Carefully review `Title:` and `Description:` fields (see detailed guidance below)
 5. **Check function documentation**: Verify all exported functions have `@return` and `@examples` (see detailed guidance below)
 6. **Verify copyright holder**: Check that `Authors@R:` includes a copyright holder with role `[cph]`
@@ -274,6 +274,17 @@ urlchecker::url_check()
 urlchecker::url_update()
 ```
 
+**Ignore URLs That Will Exist After Publication**
+
+Some URLs that don't currently resolve will exist once the package is published on CRAN. These should NOT be changed:
+
+- CRAN badge URLs (e.g., `https://cran.r-project.org/package=pkgname`)
+- CRAN status badges (e.g., `https://www.r-pkg.org/badges/version/pkgname`)
+- CRAN check results (e.g., `https://cranchecks.info/badges/pkgname`)
+- Package documentation URLs on r-universe or pkgdown sites that deploy after release
+
+When `urlchecker::url_check()` flags these URLs, leave them as-is. They are aspirational URLs that will work once the package is on CRAN.
+
 **Check for Invalid File URIs**
 
 Relative links in README must exist after package build. Common issue:
@@ -378,6 +389,7 @@ Work through these files systematically:
 
 - **DESCRIPTION**: Title, Description, Authors@R, URLs, License year
 - **R/*.R**: Function documentation (`@return`, `@examples`, `@examplesIf`, `@noRd`)
+- **README.Rmd** (if exists): Update content, then run `devtools::build_readme()`
 - **README.md**: Install instructions, relative links, URLs
 - **cran-comments.md**: Preemptive notes for reviewers
 - **NEWS.md**: Version notes for this release
@@ -430,6 +442,7 @@ calc_total <- function(x) sum(x)
 - `urlchecker::url_update()` - Fix redirecting URLs
 - `usethis::use_news_md()` - Create NEWS.md
 - `usethis::use_cran_comments()` - Create cran-comments.md
+- `devtools::build_readme()` - Re-render README.md from README.Rmd
 - `usethis::use_code_of_conduct()` - Add CoC without relative links
 - `usethis::use_build_ignore()` - Ignore files in R package build
 - `usethis::use_package()` - Add a package dependency to DESCRIPTION
