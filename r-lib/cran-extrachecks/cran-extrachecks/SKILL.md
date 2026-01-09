@@ -11,12 +11,11 @@ Help R package developers prepare packages for CRAN submission by systematically
 ## Workflow
 
 1. **Initial Assessment**: Ask user if this is first submission or resubmission
-2. **Check for README.Rmd**: If README.Rmd exists, ONLY edit README.Rmd (never README.md directly)
-3. **Run Standard Checklist**: Work through each item systematically (see below)
-4. **Identify Issues**: As you review files, note specific problems
-5. **Propose Fixes**: Suggest specific changes for each issue found
-6. **Implement Changes**: Make edits only when user approves
-7. **Verify**: Confirm all changes are complete
+2. **Run Standard Checklist**: Work through each item systematically (see below)
+3. **Identify Issues**: As you review files, note specific problems
+4. **Propose Fixes**: Suggest specific changes for each issue found
+5. **Implement Changes**: Make edits only when user approves
+6. **Verify**: Confirm all changes are complete
 
 ## Standard CRAN Preparation Checklist
 
@@ -24,7 +23,11 @@ Work through these items systematically:
 
 1. **Create NEWS.md**: Run `usethis::use_news_md()` if not already present
 2. **Create cran-comments.md**: Run `usethis::use_cran_comments()` if not already present
-3. **Update README**: Review README for aspirational install instructions (usually `install.packages("pkgname")`). **Important**: If README.Rmd exists, edit ONLY README.Rmd (README.md will be overwritten), then run `devtools::build_readme()` to re-render README.md
+3. **Review README**:
+   - Ensure it includes install instructions that will be valid when the package is accepted to CRAN (usually `install.packages("pkgname")`).
+   - Check that it does not contain relative links. This works on GitHub but will be flagged by CRAN. Use full URLs to package documentation or remove the links.
+   - Does the README clearly explain the package purpose and functionality?
+   - **Important**: If README.Rmd exists, edit ONLY README.Rmd (README.md will be overwritten), then run `devtools::build_readme()` to re-render README.md
 4. **Proofread DESCRIPTION**: Carefully review `Title:` and `Description:` fields (see detailed guidance below)
 5. **Check function documentation**: Verify all exported functions have `@return` and `@examples` (see detailed guidance below)
 6. **Verify copyright holder**: Check that `Authors@R:` includes a copyright holder with role `[cph]`
