@@ -43,10 +43,11 @@ category-name/
     ├── scripts/              # Optional: Helper scripts
     │   ├── helper.sh
     │   └── use_package.R
-    ├── templates/            # Optional: Document templates
-    │   └── template.md
-    └── README.md             # Optional but recommended: User documentation
+    └── templates/            # Optional: Document templates
+        └── template.md
 ```
+
+**Note**: Do NOT create a README.md within individual skill directories. Documentation about skill organization, design principles, or resources should go in the skill category's README.md (e.g., `open-source/README.md`).
 
 Runnable R scripts should start with a shebang line, include internal usage documentation, use minimal package dependencies, and error if required packages are missing.
 
@@ -142,7 +143,7 @@ See `references/formatting-guide.md` for detailed formatting requirements.
 
 - **Focus on real use cases**: Base your skill on actual needs, not hypothetical scenarios
 - **Keep it focused**: One skill should do one thing well. If you find yourself adding many unrelated features, consider splitting into multiple skills
-- **Provide comprehensive documentation**: Include both Claude-facing instructions (SKILL.md) and user-facing documentation (README.md)
+- **Provide comprehensive documentation**: Write clear Claude-facing instructions in SKILL.md. Optionally document organization, design principles, or resources in your skill group's README.md (e.g., `{category-name}/README.md`)
 - **Test across platforms**: Verify your skill works in Claude.ai, Claude Code, and via API
 - **Use clear naming**: Skill names should be descriptive and use kebab-case
 - **Document dependencies**: If your skill requires specific tools or packages, document them clearly
@@ -231,18 +232,28 @@ Skills are organized by category plugins. Find the plugin that matches your skil
 }
 ```
 
-### 5. Add a Category README (if new category)
+### 5. Update the Skill Category README (Optional)
 
-If you're adding a new category directory, include a README.md:
+You may optionally document your skill in the skill category's README.md (e.g., `open-source/README.md`, `r-lib/README.md`). This is where you can add:
+
+- Notes about your skill's organization or structure
+- Design principles and architectural decisions
+- Resources, references, or related documentation used
+
+Not every skill needs to be listed or documented in the group README. Use this space when you have important context to share with future contributors or users.
+
+If you're adding a **new category directory**, create a README.md with this structure:
 
 ```markdown
 # Category Name Skills
 
 Brief description of what skills in this category do.
 
-## Available Skills
+## Skills
 
-- **[skill-name](./skill-name/)** - Brief description
+Brief notes about individual skills (optional - only document when needed):
+
+- **[skill-name](./skill-name/)** - Organization notes, design principles, or key resources
 
 ## Common Use Cases
 

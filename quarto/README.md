@@ -8,8 +8,27 @@ This category contains skills that help with creating, styling, and publishing Q
 
 ## Available Skills
 
-- **[authoring](#quarto-authoring-skill)** - Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions.
-- **[brand-yml](../brand-yml/)** - Create and apply brand.yml files for consistent styling across Quarto projects. Supports HTML documents, dashboards, RevealJS presentations, Typst PDFs, websites, and more with automatic brand discovery and theme layering.
+### `authoring`
+
+Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions. See [detailed documentation below](#quarto-authoring-skill).
+
+### `brand-yml`
+
+Create and use `_brand.yml` files for consistent branding across Quarto documents and Shiny applications. Use when working with brand styling, corporate identity, colors, fonts, or logos in Quarto projects.
+
+**Organization**: Main skill file includes workflows and decision tree. Reference files provide framework-specific integration guides:
+- `brand-yml-spec.md` - Complete brand.yml specification
+- `shiny-r.md` - Shiny for R integration with bslib
+- `shiny-python.md` - Shiny for Python integration with ui.Theme
+- `quarto.md` - Quarto integration for all formats (HTML, dashboards, RevealJS presentations, Typst PDFs, websites)
+
+**Note**: This skill is also registered in the shiny category since brand.yml works across both Shiny and Quarto projects.
+
+**Resources**:
+- [brand.yml project](https://posit-dev.github.io/brand-yml/)
+- [Quarto brand.yml docs](https://quarto.org/docs/authoring/brand.html)
+- [Shiny for R brand.yml guide](https://rstudio.github.io/bslib/articles/brand-yml/)
+- [Shiny for Python brand.yml docs](https://shiny.posit.co/py/api/core/ui.Theme.html#shiny.ui.Theme.from_brand)
 
 ## Potential Skills
 
