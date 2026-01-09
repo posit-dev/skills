@@ -1,5 +1,5 @@
 ---
-name: quarto/authoring
+name: quarto-authoring
 description: >
   Comprehensive guidance for Quarto document authoring and R Markdown migration.
   Use this skill when: (1) Writing new Quarto documents (.qmd) with best practices,
@@ -81,7 +81,7 @@ Use: [references/markdown-linting.md](references/markdown-linting.md)
 
 ### Basic Document Structure
 
-````markdown
+```markdown
 ---
 title: "Document Title"
 author: "Author Name"
@@ -90,7 +90,7 @@ format: html
 ---
 
 Content goes here.
-````
+```
 
 A Quarto document consists of two main parts:
 
@@ -101,17 +101,17 @@ A Quarto document consists of two main parts:
 
 Divs use fenced syntax with three colons:
 
-````markdown
+```markdown
 ::: {.class-name}
 Content inside the div.
 :::
-````
+```
 
 Spans use bracketed syntax:
 
-````markdown
+```markdown
 This is [important text]{.highlight}.
-````
+```
 
 Details: [references/divs-and-spans.md](references/divs-and-spans.md)
 
@@ -170,7 +170,7 @@ Labels must start with a type prefix. Reference with `@`:
 
 Example:
 
-````markdown
+```markdown
 ::: {#fig-plot}
 A plot.
 
@@ -178,7 +178,7 @@ A caption for the plot.
 :::
 
 See @fig-plot for the results.
-````
+```
 
 ````markdown
 ```{r}
@@ -196,7 +196,7 @@ Details: [references/cross-references.md](references/cross-references.md)
 
 Five types: `note`, `warning`, `important`, `tip`, `caution`.
 
-````markdown
+```markdown
 ::: {.callout-note}
 This is a note callout.
 :::
@@ -208,7 +208,7 @@ This is a note callout.
 This is a warning with a custom title.
 
 :::
-````
+```
 
 Details: [references/callouts.md](references/callouts.md)
 
@@ -216,13 +216,13 @@ Details: [references/callouts.md](references/callouts.md)
 
 Basic figure with caption:
 
-````markdown
+```markdown
 ![Caption text](image.png){#fig-name fig-alt="Alt text"}
-````
+```
 
 Subfigures:
 
-````markdown
+```markdown
 ::: {#fig-group layout-ncol=2}
 ![Sub caption 1](image1.png){#fig-sub1}
 
@@ -230,7 +230,7 @@ Subfigures:
 
 Main caption for the group.
 :::
-````
+```
 
 Details: [references/figures.md](references/figures.md)
 
@@ -238,7 +238,7 @@ Details: [references/figures.md](references/figures.md)
 
 Pipe table with caption:
 
-````markdown
+```markdown
 ::: {#tbl-example}
 
 | Column 1 | Column 2 |
@@ -247,7 +247,7 @@ Pipe table with caption:
 
 Table caption.
 :::
-````
+```
 
 Details: [references/tables.md](references/tables.md)
 
@@ -255,11 +255,11 @@ Details: [references/tables.md](references/tables.md)
 
 Basic syntax:
 
-````markdown
+```markdown
 According to @smith2020, the results show...
 Multiple citations [@smith2020; @jones2021].
 Parenthetical only [-@smith2020].
-````
+```
 
 Configure in YAML:
 
@@ -297,7 +297,7 @@ format:
 
 ### Creating a RevealJS Presentation
 
-````markdown
+```markdown
 ---
 title: "My Presentation"
 format: revealjs
@@ -310,7 +310,7 @@ Content here.
 ## Second Slide
 
 More content.
-````
+```
 
 ### Setting Up a Quarto Project
 

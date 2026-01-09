@@ -29,6 +29,7 @@ Skills for Shiny app development in both R and Python.
 Skills for Quarto document creation and publishing.
 
 - **[brand-yml](./brand-yml/)** - Create and apply brand.yml files for consistent styling across Quarto projects, supporting HTML documents, dashboards, RevealJS presentations, Typst PDFs, and websites with automatic brand discovery and theme layering
+- **[authoring](quarto/README.md#quarto-authoring-skill)** - Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions
 
 ## Installation
 
@@ -62,12 +63,14 @@ Each command installs all skills in that category.
 For customization or offline use:
 
 1. Clone this repository:
+
    ```bash
    git clone https://github.com/posit-dev/skills.git
    cd skills
    ```
 
 2. Copy individual skills to your Claude Code skills directory:
+
    ```bash
    cp -r open-source/release-post ~/.config/claude-code/skills/
    ```
@@ -105,12 +108,12 @@ Claude will use the skill's knowledge to guide you through creating a properly f
 
 This repository organizes skills into categories to make it easier to find and install skills relevant to your work:
 
-| Category | Description |
-|----------|-------------|
+| Category        | Description                                             |
+| --------------- | ------------------------------------------------------- |
 | **open-source** | General open-source package development and maintenance |
-| **r-lib** | R package development with the r-lib ecosystem |
-| **shiny** | Shiny app development and deployment (R and Python) |
-| **quarto** | Quarto document creation and publishing |
+| **r-lib**       | R package development with the r-lib ecosystem          |
+| **shiny**       | Shiny app development and deployment (R and Python)     |
+| **quarto**      | Quarto document creation and publishing                 |
 
 <!-- Future category ideas
 
