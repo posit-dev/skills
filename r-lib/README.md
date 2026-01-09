@@ -20,6 +20,27 @@ Best practices for writing R package tests using testthat version 3+. Use when w
 - [testthat 3.3.0 release notes](https://tidyverse.org/blog/2025/11/testthat-3-3-0/)
 - testthat package documentation
 
+### `cli`
+
+Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication. Use when formatting console output with inline markup, displaying errors/warnings/messages with `cli_abort()`/`cli_warn()`/`cli_inform()`, showing progress indicators, creating semantic CLI elements, applying themes, handling pluralization, or working with ANSI strings and hyperlinks.
+
+**Organization**: Uses progressive disclosure with reference files. Core workflows and inline markup patterns load from SKILL.md, while specialized topics (progress indicators, theming, advanced features, pluralization) load only when needed from the `references/` directory.
+
+**Resources**: This skill synthesizes guidance from:
+- [cli package documentation](https://cli.r-lib.org/)
+- cli vignettes and function reference
+
+### `cran-extrachecks`
+
+Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`. Use when preparing a package for first CRAN release, preparing updates for resubmission, reviewing packages for CRAN compliance, or responding to CRAN reviewer feedback.
+
+**Organization**: Single comprehensive SKILL.md file combining standard checklist with detailed guidance. Covers documentation requirements (`@return`, `@examples`), DESCRIPTION field standards (Title/Description formatting, quoting conventions), URL validation, suggested package handling, and administrative requirements (copyright holder, LICENSE year).
+
+**Resources**: This skill synthesizes guidance from:
+- [DavisVaughan/extrachecks](https://github.com/DavisVaughan/extrachecks)
+- `usethis::use_release_issue()` checklist
+- Common CRAN rejection reasons
+
 ## Potential Skills
 
 This category could include skills for:
