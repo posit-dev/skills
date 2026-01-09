@@ -368,8 +368,8 @@ Authors@R: c(
 Update LICENSE year to current submission year:
 
 ```r
-# If working on package in 2023, submitting in 2024
-# Update: 2023 → 2024
+# If LICENSE shows 2024 but submitting in 2026
+# Update: 2024 → 2026
 ```
 
 **Method References**
@@ -451,3 +451,47 @@ calc_total <- function(x) sum(x)
 - `usethis::use_build_ignore()` - Ignore files in R package build
 - `usethis::use_package()` - Add a package dependency to DESCRIPTION
 - `usethis::use_tidy_description()` - Tidy up DESCRIPTION formatting
+
+## Final Verification Checklist
+
+Use this checklist to ensure nothing is missed before submission:
+
+### Files and Structure
+- [ ] `NEWS.md` exists and documents changes for this version
+- [ ] `cran-comments.md` exists with submission notes
+- [ ] If README.Rmd exists, it was edited (not README.md) and `devtools::build_readme()` was run
+- [ ] README includes valid install instructions (`install.packages("pkgname")`)
+- [ ] README has no relative links (all links are full URLs or removed)
+
+### DESCRIPTION File
+- [ ] `Title:` uses title case
+- [ ] `Title:` has no redundant phrases ("A Toolkit for", "Tools for", "for R")
+- [ ] `Title:` quotes all software/package names in single quotes
+- [ ] `Title:` is under 65 characters
+- [ ] `Description:` does NOT start with "This package", package name, or "Functions for"
+- [ ] `Description:` is 3-4 sentences explaining purpose and utility
+- [ ] `Description:` quotes software/package/API names (including 'R') but NOT function names
+- [ ] `Description:` expands all acronyms on first mention
+- [ ] `Description:` uses double quotes only for publication titles
+- [ ] `Authors@R:` includes copyright holder with `[cph]` role
+- [ ] For Posit packages: Includes `person("Posit Software, PBC", role = c("cph", "fnd"), comment = c(ROR = "03wc8by49"))`
+- [ ] LICENSE year matches current submission year
+
+### Function Documentation
+- [ ] All exported functions have `@return` documentation
+- [ ] All exported functions with meaningful returns have `@examples`
+- [ ] No example sections use commented-out code
+- [ ] Examples avoid `\dontrun{}` unless truly necessary
+- [ ] Examples requiring suggested packages use `@examplesIf` or `if` guards
+- [ ] Un-exported functions with examples use `:::` notation or `@noRd`
+
+### URLs and Links
+- [ ] `urlchecker::url_check()` was run
+- [ ] All URLs use https protocol (no http links)
+- [ ] No redirecting URLs (except aspirational CRAN badge URLs)
+- [ ] Aspirational URLs (CRAN badges, etc.) are left as-is
+- [ ] No relative links in README that reference `.Rbuildignore` files
+
+### Optional but Recommended
+- [ ] If concerns about method references, added preemptive note to `cran-comments.md`
+- [ ] Reviewed bundled file licensing if including third-party files
