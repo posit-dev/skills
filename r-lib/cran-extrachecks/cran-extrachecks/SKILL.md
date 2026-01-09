@@ -335,6 +335,19 @@ Always add `[cph]` role to Authors field, even if you're the only author:
 Authors@R: person("John", "Doe", role = c("aut", "cre", "cph"))
 ```
 
+**Posit-Supported Packages**
+
+For packages in Posit-related GitHub organizations (posit-dev, rstudio, r-lib, tidyverse, tidymodels) or maintained by someone with a @posit.co email address, include Posit Software, PBC as copyright holder and funder:
+
+```r
+Authors@R: c(
+  person("Jane", "Doe", role = c("aut", "cre"),
+         email = "jane.doe@posit.co"),
+  person("Posit Software, PBC", role = c("cph", "fnd"),
+         comment = c(ROR = "03wc8by49"))
+)
+```
+
 **LICENSE Year**
 
 Update LICENSE year to current submission year:
@@ -420,3 +433,4 @@ calc_total <- function(x) sum(x)
 - `usethis::use_code_of_conduct()` - Add CoC without relative links
 - `usethis::use_build_ignore()` - Ignore files in R package build
 - `usethis::use_package()` - Add a package dependency to DESCRIPTION
+- `usethis::use_tidy_description()` - Tidy up DESCRIPTION formatting
