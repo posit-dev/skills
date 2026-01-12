@@ -41,6 +41,17 @@ Prepare R packages for CRAN submission by checking for common ad-hoc requirement
 - `usethis::use_release_issue()` checklist
 - Common CRAN rejection reasons
 
+### `lifecycle`
+
+Guidance for managing R package lifecycle according to tidyverse principles using the lifecycle package. Use when setting up lifecycle infrastructure in a package, deprecating functions or arguments, renaming functions/arguments, superseding functions, or marking functions as experimental.
+
+**Organization**: Progressive disclosure with reference files. Core workflows and practical patterns load from SKILL.md, while detailed stage definitions and transitions load from `references/` when needed.
+
+**Resources**: This skill synthesizes guidance from:
+- [lifecycle package documentation](https://lifecycle.r-lib.org/)
+- lifecycle vignettes: "Stages", "Communicate", and "Manage"
+- [R Packages: Lifecycle](https://r-pkgs.org/lifecycle.html)
+
 ## Potential Skills
 
 This category could include skills for:

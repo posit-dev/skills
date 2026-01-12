@@ -19,6 +19,7 @@ R package development skills for working with the r-lib ecosystem and modern R p
 - **[testing-r-packages](./r-lib/testing-r-packages/)** - Best practices for writing R package tests using testthat 3+, including test structure, expectations, fixtures, snapshots, mocking, and BDD-style testing
 - **[cli](./r-lib/cli/)** - Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication with inline markup, progress indicators, and theming
 - **[cran-extrachecks](./r-lib/cran-extrachecks/)** - Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`, including documentation standards, DESCRIPTION field formatting, and URL validation
+- **[lifecycle](./r-lib/lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
 
 ### Shiny
 
