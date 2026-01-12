@@ -45,7 +45,7 @@ Prepare R packages for CRAN submission by checking for common ad-hoc requirement
 
 Guidance for managing R package lifecycle according to tidyverse principles using the lifecycle package. Use when setting up lifecycle infrastructure in a package, deprecating functions or arguments, renaming functions/arguments, superseding functions, or marking functions as experimental.
 
-**Organization**: Progressive disclosure with reference files. Core workflows and practical patterns load from SKILL.md, while detailed stage definitions and transitions load from `references/` when needed.
+**Organization**: The `SKILL.md` file provides step-by-step instructions for common lifecycle management tasks, while the `references/` directory includes detailed reference materials on lifecycle stages.
 
 **Resources**: This skill synthesizes guidance from:
 - [lifecycle package documentation](https://lifecycle.r-lib.org/)
