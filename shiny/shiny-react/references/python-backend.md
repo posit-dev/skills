@@ -365,3 +365,43 @@ JsonifiableIn = Union[
 ```
 
 Use these types for better IDE support when working with message data.
+
+## Python-Specific Gotchas
+
+### Object Identity vs Equality
+
+Python Shiny uses **object identity** (not equality) to determine if a reactive value changed. Mutating an object in place won't trigger updates:
+
+```python
+# WRONG - same object identity, no reactivity triggered
+@reactive.effect
+def update_list():
+    current = items.get()
+    current.append(new_item)  # Mutates in place
+    items.set(current)  # Same object - no update!
+
+# CORRECT - create new object with new identity
+@reactive.effect
+def update_list():
+    current = items.get()
+    new_list = current[:]  # Copy creates new identity
+    new_list.append(new_item)
+    items.set(new_list)  # New object - triggers update
+```
+
+For dicts, use `dict(current)` or `{**current, "key": value}`. For lists, use `list(current)` or `current[:]`.
+
+### Preventing Dependency Loops
+
+Use `@reactive.event` to explicitly declare triggers, or `reactive.isolate()` to read values without creating dependencies:
+
+```python
+# Only runs when submit button clicked, not when count changes
+@reactive.effect
+@reactive.event(input.submit)
+def handle_submit():
+    # Read count without creating dependency
+    with reactive.isolate():
+        current_count = count.get()
+    # Process...
+```

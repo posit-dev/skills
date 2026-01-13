@@ -90,6 +90,34 @@ def server(input: Inputs, output: Outputs, session: Session):
 app = App(page_react(title="My App"), server)
 ```
 
+## Writing React Components for Shiny
+
+When writing React components that communicate with Shiny:
+
+1. **Use `useShinyInput` for any value that needs to reach the server** - This replaces direct state when the server needs to react to changes.
+
+2. **Use `useShinyOutput` for any data coming from the server** - Always handle the `undefined` initial state and the `recalculating` boolean for loading states.
+
+3. **Match IDs exactly** - The string ID in `useShinyInput("foo", ...)` must match `input$foo` (R) or `input.foo()` (Python) exactly.
+
+4. **Choose appropriate debounce values**:
+   - Text inputs: 100-300ms (default is 100ms)
+   - Sliders/continuous: 50-100ms
+   - Buttons: Use `priority: "event"` with no debounce
+   - Expensive server operations: 500ms+
+
+5. **Button clicks need event priority** to ensure each click triggers the server:
+   ```typescript
+   const [clicks, setClicks] = useShinyInput<number>("btn", 0, { priority: "event" });
+   <button onClick={() => setClicks(clicks + 1)}>Click</button>
+   ```
+
+6. **Handle loading states** - The second return value from `useShinyOutput` indicates recalculation:
+   ```typescript
+   const [data, isLoading] = useShinyOutput<Data>("result", undefined);
+   if (isLoading) return <Spinner />;
+   ```
+
 ## Decision Tree
 
 1. **New app from scratch?** → Use `npx create-shiny-react-app`
@@ -226,7 +254,7 @@ The [shiny-react repository](https://github.com/wch/shiny-react) includes exampl
 | `6-dashboard` | Full analytics dashboard with charts and tables |
 | `7-chat` | AI chat app with streaming responses |
 
-Each example includes complete R and Python backends. View live demos at the [Shinylive links](https://wch.github.io/shiny-react/).
+Each example includes complete R and Python backends.
 
 ### Utility Files (shinyreact.R / shinyreact.py)
 
@@ -243,3 +271,22 @@ The utilities are documented in `references/r-backend.md` and `references/python
 **TypeScript errors**: Install types: `npm install -D @types/react @types/react-dom`
 
 **Build output location**: esbuild outputs to `r/www/` or `py/www/` - ensure paths match in package.json scripts.
+
+**Python: Mutable objects not triggering updates**: Python Shiny uses object identity (not equality) for reactivity. Copy mutable objects before modifying:
+```python
+# Wrong - same object identity, no update triggered
+items.append(new_item)
+reactive_value.set(items)
+
+# Correct - new object identity triggers update
+new_items = items[:]  # or list(items)
+new_items.append(new_item)
+reactive_value.set(new_items)
+```
+
+## Anti-Patterns to Avoid
+
+- **Don't mix `useState` and `useShinyInput` for the same value** - Use `useShinyInput` if the server needs the value, `useState` for local-only UI state.
+- **Don't create circular dependencies** - Avoid patterns where an output triggers an input that triggers the same output.
+- **Don't forget loading states** - Always handle `recalculating` from `useShinyOutput` to show users when data is stale.
+- **Don't use `useShinyInput` for high-frequency updates without debouncing** - Mouse movements, scroll positions, etc. should have high debounce values or be kept local.
