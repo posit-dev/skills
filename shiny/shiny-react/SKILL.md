@@ -258,7 +258,11 @@ Each example includes complete R and Python backends.
 
 ### Utility Files (shinyreact.R / shinyreact.py)
 
-Each shiny-react app requires utility files that provide `page_react()`, `render_json()`, and `post_message()`. These are **not installed as packages** - copy them from any example's `r/` or `py/` directory into your project.
+Each shiny-react app requires utility files that provide `page_react()`, `render_json()`, and `post_message()`. These are **not installed as packages** - copy them, or just the functions that you need, into your project or package.
+
+**Ready-to-use utility files are included in this skill:**
+- `assets/shinyreact.R` - For R apps or packages
+- `assets/shinyreact.py` - For Python apps or packages
 
 The utilities are documented in `references/r-backend.md` and `references/python-backend.md`.
 
