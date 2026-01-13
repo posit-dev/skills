@@ -26,6 +26,29 @@ Create and use `_brand.yml` files for consistent branding across Shiny applicati
 - [Shiny for Python brand.yml docs](https://shiny.posit.co/py/api/core/ui.Theme.html#shiny.ui.Theme.from_brand)
 - [Quarto brand.yml docs](https://quarto.org/docs/authoring/brand.html)
 
+### `shiny-react`
+
+Build Shiny applications with React frontends using the `@posit/shiny-react` library. Use when creating modern, component-based UIs with React while leveraging Shiny's reactive backend (R or Python).
+
+**Organization**: Main skill file covers quick start and essential patterns. Reference files provide deep dives:
+- `typescript-api.md` - Complete TypeScript API for hooks and components
+- `r-backend.md` - R Shiny backend patterns with render_json and post_message
+- `python-backend.md` - Python Shiny backend patterns
+- `shadcn-setup.md` - shadcn/ui and Tailwind CSS integration guide
+- `internals.md` - How shiny-react works under the hood (registries, bindings)
+
+**Key Features**:
+- `useShinyInput` / `useShinyOutput` hooks for bidirectional communication
+- `useShinyMessageHandler` for server-to-client messages
+- `ImageOutput` component for Shiny plots
+- shadcn/ui integration with Tailwind CSS
+- Support for both R and Python Shiny backends
+
+**Resources**:
+- [shiny-react GitHub](https://github.com/wch/shiny-react)
+- [create-shiny-react-app](https://www.npmjs.com/package/create-shiny-react-app)
+- [shadcn/ui](https://ui.shadcn.com/)
+
 ## Potential Skills
 
 This category could include skills for:

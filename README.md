@@ -26,6 +26,7 @@ R package development skills for working with the r-lib ecosystem and modern R p
 Skills for Shiny app development in both R and Python.
 
 - **[brand-yml](./brand-yml/)** - Create and apply brand.yml files for consistent styling across Shiny apps, with support for bslib (R) and ui.Theme (Python), including automatic brand discovery and theming functions for plots and tables
+- **[shiny-react](./shiny/shiny-react/)** - Build Shiny applications with React frontends using the @posit/shiny-react library, with hooks for bidirectional communication (useShinyInput, useShinyOutput), shadcn/ui integration, and support for both R and Python backends
 
 ### Quarto
 
