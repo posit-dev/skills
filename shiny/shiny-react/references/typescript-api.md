@@ -9,6 +9,7 @@ Complete API reference for `@posit/shiny-react` hooks and components.
 - [useShinyMessageHandler](#useshinymessagehandler)
 - [useShinyInitialized](#useshinyinitialized)
 - [ImageOutput Component](#imageoutput-component)
+- [ShinyReactComponentElement](#shinyreactcomponentelement)
 
 ## useShinyInput
 
@@ -260,4 +261,138 @@ def myplot():
     fig, ax = plt.subplots()
     ax.scatter(data['x'], data['y'])
     return fig
+```
+
+## ShinyReactComponentElement
+
+Base class for creating custom web elements that render React components with automatic Shiny integration.
+
+```typescript
+class ShinyReactComponentElement extends HTMLElement {
+  // Set on subclass to define the React component to render
+  static component: React.ComponentType<Record<string, unknown>> | null;
+
+  // Protected properties
+  protected root: Root | null;
+  protected slotContents: Map<string, Node[]>;
+
+  // Protected methods
+  protected getConfig(): Record<string, unknown>;
+  protected captureSlots(selector?: string): Map<string, Node[]>;
+  protected mountSlot(slotName: string, container: HTMLElement | null): Promise<void>;
+  protected get onSlotMount(): (slotName: string, el: HTMLElement | null) => Promise<void>;
+  protected get namespace(): string | undefined;
+  protected render(): React.ReactNode;
+  protected clearContent(): void;
+
+  // Lifecycle
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+}
+```
+
+### Features
+
+- **Automatic namespace support**: Wraps in `ShinyModuleProvider` if element has an `id`
+- **Config parsing**: `getConfig()` parses `data-*` attributes with JSON auto-parsing
+- **Slot preservation**: Captures `[data-slot]` children for blended React+Shiny content
+- **Default slot**: If no `data-slot` elements, all children go to `__children__` slot
+- **Shiny lifecycle**: Automatic `bindAll`/`unbindAll` management
+
+### Simple Widget Example
+
+```typescript
+import { ShinyReactComponentElement } from "@posit/shiny-react";
+import { MyWidget } from "./MyWidget";
+
+class MyWidgetElement extends ShinyReactComponentElement {
+  static component = MyWidget;
+}
+
+if (!customElements.get("my-widget")) {
+  customElements.define("my-widget", MyWidgetElement);
+}
+```
+
+The component receives parsed `data-*` attributes as props automatically.
+
+### Blended Component Example
+
+For React layouts containing Shiny content:
+
+```typescript
+class MySidebarElement extends ShinyReactComponentElement {
+  protected render() {
+    const config = this.getConfig();
+    return (
+      <SidebarLayout
+        {...config}
+        onSlotMount={this.onSlotMount}
+      />
+    );
+  }
+}
+```
+
+In your React component, call `onSlotMount(slotName, containerEl)` after the container renders to move Shiny content into place.
+
+### Key Methods
+
+#### getConfig()
+
+Parses `data-*` attributes into a props object with JSON auto-parsing:
+
+```html
+<my-widget data-count="5" data-items="[1,2,3]" data-title="Hello">
+```
+
+Returns: `{ count: 5, items: [1,2,3], title: "Hello" }`
+
+- Numbers/booleans parsed from JSON
+- Arrays/objects parsed from JSON
+- Invalid JSON stays as string
+
+#### captureSlots(selector?)
+
+Called automatically in `connectedCallback()`. Captures children matching selector (default `[data-slot]`).
+
+If no matching elements found and element has children, all children are stored under the `__children__` slot.
+
+#### mountSlot(slotName, container)
+
+Moves captured slot content into the container element and calls `Shiny.bindAll()`.
+
+#### onSlotMount
+
+Getter that returns `mountSlot.bind(this)` - pass this to React components as a callback.
+
+#### clearContent()
+
+Clears `innerHTML` before React renders. Override with no-op to preserve existing content:
+
+```typescript
+protected clearContent() {} // Keep existing content
+```
+
+### Override Points
+
+- **`render()`**: Customize what React renders (default renders `static component` with `getConfig()` props)
+- **`getConfig()`**: Customize attribute parsing
+- **`clearContent()`**: Override to preserve innerHTML
+- **`captureSlots()`**: Override with custom selector
+
+### HTML Structure
+
+R:
+```r
+tag("my-widget", list(
+  id = "widget1",              # Used for namespace
+  `data-title` = "My Title",   # Becomes props.title
+  `data-count` = 5             # Becomes props.count (number)
+))
+```
+
+Python:
+```python
+ui.HTML('<my-widget id="widget1" data-title="My Title" data-count="5"></my-widget>')
 ```

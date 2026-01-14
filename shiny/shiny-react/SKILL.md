@@ -3,12 +3,12 @@ name: shiny-react
 description: >
   Build Shiny applications with React frontends using the @posit/shiny-react library.
   Use when: (1) Creating new Shiny apps with React UI, (2) Adding React components to
-  existing Shiny apps, (3) Creating reusable React widgets using custom web elements,
-  (4) Using shadcn/ui or other React component libraries with Shiny, (5) Understanding
-  useShinyInput/useShinyOutput hooks, (6) Setting up bidirectional communication between
-  React and R/Python Shiny backends, (7) Building modern data dashboards with React and
-  Shiny, (8) Implementing dynamic widget rendering with insertUI/removeUI. Supports both
-  R and Python Shiny backends.
+  existing Shiny apps, (3) Creating reusable React widgets using ShinyReactComponentElement
+  or custom web elements, (4) Using shadcn/ui or other React component libraries with Shiny,
+  (5) Understanding useShinyInput/useShinyOutput hooks, (6) Setting up bidirectional
+  communication between React and R/Python Shiny backends, (7) Building modern data
+  dashboards with React and Shiny, (8) Implementing dynamic widget rendering with
+  insertUI/removeUI. Supports both R and Python Shiny backends.
 ---
 
 # shiny-react
@@ -129,7 +129,7 @@ When writing React components that communicate with Shiny:
    </ShinyModuleProvider>
    ```
 
-8. **Create reusable widgets with custom web elements** - For self-contained React widgets that can be embedded in Shiny apps, use custom web elements. See the "Custom Web Element Pattern" section below for the recommended approach.
+8. **Create reusable widgets with ShinyReactComponentElement** - For self-contained React widgets that can be embedded in Shiny apps, extend `ShinyReactComponentElement` for automatic lifecycle management and Shiny integration. See the "ShinyReactComponentElement Base Class" section below for the recommended approach.
 
 ## Shiny Module Namespaces
 
@@ -207,60 +207,63 @@ def counter_server(input, output, session):
     return count  # Return reactive for use elsewhere
 ```
 
-### Custom Web Element Pattern (Recommended)
+### ShinyReactComponentElement Base Class (Recommended)
 
-For self-contained React widgets embedded in standard Shiny apps, **use custom web elements** that handle their own lifecycle:
+For self-contained React widgets, extend `ShinyReactComponentElement` - a base class that handles React lifecycle, Shiny bindings, and namespace support automatically.
 
+**Simple widget:**
 ```typescript
-// main.tsx - define a custom web element
-class CounterWidgetElement extends HTMLElement {
-  private root: Root | null = null;
+import { ShinyReactComponentElement } from "@posit/shiny-react";
+import { CounterWidget } from "./CounterWidget";
 
-  connectedCallback() {
-    // Read attributes using dataset and pass them as props to React component
-    const namespace = this.id;
-    const title = this.dataset.title || "Counter";
-    const initialValue = parseInt(this.dataset.initialValue || "0");
-
-    this.root = createRoot(this);
-    this.root.render(
-      <StrictMode>
-        <ShinyModuleProvider namespace={namespace}>
-          <CounterWidget title={title} initialValue={initialValue} />
-        </ShinyModuleProvider>
-      </StrictMode>
-    );
-  }
-
-  disconnectedCallback() {
-    // Clean up React root when element is removed
-    if (this.root) {
-      this.root.unmount();
-      this.root = null;
-    }
-  }
+class CounterWidgetElement extends ShinyReactComponentElement {
+  static component = CounterWidget;
 }
 
-// Register the custom element
-customElements.define("counter-widget", CounterWidgetElement);
+if (!customElements.get("counter-widget")) {
+  customElements.define("counter-widget", CounterWidgetElement);
+}
 ```
 
-**Benefits of custom web elements:**
-- **Pass configuration via HTML attributes**: Read attributes in `connectedCallback()` and pass them as props to your React component
-- **Automatic initialization**: React initializes when element is added to DOM
-- **Automatic cleanup**: React unmounts when element is removed from DOM
-- **Dynamic rendering support**: Works seamlessly with `insertUI()`/`removeUI()` (R) or `ui.insert_ui()`/`ui.remove_ui()` (Python)
-- **Semantic HTML**: `<counter-widget>` is more readable than `<div data-widget>`
-- **Self-contained**: All initialization logic lives in one place
-- **No event listener dependencies**: No need to wait for `DOMContentLoaded`
+The base class automatically:
+- Creates React root and renders your component
+- Wraps in `ShinyModuleProvider` if element has an `id` attribute
+- Parses `data-*` attributes into props via `getConfig()` (JSON auto-parsing)
+- Handles Shiny `bindAll`/`unbindAll` lifecycle
+- Cleans up on disconnect
+
+**Blended component (React layout + Shiny content):**
+```typescript
+class SidebarLayoutElement extends ShinyReactComponentElement {
+  protected render() {
+    const config = this.getConfig();
+    return (
+      <SidebarLayout
+        {...config}
+        onSlotMount={this.onSlotMount}
+      />
+    );
+  }
+}
+```
+
+Use `data-slot="name"` in R/Python to create named slots. If no slots exist, all children are captured as `__children__`.
+
+**Key methods:**
+- `getConfig()` - Returns parsed `data-*` attributes as object
+- `onSlotMount` - Callback to pass to React for mounting Shiny content
+- `mountSlot(name, el)` - Moves captured slot content and calls `Shiny.bindAll()`
+- `captureSlots()` - Called automatically; captures `[data-slot]` children
+- `clearContent()` - Override with no-op to preserve innerHTML
+- `render()` - Override to customize React rendering
 
 **Using the widget in Shiny:**
 
 R:
 ```r
 counter_ui <- function(id, title = "Counter", initial_value = 0) {
-  card(
-    card_header(title),
+  tagList(
+    htmlDependency(...),
     tag("counter-widget", list(
       id = id,
       `data-title` = title,
@@ -273,28 +276,32 @@ counter_ui <- function(id, title = "Counter", initial_value = 0) {
 Python:
 ```python
 def counter_ui(id: str, title: str = "Counter", initial_value: int = 0):
-    return ui.card(
-        ui.card_header(title),
+    return ui.TagList(
+        ui.include_js(...),
         ui.HTML(f'<counter-widget id="{id}" data-title="{title}" data-initial-value="{initial_value}"></counter-widget>')
     )
 ```
 
-**Key Pattern:** Use `data-*` attributes to pass configuration from Shiny to React. Write the custom element to read these via `this.dataset` in `connectedCallback()` and pass them as props to your React component.
+**Benefits:**
+- Automatic initialization/cleanup with DOM lifecycle
+- Works with `insertUI()`/`removeUI()` and `ui.insert_ui()`/`ui.remove_ui()`
+- Semantic HTML: `<counter-widget>` instead of `<div>`
+- Configuration via attributes flows to React props
+- Namespace support via element `id`
 
-This pattern allows React widgets to be used like native Shiny components, with clean APIs that follow Shiny conventions. The custom element automatically handles React lifecycle, making widgets work correctly even when dynamically added or removed.
-
-See `examples/8-modules/app-standard.R` and `app-standard.py` in the shiny-react repository for a complete working example with dynamic widget rendering.
+See `examples/8-modules/` and `examples/9-blended/` in the shiny-react repository for complete examples.
 
 ## Decision Tree
 
 1. **New app from scratch?** → Use `npx create-shiny-react-app`
-2. **Creating reusable React widgets for Shiny?** → Use custom web elements (see "Custom Web Element Pattern" above)
-3. **Need multiple instances of same widget?** → Use `ShinyModuleProvider` with namespacing (see "Shiny Module Namespaces" above)
-4. **Need TypeScript API details?** → Read `references/typescript-api.md`
-5. **Setting up R backend?** → Read `references/r-backend.md`
-6. **Setting up Python backend?** → Read `references/python-backend.md`
-7. **Using shadcn/ui or Tailwind?** → Read `references/shadcn-setup.md`
-8. **Understanding internals?** → Read `references/internals.md`
+2. **Creating reusable React widgets for Shiny?** → Extend `ShinyReactComponentElement` (see "ShinyReactComponentElement Base Class" above)
+3. **Extending ShinyReactComponentElement?** → See examples in `examples/8-modules/` and `examples/9-blended/`
+4. **Need multiple instances of same widget?** → Use `ShinyModuleProvider` with namespacing (see "Shiny Module Namespaces" above)
+5. **Need TypeScript API details?** → Read `references/typescript-api.md`
+6. **Setting up R backend?** → Read `references/r-backend.md`
+7. **Setting up Python backend?** → Read `references/python-backend.md`
+8. **Using shadcn/ui or Tailwind?** → Read `references/shadcn-setup.md`
+9. **Understanding internals?** → Read `references/internals.md`
 
 ## Project Structure
 
