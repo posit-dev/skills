@@ -77,14 +77,19 @@ render_json <- function(
 #' React components using useShinyMessageHandler() hook. This wraps messages in a
 #' standard format and sends them via the "shinyReactMessage" channel.
 #'
+#' When used within a Shiny module (moduleServer), the type is automatically
+#' namespaced using session$ns(). Outside of modules, the type is passed through
+#' unchanged.
+#'
 #' @param session The Shiny session object
 #' @param type The message type (should match messageType in useShinyMessageHandler)
 #' @param data The data to send to the client
 post_message <- function(session, type, data) {
+  namespaced_type <- session$ns(type)
   session$sendCustomMessage(
     "shinyReactMessage",
     list(
-      type = type,
+      type = namespaced_type,
       data = data
     )
   )
