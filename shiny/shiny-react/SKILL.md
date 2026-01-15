@@ -165,7 +165,7 @@ Use standard Shiny module patterns. The `post_message()` function automatically 
 counter_ui <- function(id, title = "Counter") {
   card(
     card_header(title),
-    tags$tag("counter-widget", list(`data-namespace` = id))
+    tags$tag("counter-widget", list(id = id))
   )
 }
 
@@ -188,7 +188,7 @@ counter_server <- function(id) {
 def counter_ui(id: str, title: str = "Counter"):
     return ui.card(
         ui.card_header(title),
-        ui.HTML(f'<counter-widget data-namespace="{id}"></counter-widget>')
+        ui.HTML(f'<counter-widget id="{id}"></counter-widget>')
     )
 
 @module.server
