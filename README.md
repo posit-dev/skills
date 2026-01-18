@@ -16,7 +16,19 @@ Open Source skills support internal open-source package workflows.
 
 R package development skills for working with the r-lib ecosystem and modern R package workflows.
 
-- **[testing-r-packages](./r-lib/testing-r-packages/)** - Best practices for writing R package tests using testthat 3+, including test structure, expectations, fixtures, snapshots, mocking, and BDD-style testing
+- **[cli](./r-lib/cli/)** - Command-line interface styling, semantic messaging, progress reporting, and inline markup for user-facing R output
+- **[testing-r-packages](./r-lib/testing-r-packages/)** - Best practices for writing R package tests using testthat 3+ (structure, expectations, fixtures, snapshots, mocking)
+- **[package-development-workflow](./r-lib/package-development-workflow/)** - The modern edit → load → test-drive → document → check workflow using usethis/devtools
+- **[documentation-roxygen2-pkgdown](./r-lib/documentation-roxygen2-pkgdown/)** - R package documentation workflows with roxygen2 and pkgdown (examples policy, vignettes vs articles, package-level docs)
+- **[r-cmd-check-ci](./r-lib/r-cmd-check-ci/)** - A practical playbook for `R CMD check` triage and CI with GitHub Actions (r-lib/actions)
+- **[compiled-code-workflows](./r-lib/compiled-code-workflows/)** - Building and shipping packages with compiled code (C/C++/Fortran), including Rcpp usage, toolchains, and external system dependencies
+- **[cran-submission](./r-lib/cran-submission/)** - Preparing a package for CRAN submission (check-as-CRAN discipline, common gotchas, `cran-comments.md`)
+- **[large-data-package-size](./r-lib/large-data-package-size/)** - Handling large files and data in packages (`inst/extdata`, `data-raw/`, caching) and keeping package size within CRAN expectations
+- **[revdep-checks](./r-lib/revdep-checks/)** - Running reverse dependency checks prior to release and interpreting downstream failures
+- **[performance-profiling](./r-lib/performance-profiling/)** - Profiling and benchmarking package code to improve runtime and memory use
+- **[code-coverage-ci](./r-lib/code-coverage-ci/)** - Measuring test coverage with covr and integrating coverage runs into GitHub Actions
+- **[release-versioning-news](./r-lib/release-versioning-news/)** - Version bumps and `NEWS.md` workflow for predictable releases
+- **[pkgdown-site-craft](./r-lib/pkgdown-site-craft/)** - Configuring, curating, and deploying pkgdown sites (reference index, navigation, GitHub Pages)
 
 ### Shiny
 
@@ -28,6 +40,7 @@ Skills for Shiny app development in both R and Python.
 
 Skills for Quarto document creation and publishing.
 
+- **[authoring](./quarto/authoring/)** - Comprehensive guidance for Quarto document authoring and R Markdown migration (including bookdown/blogdown/xaringan/distill)
 - **[brand-yml](./brand-yml/)** - Create and apply brand.yml files for consistent styling across Quarto projects, supporting HTML documents, dashboards, RevealJS presentations, Typst PDFs, and websites with automatic brand discovery and theme layering
 
 ## Installation
@@ -62,12 +75,14 @@ Each command installs all skills in that category.
 For customization or offline use:
 
 1. Clone this repository:
+
    ```bash
    git clone https://github.com/posit-dev/skills.git
    cd skills
    ```
 
 2. Copy individual skills to your Claude Code skills directory:
+
    ```bash
    cp -r open-source/release-post ~/.config/claude-code/skills/
    ```
@@ -105,12 +120,12 @@ Claude will use the skill's knowledge to guide you through creating a properly f
 
 This repository organizes skills into categories to make it easier to find and install skills relevant to your work:
 
-| Category | Description |
-|----------|-------------|
+| Category        | Description                                             |
+| --------------- | ------------------------------------------------------- |
 | **open-source** | General open-source package development and maintenance |
-| **r-lib** | R package development with the r-lib ecosystem |
-| **shiny** | Shiny app development and deployment (R and Python) |
-| **quarto** | Quarto document creation and publishing |
+| **r-lib**       | R package development with the r-lib ecosystem          |
+| **shiny**       | Shiny app development and deployment (R and Python)     |
+| **quarto**      | Quarto document creation and publishing                 |
 
 <!-- Future category ideas
 
