@@ -1,5 +1,5 @@
 ---
-name: testing-r-packages
+name: r-lib/testing-r-packages
 description: >
   Best practices for writing R package tests using testthat version 3+. Use when writing, organizing, or improving tests for R packages. Covers test structure, expectations, fixtures, snapshots, mocking, and modern testthat 3 patterns including self-sufficient tests, proper cleanup with withr, and snapshot testing.
 ---
@@ -21,12 +21,14 @@ This creates `tests/testthat/` directory, adds testthat to `DESCRIPTION` Suggest
 ## File Organization
 
 **Mirror package structure:**
+
 - Code in `R/foofy.R` → tests in `tests/testthat/test-foofy.R`
 - Use `usethis::use_r("foofy")` and `usethis::use_test("foofy")` to create paired files
 
 **Special files:**
+
 - `helper-*.R` - Helper functions and custom expectations, sourced before tests
-- `setup-*.R` - Run during `R CMD check` only, not during `load_all()`
+- `setup-*.R` - Setup code sourced by testthat when running tests (including during `R CMD check`); not run by `devtools::load_all()`
 - `fixtures/` - Static test data files accessed via `test_path()`
 
 ## Test Structure
@@ -64,6 +66,7 @@ describe("matrix()", {
 ```
 
 **Key features:**
+
 - `describe()` groups related specifications for a component
 - `it()` defines individual specifications (like `test_that()`)
 - Supports nesting for hierarchical organization
@@ -78,18 +81,21 @@ See [references/bdd.md](references/bdd.md) for comprehensive BDD patterns, neste
 Three scales of testing:
 
 **Micro** (interactive development):
+
 ```r
 devtools::load_all()
 expect_equal(foofy(...), expected)
 ```
 
 **Mezzo** (single file):
+
 ```r
 testthat::test_file("tests/testthat/test-foofy.R")
 # RStudio: Ctrl/Cmd + Shift + T
 ```
 
 **Macro** (full suite):
+
 ```r
 devtools::test()    # Ctrl/Cmd + Shift + T
 devtools::check()   # Ctrl/Cmd + Shift + E
@@ -194,6 +200,7 @@ test_that("function respects options", {
 ```
 
 **Common withr functions:**
+
 - `local_options()` - Temporarily set options
 - `local_envvar()` - Temporarily set environment variables
 - `local_tempfile()` - Create temp file with automatic cleanup
@@ -203,6 +210,7 @@ test_that("function respects options", {
 ### 3. Plan for Test Failure
 
 Write tests assuming they will fail and need debugging:
+
 - Tests should run independently in fresh R sessions
 - Avoid hidden dependencies on earlier tests
 - Make test logic explicit and obvious
@@ -214,6 +222,7 @@ Repeat setup code in tests rather than factoring it out. Test clarity is more im
 ### 5. Use `devtools::load_all()` Workflow
 
 During development:
+
 - Use `devtools::load_all()` instead of `library()`
 - Makes all functions available (including unexported)
 - Automatically attaches testthat
@@ -237,6 +246,7 @@ test_that("error message is helpful", {
 Snapshots stored in `tests/testthat/_snaps/`.
 
 **Workflow:**
+
 ```r
 devtools::test()                    # Creates new snapshots
 testthat::snapshot_review('name')   # Review changes
@@ -248,6 +258,7 @@ testthat::snapshot_accept('name')   # Accept changes
 Three approaches for test data:
 
 **1. Constructor functions** - Create data on-demand:
+
 ```r
 new_sample_data <- function(n = 10) {
   data.frame(id = seq_len(n), value = rnorm(n))
@@ -255,6 +266,7 @@ new_sample_data <- function(n = 10) {
 ```
 
 **2. Local functions with cleanup** - Handle side effects:
+
 ```r
 local_temp_csv <- function(data, env = parent.frame()) {
   path <- withr::local_tempfile(fileext = ".csv", .local_envir = env)
@@ -264,6 +276,7 @@ local_temp_csv <- function(data, env = parent.frame()) {
 ```
 
 **3. Static fixture files** - Store in `fixtures/` directory:
+
 ```r
 data <- readRDS(test_path("fixtures", "sample_data.rds"))
 ```
@@ -394,12 +407,14 @@ For advanced testing scenarios, see:
 When working with testthat 3 code, prefer modern patterns:
 
 **Deprecated → Modern:**
+
 - `context()` → Remove (duplicates filename)
 - `expect_equivalent()` → `expect_equal(ignore_attr = TRUE)`
 - `with_mock()` → `local_mocked_bindings()`
 - `is_null()`, `is_true()`, `is_false()` → `expect_null()`, `expect_true()`, `expect_false()`
 
 **New in testthat 3:**
+
 - Edition system (`Config/testthat/edition: 3`)
 - Improved snapshot testing
 - `waldo::compare()` for better diff output
