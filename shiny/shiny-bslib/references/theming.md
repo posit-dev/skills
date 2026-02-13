@@ -278,8 +278,7 @@ The `.where = "declarations"` places the definition after Bootstrap's variables 
 ### Finding Variable Names
 
 **Bootstrap 5 variables:**
-- See [references/bs5-variables.md](bs5-variables.md) for comprehensive list
-- Or visit https://rstudio.github.io/bslib/articles/bs5-variables/
+- Visit https://rstudio.github.io/bslib/articles/bs5-variables/ for a comprehensive list
 
 **Common useful variables:**
 - `"border-radius"` - Global border radius

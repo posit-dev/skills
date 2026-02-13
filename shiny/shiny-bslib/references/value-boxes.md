@@ -54,39 +54,41 @@ layout_column_wrap(
 
 ## Showcase Options
 
-The `showcase` parameter accepts icons or small plots. Three layout options control positioning:
+The `showcase` parameter accepts icons or small plots. Three layout functions control positioning:
 
 ### Showcase Layouts
 
-**1. `"left center"` (default):**
+**1. `showcase_left_center()` (default):**
 ```r
 value_box(
   title = "New Users",
   value = "487",
   showcase = bsicons::bs_icon("person-plus"),
-  showcase_layout = "left center"
+  showcase_layout = showcase_left_center()
 )
 ```
 
-**2. `"top right":`**
+**2. `showcase_top_right()`:**
 ```r
 value_box(
   title = "Revenue",
   value = "$125K",
   showcase = bsicons::bs_icon("currency-dollar"),
-  showcase_layout = "top right"
+  showcase_layout = showcase_top_right()
 )
 ```
 
-**3. `"bottom":`**
+**3. `showcase_bottom()`:**
 ```r
 value_box(
   title = "Growth",
   value = "+18%",
   showcase = bsicons::bs_icon("graph-up"),
-  showcase_layout = "bottom"
+  showcase_layout = showcase_bottom()
 )
 ```
+
+These functions accept optional customization parameters like `width` and `max_height` for fine-grained control over the showcase area dimensions. String shorthands like `"left center"`, `"top right"`, and `"bottom"` also work.
 
 ### Icons
 

@@ -272,7 +272,7 @@ shinyApp(
 
 ## Reactive Open/Close Updates
 
-Programmatically toggle sidebar visibility using `sidebar_toggle()`:
+Programmatically toggle sidebar visibility using `toggle_sidebar()`:
 
 **Example:**
 ```r
@@ -291,7 +291,7 @@ ui <- page_navbar(
 server <- function(input, output, session) {
   # Open sidebar when navigating to Page 2
   observe({
-    sidebar_toggle(
+    toggle_sidebar(
       id = "main_sidebar",
       open = input$nav == "Page 2"
     )

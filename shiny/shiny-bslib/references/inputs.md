@@ -90,7 +90,9 @@ sidebar(
 
 ## input_dark_mode()
 
-A specialized switch for toggling between light and dark themes, with built-in theme switching logic.
+A specialized switch for toggling between light and dark themes, built on [Bootstrap 5.3 color modes](https://getbootstrap.com/docs/5.3/customize/color-modes/). This toggle automatically switches the Bootstrap color mode attribute on the page.
+
+**Important:** `input_dark_mode()` relies on Bootstrap 5.3+ color mode support. For full dark mode theming with custom colors, combine it with `session$setCurrentTheme()` to switch between custom light and dark `bs_theme()` objects. See [theming.md](theming.md) for details.
 
 ### Basic Usage
 
@@ -180,7 +182,7 @@ server <- function(input, output, session) {
   observe({
     saved_mode <- get_cookie("theme_mode")
     if (!is.null(saved_mode)) {
-      update_dark_mode("mode", mode = saved_mode)
+      toggle_dark_mode(mode = saved_mode)
     }
   }) |> bindEvent(once = TRUE)
 
