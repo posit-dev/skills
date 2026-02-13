@@ -191,8 +191,8 @@ Determine the project's local check commands by consulting (in priority order):
 3. CI workflow files in `.github/workflows/` to understand what CI will run
 
 Run the checks that are available locally. Common patterns:
-- **Lint/format**: `npm run lint`, `ruff check`, `styler::style_pkg()`, `biome check`, etc.
-- **Build**: `npm run build`, `pip install -e .`, `R CMD build`, etc.
+- **Lint/format**: `npm run lint`, `ruff check`, `air format`, `biome check`, etc.
+- **Build**: `npm run build`, `pip install -e .`, `devtools::check()`, etc.
 - **Type check**: `npm run check-types`, `mypy`, `pyright`, etc.
 - **Tests**: `npm test`, `pytest`, `devtools::test()`, `cargo test`, etc.
 
