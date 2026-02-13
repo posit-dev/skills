@@ -26,6 +26,39 @@ Create and use `_brand.yml` files for consistent branding across Shiny applicati
 - [Shiny for Python brand.yml docs](https://shiny.posit.co/py/api/core/ui.Theme.html#shiny.ui.Theme.from_brand)
 - [Quarto brand.yml docs](https://quarto.org/docs/authoring/brand.html)
 
+### `shiny-bslib`
+
+Build modern Shiny dashboards and applications using bslib with Bootstrap 5. Use when creating or updating Shiny apps with modern layouts, themes, and components.
+
+**Organization**: Comprehensive reference skill with main SKILL.md providing overview and workflows, plus 11 detailed reference files:
+- `page-layouts.md` - Page-level layout functions (page_sidebar, page_navbar, page_fillable)
+- `grid-layouts.md` - Multi-column grid systems (layout_columns, layout_column_wrap)
+- `cards.md` - Card components with full-screen support
+- `value-boxes.md` - KPI and metrics display components
+- `navigation.md` - Navigation containers and multi-page patterns
+- `sidebars.md` - Sidebar layouts and organization
+- `filling.md` - Fillable containers and fill items system
+- `theming.md` - Complete theming guide with bs_theme(), Bootswatch, and Sass
+- `components.md` - Accordions, tooltips, popovers, and toasts
+- `inputs.md` - Special bslib input widgets
+- `best-practices.md` - Patterns, tips, and common gotchas
+
+**Key features covered**:
+- Dashboard layouts (single-page and multi-page)
+- Responsive grid systems
+- Card-based content organization
+- Value boxes for KPIs
+- Comprehensive theming system
+- Filling vs scrolling layouts
+- Modern UI components
+- Mobile and responsive design
+
+**Resources**:
+- [bslib website](https://rstudio.github.io/bslib/)
+- [bslib articles](https://rstudio.github.io/bslib/articles/)
+- [Bootstrap 5 documentation](https://getbootstrap.com/docs/5.0/)
+- [Bootswatch themes](https://bootswatch.com/)
+
 ## Potential Skills
 
 This category could include skills for:
