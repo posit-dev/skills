@@ -63,7 +63,7 @@ card(
 
 ### card_header()
 
-Top section of the card, useful for titles and controls.
+Top section of the card, useful for titles and controls. The header is a flex container by default, so child elements are laid out horizontally.
 
 **Basic usage:**
 ```r
@@ -84,11 +84,14 @@ card(
 )
 ```
 
-**With icons or buttons:**
+**With icons or buttons (flex layout):**
 ```r
 card(
   card_header(
-    tags$span("Settings", tooltip(bsicons::bs_icon("info-circle"), "Configure options"))
+    gap = "0.5rem",  # Space between header elements
+    "Settings",
+    tooltip(bsicons::bs_icon("info-circle"), "Configure options"),
+    popover(bsicons::bs_icon("gear"), title = "Options", selectInput("opt", "Option", ...))
   ),
   ...
 )
@@ -189,6 +192,23 @@ card(
 ```
 
 **Best practice:** Enable full-screen for all cards containing plots, maps, or detailed tables. This is highly valued by users.
+
+**Tracking full-screen state in Shiny:** Provide an `id` to the card to observe its full-screen state:
+```r
+card(
+  id = "my_card",
+  full_screen = TRUE,
+  card_header("Plot"),
+  plotOutput("plot")
+)
+
+# Server: input$my_card_full_screen is TRUE/FALSE
+observe({
+  if (isTRUE(input$my_card_full_screen)) {
+    # Render higher-resolution plot when expanded
+  }
+})
+```
 
 **Important:** When expanded to full-screen, `max_height` and `height` constraints are ignored, allowing content to use the full viewport.
 

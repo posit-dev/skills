@@ -50,11 +50,14 @@ sidebar(
 - `title`: Optional title displayed at the top
 - `open`: Initial state (TRUE/FALSE) or responsive ("desktop", "closed", "always")
 - `position`: "left" (default) or "right"
-- `width`: Width as CSS unit (default "250px")
+- `width`: Width as CSS unit (default 250px). Users can resize sidebars by dragging the edge on desktop
 - `id`: For programmatic control
 - `bg`: Background color
+- `fg`: Foreground color (auto-contrasted if only `bg` is set)
+- `fillable`: Whether sidebar contents should fill vertically (default FALSE)
+- `gap`: CSS length for spacing between sidebar children
+- `padding`: CSS padding within the sidebar
 - `class`: Bootstrap utility classes
-- `style`: Custom inline CSS
 
 ## Page-Level Sidebars
 

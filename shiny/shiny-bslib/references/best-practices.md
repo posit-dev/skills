@@ -219,10 +219,7 @@ observeEvent(input$save, {
   save_data(data())
 
   show_toast(
-    toast(
-      toast_header("Success", class = "bg-success text-white"),
-      "Data saved successfully"
-    )
+    toast("Data saved successfully", header = "Success", type = "success")
   )
 })
 ```

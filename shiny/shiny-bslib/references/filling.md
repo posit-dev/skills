@@ -579,12 +579,12 @@ Use filling layouts for main dashboard areas and scrolling for detail pages:
 ```r
 page_navbar(
   title = "App",
-  fillable = c("Dashboard"),  # Only dashboard fills
+  fillable = c("Dashboard"),  # Only "Dashboard" page fills
   nav_panel("Dashboard",
-    page_fillable(...)  # Filling layout
+    layout_columns(...)  # Content fills viewport
   ),
   nav_panel("Details",
-    # Scrolling layout (implicit)
+    # Scrolling layout (not in fillable list)
     card(...), card(...), card(...)
   )
 )

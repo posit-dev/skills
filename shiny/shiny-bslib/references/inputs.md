@@ -234,13 +234,12 @@ The button automatically disables while the task runs, providing visual feedback
 
 ### With Extended Tasks
 
-For truly long-running tasks, combine with `ExtendedTask`:
+For truly long-running tasks, combine with `ExtendedTask` and `bind_task_button()`. The button stays in "busy" state for as long as the extended task is running.
 
 **Example:**
 ```r
 library(shiny)
 library(bslib)
-library(promises)
 library(future)
 plan(multisession)
 
@@ -254,15 +253,15 @@ ui <- page_sidebar(
 
 # Server
 server <- function(input, output, session) {
-  # Define extended task
+  # Define extended task and bind to button
   long_task <- ExtendedTask$new(function() {
-    future_promise({
+    future({
       Sys.sleep(10)  # Simulate long operation
       "Task complete!"
-    })
-  })
+    }, seed = TRUE)
+  }) |> bind_task_button("run")
 
-  # Bind button to task
+  # Trigger task on button click
   observeEvent(input$run, {
     long_task$invoke()
   })
@@ -276,51 +275,17 @@ server <- function(input, output, session) {
 
 ### bind_task_button()
 
-Explicitly bind a task button to an ExtendedTask:
+Binds a task button to an `ExtendedTask` so the button reflects the task's state. The first argument is the task, the second is the button ID:
 
-**Example:**
 ```r
-# UI
-ui <- page_sidebar(
-  sidebar = sidebar(
-    input_task_button("analyze", "Analyze Data")
-  ),
-  card(
-    plotOutput("plot"),
-    textOutput("status")
-  )
-)
+# Piped style (recommended)
+my_task <- ExtendedTask$new(...) |> bind_task_button("my_button")
 
-# Server
-server <- function(input, output, session) {
-  analysis_task <- ExtendedTask$new(function(data) {
-    future_promise({
-      # Complex analysis
-      expensive_analysis(data)
-    })
-  })
-
-  # Bind button to task
-  bind_task_button("analyze", analysis_task)
-
-  observeEvent(input$analyze, {
-    analysis_task$invoke(filtered_data())
-  })
-
-  output$plot <- renderPlot({
-    req(analysis_task$result())
-    plot(analysis_task$result())
-  })
-
-  output$status <- renderText({
-    if (analysis_task$is_running()) {
-      "Analysis in progress..."
-    } else {
-      "Analysis complete"
-    }
-  })
-}
+# Or explicit call
+bind_task_button(my_task, "my_button")
 ```
+
+**Note:** `bind_task_button()` does NOT trigger the task on click -- you still need `observeEvent()` to invoke it.
 
 ### Update Button
 
@@ -362,13 +327,15 @@ observeEvent(input$export, {
   # Long export operation
   export_data(data(), format = input$format)
 
-  show_toast(toast("Export complete!"))
+  show_toast(toast("Export complete!", type = "success"))
 })
 ```
 
 ## input_code_editor()
 
-A code editor input widget with syntax highlighting, perfect for allowing users to input code snippets.
+A lightweight code editor with syntax highlighting, powered by [prism-code-editor](https://prism-code-editor.netlify.app/). Supports 20+ languages and automatic light/dark mode switching. Try `shiny::runExample("code-editor", package = "bslib")` for a complete demo.
+
+**Important:** The editor value is not sent on every keystroke. Updates reach the server when the user moves focus away from the editor or presses `Ctrl/Cmd+Enter`. Not designed for large files (1000+ lines may have performance issues).
 
 ### Basic Usage
 
@@ -381,7 +348,9 @@ input_code_editor(
 )
 ```
 
-**With multiple languages:**
+**Supported languages:** `"r"`, `"python"`, `"julia"`, `"sql"`, `"javascript"`, `"typescript"`, `"html"`, `"css"`, `"scss"`, `"sass"`, `"json"`, `"markdown"`, `"yaml"`, `"xml"`, `"toml"`, `"ini"`, `"bash"`, `"docker"`, `"latex"`, `"cpp"`, `"rust"`, `"diff"`, `"plain"`.
+
+**With dynamic language switching:**
 ```r
 page_sidebar(
   sidebar = sidebar(
@@ -410,18 +379,21 @@ observeEvent(input$language, {
 input_code_editor(
   id = "code",
   language = "r",
-  height = "400px"
+  height = "400px"  # Default is "auto"
 )
 ```
 
-**Theme:**
+**Themes (auto-switches with dark mode):**
 ```r
 input_code_editor(
   id = "code",
   language = "r",
-  theme = "vs-dark"  # Dark theme for the editor
+  theme_light = "github-light",  # Default
+  theme_dark = "github-dark"     # Default
 )
 ```
+
+Available themes: `"atom-one-dark"`, `"dracula"`, `"github-dark-dimmed"`, `"github-dark"`, `"github-light"`, `"night-owl-light"`, `"night-owl"`, `"prism-okaidia"`, `"prism-solarized-light"`, `"prism-tomorrow"`, `"prism-twilight"`, `"prism"`, `"vs-code-dark"`, `"vs-code-light"`.
 
 **Read-only mode:**
 ```r
@@ -429,64 +401,30 @@ input_code_editor(
   id = "code",
   language = "r",
   value = "# Read-only code example",
-  readonly = TRUE
+  read_only = TRUE
 )
 ```
 
-### Update Code Editor
+**Other options:** `line_numbers` (default TRUE), `word_wrap`, `tab_size` (default 2), `indentation` (`"space"` or `"tab"`), `fill` (default TRUE for filling containers).
 
-**update_code_editor():**
-```r
-# Server
-observeEvent(input$load_example, {
-  update_code_editor(
-    "user_code",
-    value = "ggplot(data, aes(x, y)) +\n  geom_point()"
-  )
-})
-```
+### Keyboard Shortcuts
+
+- `Ctrl/Cmd+Enter`: Submit current code to R
+- `Ctrl/Cmd+Z`: Undo
+- `Ctrl/Cmd+Shift+Z`: Redo
+- `Tab`: Indent selection
+- `Shift+Tab`: Dedent selection
 
 ### Common Patterns
 
-#### Code Evaluation
-
-```r
-# UI
-card(
-  card_header("R Code Editor"),
-  input_code_editor(
-    id = "r_code",
-    language = "r",
-    value = "# Write R code\n1 + 1"
-  ),
-  actionButton("eval", "Evaluate"),
-  card_footer(
-    verbatimTextOutput("result")
-  )
-)
-
-# Server
-observeEvent(input$eval, {
-  result <- tryCatch({
-    eval(parse(text = input$r_code))
-  }, error = function(e) {
-    paste("Error:", e$message)
-  })
-
-  output$result <- renderPrint({
-    result
-  })
-})
-```
-
-#### Query Builder
+#### SQL Query Builder
 
 ```r
 # UI
 page_sidebar(
   sidebar = sidebar(
     selectInput("table", "Table", c("users", "orders", "products")),
-    actionButton("run_query", "Run Query", class = "btn-primary w-100")
+    input_task_button("run_query", "Run Query")
   ),
   card(
     card_header("SQL Query"),
@@ -505,7 +443,6 @@ page_sidebar(
 # Server
 observeEvent(input$run_query, {
   output$query_results <- renderTable({
-    # Execute query (safely!)
     run_query(input$sql_query)
   })
 })
@@ -514,124 +451,128 @@ observeEvent(input$run_query, {
 ### When to Use
 
 **Use `input_code_editor()` when:**
-- Users need to write code snippets
-- Syntax highlighting improves usability
-- Code validation/linting would help users
-- Building developer-focused tools
-
-**Examples:**
-- SQL query builders
-- R/Python code notebooks
-- API request builders
-- Configuration file editors
-- Custom formula/expression inputs
+- Users need to write code snippets with syntax highlighting
+- Building SQL query builders, expression editors, or config editors
+- Displaying read-only code with highlighting
 
 ## input_submit_textarea()
 
-A textarea with explicit submission control, preventing reactive updates on every keystroke.
+A textarea with explicit submission, preventing reactive updates on every keystroke. Ideal for chat boxes, comments, or any input where users compose and review text before submitting. The textarea auto-grows as the user types.
+
+**Important:** The initial server value is always `""` (empty string), regardless of the `value` parameter. The server value only updates when the user explicitly submits (via button click or keyboard shortcut).
 
 ### Basic Usage
 
-**Basic submit textarea:**
+**Simple submit textarea:**
 ```r
 input_submit_textarea(
-  id = "long_text",
+  id = "user_input",
   label = "Enter text:",
-  placeholder = "Type your text here...",
-  submit_label = "Submit"
+  placeholder = "Type your text here..."
 )
 ```
 
-**With rows:**
+**With more rows and custom width:**
 ```r
 input_submit_textarea(
   id = "comments",
   label = "Comments:",
-  rows = 10,
-  submit_label = "Post Comment"
+  rows = 6,
+  width = "100%"
 )
 ```
 
-### Behavior
+### Submission Behavior
 
-Unlike regular `textAreaInput()`, this doesn't trigger reactive updates on every keystroke. It only updates when the user explicitly submits.
+**Default (`submit_key = "enter+modifier"`):** User holds `Ctrl` (or `Cmd` on Mac) and presses `Enter` to submit. This prevents accidental submissions.
 
-**Example:**
+**Enter-only submission:**
 ```r
-# UI
-page_sidebar(
-  sidebar = sidebar(
-    input_submit_textarea(
-      id = "analysis_notes",
-      label = "Analysis Notes:",
-      placeholder = "Enter notes about the analysis...",
-      rows = 8,
-      submit_label = "Save Notes"
-    )
-  ),
-  card(
-    card_header("Saved Notes"),
-    verbatimTextOutput("notes_display")
+input_submit_textarea(
+  id = "chat_input",
+  placeholder = "Type a message...",
+  submit_key = "enter"  # Submit with Enter, Shift+Enter for new lines
+)
+```
+
+### Custom Submit Button
+
+The `button` parameter accepts any HTML element. Using `input_task_button()` is recommended for built-in busy state:
+
+```r
+input_submit_textarea(
+  id = "query",
+  placeholder = "Ask a question...",
+  button = input_task_button("submit_query", "Send", icon = bsicons::bs_icon("send"))
+)
+```
+
+### Toolbar Items
+
+Add extra UI elements next to the submit button with `toolbar`:
+
+```r
+input_submit_textarea(
+  id = "message",
+  placeholder = "Write a message...",
+  toolbar = list(
+    actionLink("attach", bsicons::bs_icon("paperclip")),
+    actionLink("emoji", bsicons::bs_icon("emoji-smile"))
   )
 )
-
-# Server
-output$notes_display <- renderText({
-  # Only updates when submitted
-  input$analysis_notes
-})
 ```
 
 ### Update Submit Textarea
 
-**update_submit_textarea():**
 ```r
 # Server
 observeEvent(input$load_template, {
-  update_submit_textarea(
-    "long_text",
-    value = "Template text here..."
+  update_submit_textarea("user_input", value = "Template text here...")
+})
+
+# Submit programmatically
+update_submit_textarea("user_input", value = "Auto text", submit = TRUE)
+
+# Move focus to the textarea
+update_submit_textarea("user_input", focus = TRUE)
+```
+
+### Common Patterns
+
+#### Chat Interface
+
+```r
+# UI
+card(
+  card_header("Chat"),
+  card_body(uiOutput("chat_messages"), fillable = FALSE, fill = TRUE),
+  card_footer(
+    input_submit_textarea(
+      id = "chat_input",
+      placeholder = "Type a message...",
+      submit_key = "enter"
+    )
   )
+)
+
+# Server
+observeEvent(input$chat_input, {
+  req(nchar(input$chat_input) > 0)
+  add_message(input$chat_input)
+  update_submit_textarea("chat_input", value = "")
 })
 ```
 
 ### When to Use
 
 **Use `input_submit_textarea()` when:**
-- Long-form text input is needed
-- Expensive computations triggered by input changes
-- Users should explicitly save/submit their input
-- Preventing accidental triggering is important
+- Downstream computations are expensive (API calls, model inference)
+- Users need to compose and review before submitting
+- Building chat or comment interfaces
 
 **Use regular `textAreaInput()` when:**
 - Live preview of changes is desired
 - Downstream computations are cheap
-- Immediate feedback enhances UX
-
-**Example - comments system:**
-```r
-card(
-  card_header("Add Comment"),
-  input_submit_textarea(
-    id = "new_comment",
-    label = NULL,
-    placeholder = "Write your comment...",
-    rows = 4,
-    submit_label = "Post Comment"
-  )
-)
-
-# Server
-observeEvent(input$new_comment, {
-  # Only triggers when "Post Comment" is clicked
-  save_comment(input$new_comment)
-
-  # Clear the textarea
-  update_submit_textarea("new_comment", value = "")
-
-  show_toast(toast("Comment posted!"))
-})
-```
 
 ## Best Practices
 
@@ -687,15 +628,10 @@ input_task_button("export", "Export")
 For task buttons, show completion feedback:
 ```r
 observeEvent(input$process, {
-  # Long operation
   result <- process_data()
 
-  # Show feedback
   show_toast(
-    toast(
-      toast_header("Complete", class = "bg-success text-white"),
-      "Processing finished successfully"
-    )
+    toast("Processing finished successfully", header = "Complete", type = "success")
   )
 })
 ```
@@ -709,10 +645,7 @@ observeEvent(input$run_code, {
     eval(parse(text = input$code))
   }, error = function(e) {
     show_toast(
-      toast(
-        toast_header("Error", class = "bg-danger text-white"),
-        e$message
-      )
+      toast(e$message, header = "Error", type = "danger", duration_s = NA)
     )
     NULL
   })

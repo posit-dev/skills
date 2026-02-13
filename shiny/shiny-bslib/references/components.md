@@ -616,157 +616,166 @@ popover(
 
 ## Toasts
 
-Toasts are temporary notification messages that appear (typically in a corner) to provide feedback without interrupting workflow.
+Toasts are lightweight, temporary notification messages that appear in a corner of the screen. Based on [Bootstrap 5.3's toast component](https://getbootstrap.com/docs/5.3/components/toasts/). Try `shiny::runExample("toast", package = "bslib")` for a complete demo.
 
 ### Toast Basic Usage
 
-**Create a toast:**
-
+**Simple toast (string shorthand):**
 ```r
-my_toast <- toast(
-  "Analysis complete!",
-  "Your results are ready to view."
+# Server
+show_toast("Operation completed!")
+```
+
+**Create a toast with `toast()`:**
+```r
+show_toast(
+  toast(
+    "Your results are ready to view.",
+    header = "Analysis Complete",
+    type = "success"
+  )
 )
 ```
 
-**With title:**
-```r
-my_toast <- toast(
-  toast_header("Success"),
-  "Analysis completed successfully."
-)
-```
-
-**Different intent:**
+**Using semantic types** for automatic background coloring:
 ```r
 # Success
-toast(toast_header("Success", class = "bg-success text-white"), "...")
+toast("Saved successfully.", header = "Success", type = "success")
 
 # Warning
-toast(toast_header("Warning", class = "bg-warning"), "...")
+toast("Disk space low.", header = "Warning", type = "warning")
 
 # Error
-toast(toast_header("Error", class = "bg-danger text-white"), "...")
+toast("Failed to connect.", header = "Error", type = "danger")
 
 # Info
-toast(toast_header("Info", class = "bg-info text-white"), "...")
+toast("New data available.", header = "Info", type = "info")
 ```
+
+**Structured header with status text:**
+```r
+toast(
+  "Your settings have been saved.",
+  header = toast_header(
+    title = "Settings Updated",
+    icon = bsicons::bs_icon("gear"),
+    status = "just now"
+  ),
+  type = "success"
+)
+```
+
+### Key Parameters of toast()
+
+| Parameter | Default | Description |
+|---|---|---|
+| `header` | `NULL` | String or `toast_header()` object |
+| `icon` | `NULL` | Icon element (when not using `toast_header()`) |
+| `id` | auto | Stable ID for `hide_toast()` or replacing visible toasts |
+| `type` | `NULL` | `"success"`, `"danger"`, `"warning"`, `"info"`, `"primary"`, etc. |
+| `duration_s` | `5` | Seconds before auto-hide. Use `0` or `NA` to disable auto-hide |
+| `position` | `"top-right"` | e.g. `"bottom-right"`, `"top-center"`, `"middle-center"` |
+| `closable` | `TRUE` | Show close button |
 
 ### Showing and Hiding Toasts
 
-#### show_toast()
-
-Display a toast notification:
-
-**Example:**
+**`show_toast()`** displays a toast and returns its ID:
 ```r
 # Server
 observeEvent(input$analyze, {
-  # Run analysis
   result <- run_analysis()
 
-  # Show toast
   show_toast(
     toast(
-      toast_header("Analysis Complete", class = "bg-success text-white"),
-      "Results are now available in the table below."
+      "Results are now available in the table below.",
+      header = "Analysis Complete",
+      type = "success"
     )
   )
 })
 ```
 
-**With options:**
+**`hide_toast()`** dismisses a toast by ID:
 ```r
-show_toast(
-  toast("Message"),
-  autohide = TRUE,  # Auto-dismiss
-  delay = 5000      # Dismiss after 5 seconds
-)
-```
-
-#### hide_toast()
-
-Dismiss a toast programmatically:
-
-**Example:**
-```r
-# UI
-my_toast <- toast(
-  id = "progress_toast",
-  "Processing..."
-)
-
 # Server
 observeEvent(input$start, {
-  show_toast(my_toast, autohide = FALSE)
+  # Show persistent toast (no auto-hide)
+  show_toast(
+    toast(
+      "Processing...",
+      id = "progress_toast",
+      duration_s = NA,
+      closable = FALSE
+    )
+  )
 
   # Long-running operation
   result <- expensive_computation()
 
-  # Hide toast when done
+  # Hide when done
   hide_toast("progress_toast")
 })
 ```
 
+**Replacing toasts:** If a toast with the same `id` is already visible, showing a new one with that `id` automatically hides the old one first.
+
 ### Common Toast Patterns
 
-#### Success Notifications
+#### Success/Error Feedback
 
 ```r
 observeEvent(input$save, {
   tryCatch({
     save_data(data())
     show_toast(
-      toast(
-        toast_header("Saved", class = "bg-success text-white"),
-        "Data saved successfully."
-      )
+      toast("Data saved successfully.", header = "Saved", type = "success")
     )
   }, error = function(e) {
     show_toast(
       toast(
-        toast_header("Error", class = "bg-danger text-white"),
-        paste("Failed to save:", e$message)
+        paste("Failed to save:", e$message),
+        header = "Error",
+        type = "danger",
+        duration_s = NA  # Don't auto-hide errors
       )
     )
   })
 })
 ```
 
-#### Progress Updates
+#### Progress → Completion
 
 ```r
 observeEvent(input$export, {
   show_toast(
-    toast(id = "export_toast", "Exporting data..."),
-    autohide = FALSE
+    toast("Exporting data...", id = "export", duration_s = NA, closable = FALSE)
   )
 
   export_data()
 
-  hide_toast("export_toast")
-
+  hide_toast("export")
   show_toast(
-    toast(
-      toast_header("Export Complete", class = "bg-success text-white"),
-      "File downloaded to your Downloads folder."
-    )
+    toast("File downloaded.", header = "Export Complete", type = "success")
   )
 })
 ```
 
-#### Multiple Toasts
+#### Toast with Interactive Content
 
 ```r
-# Show multiple toasts for different events
-observe({
-  if (data_updated()) {
-    show_toast(toast("Data refreshed"))
-  }
+show_toast(
+  toast(
+    actionLink("undo_delete", "Undo"),
+    header = "Item Deleted",
+    id = "undo_toast",
+    duration_s = 10,
+    closable = FALSE
+  )
+)
 
-  if (new_notifications()) {
-    show_toast(toast("You have new notifications"))
-  }
+observeEvent(input$undo_delete, {
+  restore_item()
+  hide_toast("undo_toast")
 })
 ```
 
@@ -859,16 +868,16 @@ accordion(
 **Be specific:**
 ```r
 # Good
-show_toast(toast("Analysis complete", "Results saved to output.csv"))
+show_toast(toast("Results saved to output.csv", header = "Analysis Complete", type = "success"))
 
 # Too vague
-show_toast(toast("Done"))
+show_toast("Done")
 ```
 
-**Set appropriate timing:**
-- Success messages: 3-5 seconds
-- Error messages: No auto-hide (let user read and dismiss)
-- Progress updates: No auto-hide until complete
+**Set appropriate durations:**
+- Success messages: 3-5 seconds (default `duration_s = 5`)
+- Error messages: `duration_s = NA` (let user read and dismiss)
+- Progress updates: `duration_s = NA` + `closable = FALSE` until complete
 
 **Use sparingly:**
 - Don't toast every minor action
@@ -876,7 +885,7 @@ show_toast(toast("Done"))
 - Avoid toast overload
 
 **Position consistently:**
-Toasts typically appear in the same corner throughout the app (default: top-right).
+Use the same `position` throughout your app (default: `"top-right"`).
 
 ### Accessibility
 

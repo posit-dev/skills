@@ -5,6 +5,7 @@ bslib provides powerful theming capabilities that allow you to customize the app
 ## Table of Contents
 
 - [Core Theming Function](#core-theming-function)
+- [Brand YAML Integration](#brand-yaml-integration)
 - [Bootswatch Themes](#bootswatch-themes)
 - [Main Colors](#main-colors)
 - [Typography](#typography)
@@ -34,6 +35,19 @@ page_sidebar(
 ```
 
 **Key insight:** Changing only a few colors and fonts can impact **hundreds** of Bootstrap CSS rules due to variable cascading.
+
+## Brand YAML Integration
+
+bslib automatically discovers and applies `_brand.yml` files (from the [brand.yml](https://posit-dev.github.io/brand-yml/) spec) in your project directory. This provides a cross-tool way to define brand colors, typography, and logos that work in both Shiny apps and Quarto documents.
+
+**How it works:** If a `_brand.yml` file exists in your app directory, `bs_theme()` will automatically apply its settings. No code changes needed.
+
+**Disable auto-discovery:**
+```r
+bs_theme(brand = FALSE)  # Ignore _brand.yml
+```
+
+**Requires:** The `brand.yml` R package must be installed for auto-discovery to work.
 
 ## Bootswatch Themes
 
