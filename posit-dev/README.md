@@ -6,6 +6,7 @@ General-purpose developer skills useful across any language, project type, or co
 
 - **[critical-code-reviewer](./critical-code-reviewer/)** - Rigorous, adversarial code review across Python, R, JavaScript/TypeScript, SQL, and front-end code
 - **[describe-design](./describe-design/)** - Research a codebase and create architectural documentation with Mermaid diagrams
+- **[pr-create](./pr-create/)** - Creates a pull request from current changes, monitors GitHub CI, and debugs any failures until CI passes
 
 ## Contributing
 

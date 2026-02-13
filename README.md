@@ -12,6 +12,7 @@ General-purpose developer skills useful across any language, project type, or co
 
 - **[critical-code-reviewer](./posit-dev/critical-code-reviewer/)** - Conduct rigorous, adversarial code reviews identifying security holes, lazy patterns, edge case failures, and bad practices across Python, R, JavaScript/TypeScript, SQL, and front-end code
 - **[describe-design](./posit-dev/describe-design/)** - Research a codebase and create architectural documentation describing how features or systems work, with Mermaid diagrams and stable code references suitable for humans and AI agents
+- **[pr-create](./posit-dev/pr-create/)** - Creates a pull request from current changes, monitors GitHub CI, and debugs any failures until CI passes
 
 ### Open Source
 
