@@ -30,7 +30,7 @@ Create and use `_brand.yml` files for consistent branding across Shiny applicati
 
 Build modern Shiny dashboards and applications using bslib with Bootstrap 5. Use when creating or updating Shiny apps with modern layouts, themes, and components.
 
-**Organization**: Comprehensive reference skill with main SKILL.md providing overview and workflows, plus 12 detailed reference files:
+**Organization**: Comprehensive reference skill with main SKILL.md providing overview and workflows, plus 14 detailed reference files:
 - `migration.md` - Legacy Shiny to modern bslib migration guide
 - `page-layouts.md` - Page-level layout functions (page_sidebar, page_navbar, page_fillable)
 - `grid-layouts.md` - Multi-column grid systems (layout_columns, layout_column_wrap)
@@ -39,8 +39,10 @@ Build modern Shiny dashboards and applications using bslib with Bootstrap 5. Use
 - `navigation.md` - Navigation containers and multi-page patterns
 - `sidebars.md` - Sidebar layouts and organization
 - `filling.md` - Fillable containers and fill items system
-- `theming.md` - Complete theming guide with bs_theme(), Bootswatch, brand.yml, and Sass
-- `components.md` - Accordions, tooltips, popovers, and toasts
+- `theming.md` - Basic theming (colors, fonts, Bootswatch). See shiny-bslib-theming for advanced theming
+- `accordions.md` - Collapsible sections and sidebar organization
+- `tooltips-popovers.md` - Hover tooltips and click-triggered popovers
+- `toasts.md` - Temporary notification messages
 - `inputs.md` - Special bslib input widgets (switches, dark mode, task buttons, code editor, submit textarea)
 - `best-practices.md` - bslib-specific patterns and common gotchas
 
@@ -59,6 +61,19 @@ Build modern Shiny dashboards and applications using bslib with Bootstrap 5. Use
 - [bslib articles](https://rstudio.github.io/bslib/articles/)
 - [Bootstrap 5 documentation](https://getbootstrap.com/docs/5.0/)
 - [Bootswatch themes](https://bootswatch.com/)
+
+### `shiny-bslib-theming`
+
+Comprehensive theming for Shiny apps using bslib and Bootstrap 5. Use when customizing app appearance beyond basic Bootswatch themes — covers bs_theme(), custom colors, typography, Bootstrap Sass variables, custom Sass/CSS rules, dark mode, dynamic theming, and plot theming with the thematic package.
+
+**Organization**: SKILL.md covers core theming workflow (bs_theme, Bootswatch, colors, fonts, Sass variables, custom rules, plot theming), plus 1 reference file:
+- `advanced-theming.md` - Dynamic theme switching, dark mode, component compatibility
+
+**Resources**:
+- [bslib theming articles](https://rstudio.github.io/bslib/articles/theming/)
+- [Bootstrap 5 Sass variables](https://rstudio.github.io/bslib/articles/bs5-variables/)
+- [Bootswatch themes](https://bootswatch.com/)
+- [thematic package](https://rstudio.github.io/thematic/)
 
 ## Potential Skills
 

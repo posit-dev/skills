@@ -128,9 +128,12 @@ See [theming.md](references/theming.md) for detailed guidance.
 
 ### UI Components
 
-Accordions, tooltips, popovers, and toasts for rich interactive interfaces.
+- **Accordions** -- Collapsible sections, especially useful in sidebars
+- **Tooltips** -- Hover-triggered help text
+- **Popovers** -- Click-triggered containers for secondary UI/inputs
+- **Toasts** -- Temporary notification messages
 
-See [components.md](references/components.md) for detailed guidance.
+See [accordions.md](references/accordions.md), [tooltips-popovers.md](references/tooltips-popovers.md), and [toasts.md](references/toasts.md).
 
 ### Special Inputs
 
@@ -175,7 +178,9 @@ See [migration.md](references/migration.md) for a complete mapping of legacy pat
 - **[navigation.md](references/navigation.md)** -- Navigation containers and patterns
 - **[sidebars.md](references/sidebars.md)** -- Sidebar layouts and organization
 - **[filling.md](references/filling.md)** -- Fillable containers and fill items
-- **[theming.md](references/theming.md)** -- Complete theming guide
-- **[components.md](references/components.md)** -- Accordions, tooltips, popovers, toasts
+- **[theming.md](references/theming.md)** -- Basic theming (colors, fonts, Bootswatch). See **shiny-bslib-theming** skill for advanced theming
+- **[accordions.md](references/accordions.md)** -- Collapsible sections and sidebar organization
+- **[tooltips-popovers.md](references/tooltips-popovers.md)** -- Hover tooltips and click-triggered popovers
+- **[toasts.md](references/toasts.md)** -- Temporary notification messages
 - **[inputs.md](references/inputs.md)** -- Special bslib input widgets
 - **[best-practices.md](references/best-practices.md)** -- bslib-specific patterns and common gotchas
