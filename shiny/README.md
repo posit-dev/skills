@@ -66,8 +66,9 @@ Build modern Shiny dashboards and applications using bslib with Bootstrap 5. Use
 
 Comprehensive theming for Shiny apps using bslib and Bootstrap 5. Use when customizing app appearance beyond basic Bootswatch themes — covers bs_theme(), custom colors, typography, Bootstrap Sass variables, custom Sass/CSS rules, dark mode, dynamic theming, and plot theming with the thematic package.
 
-**Organization**: SKILL.md covers core theming workflow (bs_theme, Bootswatch, colors, fonts, Sass variables, custom rules, plot theming), plus 1 reference file:
-- `advanced-theming.md` - Dynamic theme switching, dark mode, component compatibility
+**Organization**: SKILL.md covers core theming workflow (bs_theme, Bootswatch, colors, fonts, Sass variables, low-level theming functions, interactive theming tools, plot theming), plus 2 reference files:
+- `sass-and-css-variables.md` - Bootstrap's two-layer variable system, CSS custom properties, utility classes
+- `dark-mode.md` - Color modes, dark mode (input_dark_mode, toggle_dark_mode), dynamic theming, component compatibility
 
 **Resources**:
 - [bslib theming articles](https://rstudio.github.io/bslib/articles/theming/)
