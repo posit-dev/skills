@@ -13,29 +13,33 @@ Basic theming for Shiny apps using `bs_theme()`. For comprehensive theming (Sass
 
 ## Quick Start
 
+`bs_theme(version = 5)` uses `preset = "shiny"` by default — a polished theme designed to look good for most Shiny apps. Start here, especially when modernizing a stock Shiny app:
+
 ```r
 page_sidebar(
-  theme = bs_theme(
-    version = 5,
-    preset = "flatly"
-  ),
+  theme = bs_theme(version = 5),  # "shiny" preset by default
   ...
 )
 ```
 
 ## Preset Themes
 
-Pre-packaged professional themes. List all with `bootswatch_themes()`. The `bootswatch` argument is an alias for `preset`.
+### The "shiny" preset (default)
 
-Popular options: `"flatly"`, `"minty"`, `"cosmo"`, `"litera"`, `"darkly"`, `"cyborg"`, `"simplex"`, `"zephyr"`.
+`bs_theme(version = 5)` defaults to `preset = "shiny"`, which is specifically designed for Shiny apps and looks professional without any extra configuration. Recommend this as the starting point.
+
+### Bootswatch presets
+
+For a different visual style, use a Bootswatch preset. Choose one that fits the app's purpose and audience — don't apply one by default. List all options with `bootswatch_themes()`.
 
 ```r
-page_navbar(
-  title = "My App",
-  theme = bs_theme(preset = "flatly"),
-  ...
-)
+bs_theme(version = 5, preset = "minty")   # soft green, friendly
+bs_theme(version = 5, preset = "cosmo")   # clean and modern
+bs_theme(version = 5, preset = "darkly")  # dark background
+bs_theme(version = 5, preset = "zephyr")  # light, airy
 ```
+
+The `bootswatch` argument is an alias for `preset`.
 
 ## Main Colors
 
