@@ -195,12 +195,6 @@ bs_theme() |>
 
 **bslib components:** Cards, value boxes, navs/navsets, sidebars, accordions, tooltips, popovers, toasts.
 
-### Partially Compatible
-
-- **`DT::datatable()`** -- Responds to color mode via CSS; filter controls adapt to dark mode (since bslib 0.6.0)
-- **`plotly`** -- Partially via `ggplotly()` + thematic; may need explicit dark mode layout config
-- **Other HTML widgets** -- Varies by widget
-
 ### Not Themeable
 
 - **`renderPlot()`** without the `thematic` package (images are rendered server-side, unaffected by CSS)
@@ -235,6 +229,3 @@ output$plot <- renderPlot({
 
 - **Client-side color modes** (`input_dark_mode()`) are instantaneous — just a CSS variable swap
 - **Server-side theme switching** (`session$setCurrentTheme()`) triggers Sass recompilation, which can take a noticeable moment for complex themes
-- Minimize custom Sass/CSS rules to reduce compilation time
-- Pre-compile Sass when possible (`sass::sass()` to a CSS file)
-- Consider caching strategies for production apps with multiple themes
