@@ -1,6 +1,6 @@
 ---
 name: shiny-bslib
-description: Build modern Shiny dashboards and applications using bslib (Bootstrap 5). Use this skill when creating new Shiny apps or modernizing existing apps that use legacy patterns (fluidPage, fluidRow/column, tabsetPanel, wellPanel, shinythemes). Covers page layouts (page_sidebar, page_navbar, page_fillable), grid systems (layout_columns, layout_column_wrap), cards, value boxes, navigation (navset functions), sidebars, filling layouts, theming (bs_theme, Bootswatch themes), UI components (accordions, tooltips, popovers, toasts), and special inputs (input_switch, input_dark_mode, input_task_button, input_code_editor). This skill assumes familiarity with basic Shiny and focuses on modern bslib UI/UX features for Bootstrap 5 dashboards.
+description: Build modern Shiny dashboards and applications using bslib (Bootstrap 5). Use when creating new Shiny apps, modernizing legacy apps (fluidPage, fluidRow/column, tabsetPanel, wellPanel, shinythemes), or working with bslib page layouts, grid systems, cards, value boxes, navigation, sidebars, filling layouts, theming, accordions, tooltips, popovers, toasts, or bslib inputs. Assumes familiarity with basic Shiny.
 ---
 
 # Modern Shiny Apps with bslib

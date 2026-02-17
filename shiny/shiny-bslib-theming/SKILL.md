@@ -1,6 +1,6 @@
 ---
 name: shiny-bslib-theming
-description: Comprehensive theming for Shiny apps using bslib and Bootstrap 5. Use when customizing app appearance with bs_theme(), Bootswatch themes, preset themes (builtin_themes), custom colors (bg, fg, primary, secondary, success, info, warning, danger), typography (font_google, font_face, font_link, font_collection, font_scale), brand.yml integration, Bootstrap Sass variables (bs_add_variables), custom Sass/CSS rules (bs_add_rules, bs_add_functions, bs_add_mixins, bs_bundle), dark mode and Bootstrap 5.3 color modes (input_dark_mode, toggle_dark_mode, data-bs-theme attribute, CSS custom properties), dynamic theme switching (session$setCurrentTheme), real-time theming (bs_themer, run_with_themer, bs_theme_preview), theme inspection (bs_get_variables, bs_get_contrast), or making R plots match the app theme (thematic package). Covers everything from quick Bootswatch theming to advanced Sass customization, Bootstrap CSS variables, and dynamic color mode switching.
+description: Advanced theming for Shiny apps using bslib and Bootstrap 5. Use when customizing app appearance with bs_theme(), Bootswatch themes, custom colors, typography, brand.yml integration, Bootstrap Sass variables, custom Sass/CSS rules, dark mode and color modes, dynamic theme switching, real-time theming, theme inspection, or making R plots match the app theme with thematic.
 ---
 
 # Theming Shiny Apps with bslib
