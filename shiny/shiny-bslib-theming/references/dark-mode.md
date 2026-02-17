@@ -12,6 +12,7 @@ Bootstrap 5.3 introduced client-side color modes that switch CSS custom properti
 - [Custom Styles Across Modes](#custom-styles-across-modes)
 - [Component Compatibility](#component-compatibility)
 - [Performance](#performance)
+- [Best Practices for Dark-Mode-Compatible Themes](#best-practices-for-dark-mode-compatible-themes)
 
 ## How Bootstrap Color Modes Work
 
@@ -229,3 +230,68 @@ output$plot <- renderPlot({
 
 - **Client-side color modes** (`input_dark_mode()`) are instantaneous — just a CSS variable swap
 - **Server-side theme switching** (`session$setCurrentTheme()`) triggers Sass recompilation, which can take a noticeable moment for complex themes
+
+## Best Practices for Dark-Mode-Compatible Themes
+
+### Design the Light Theme First
+
+Bootstrap derives dark mode from light-mode values. Design and finalize your light theme first, then patch dark mode as needed.
+
+### Patch Theme Colors for Dark Mode
+
+Sass theme colors (`$primary`, `$success`, etc.) compile once for both modes. Colors that work on light backgrounds may lack contrast on dark backgrounds. Patch with CSS property overrides:
+
+```r
+bs_theme(primary = "#2c6fbb") |>
+  bs_add_variables(
+    "primary-dark" = "#5a9fd4",
+    .where = "defaults"
+  ) |>
+  bs_add_rules("
+    [data-bs-theme='dark'] {
+      --bs-primary: #{$primary-dark};
+      --bs-primary-rgb: #{to-rgb($primary-dark)};
+    }
+  ")
+```
+
+Using a Sass variable with `!default` placement lets users override `$primary-dark` via `bs_add_variables()`, and Bootstrap's `to-rgb()` derives the RGB components automatically.
+
+### Avoid Hardcoded Colors
+
+Hardcoded hex values won't respond to mode changes. Use `var(--bs-*)` properties, or define custom properties that switch per mode:
+
+```r
+bs_theme() |>
+  bs_add_rules("
+    :root, [data-bs-theme='light'] {
+      --my-surface: #f0f4f8;
+      --my-surface-text: #1a2b3c;
+    }
+    [data-bs-theme='dark'] {
+      --my-surface: #1e2a38;
+      --my-surface-text: #c8d6e0;
+    }
+    .my-surface {
+      background: var(--my-surface);
+      color: var(--my-surface-text);
+    }
+  ")
+```
+
+### Test Contrast in Both Modes
+
+Colors meeting WCAG contrast in light mode may fail in dark mode. Toggle between modes and verify:
+
+- Text readability against backgrounds
+- Primary-colored buttons and links
+- Borders and dividers visible but not overpowering
+- Status colors (success, warning, danger) remain distinguishable
+
+### Keep Dark Mode Overrides Minimal
+
+Bootstrap's built-in dark derivations handle most components well. Focus overrides on:
+
+- Theme colors with confirmed contrast issues in dark mode
+- Custom components with colors outside Bootstrap's system
+- Shadows (dark backgrounds need subtler or lighter shadows)
