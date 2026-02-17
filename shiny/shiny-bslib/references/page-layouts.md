@@ -55,6 +55,7 @@ ui <- page_sidebar(
 - `theme`: Optional `bs_theme()` object for styling
 - `fillable`: Whether the page should fill the viewport height (default TRUE)
 - `fillable_mobile`: Whether fillable behavior applies on mobile (default FALSE)
+- `class = "bslib-page-dashboard"`: Adds a light gray background behind the main area, which looks best when cards are used as the primary content containers
 
 ### page_navbar()
 
@@ -93,6 +94,19 @@ ui <- page_navbar(
 - `id`: ID for tracking the active page (accessible as `input$<id>`)
 - `fillable`: Can be TRUE (all pages), FALSE (no pages), or a vector of page names
 - `theme`: Optional `bs_theme()` object
+
+**Dashboard appearance:** Add `class = "bslib-page-dashboard"` to individual `nav_panel()` containers (not the `page_navbar()` itself) to get a light gray background on specific pages:
+
+```r
+page_navbar(
+  title = "My App",
+  nav_panel("Dashboard", class = "bslib-page-dashboard",
+    card(...),
+    card(...)
+  ),
+  nav_panel("About", "Plain white background here")
+)
+```
 
 **Navigation helpers:**
 - `nav_spacer()`: Adds spacing/pushes subsequent items right

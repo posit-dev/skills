@@ -18,6 +18,7 @@ Value boxes at top, detailed content below:
 
 ```r
 page_sidebar(
+  class = "bslib-page-dashboard",  # Light gray background; looks best with cards
   sidebar = sidebar(...),
   # KPIs at top - don't fill
   layout_column_wrap(
