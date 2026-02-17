@@ -323,7 +323,7 @@ navset_card_underline(
 **Key features:**
 - The `title` argument adds a card header
 - Full-screen support works with tabbed cards
-- Each `nav_panel()` behaves like a card — non-card children get implicitly wrapped in `card_body()`
+- Each `nav_panel()` behaves like a card body — do **not** wrap panel content in `card()`; the navset already provides the card container
 
 See [navigation.md](navigation.md) for more details on navset functions.
 

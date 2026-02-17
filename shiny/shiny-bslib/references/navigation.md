@@ -160,7 +160,23 @@ navset_card_underline(
 **Key features:**
 - The `title` parameter adds a card header above the navigation
 - Supports `full_screen = TRUE` for expandable content
-- Each `nav_panel()` behaves like a card body
+- Each `nav_panel()` behaves like a card body — do **not** wrap panel content in `card()`
+
+**Don't nest cards inside navset_card_* panels.** The navset already provides the card container. Wrapping content in `card()` inside `nav_panel()` creates a card-within-a-card:
+
+```r
+# Wrong: double-nested card
+navset_card_underline(
+  nav_panel("Plot", card(plotOutput("plot")))  # card() is redundant
+)
+
+# Right: output directly in nav_panel
+navset_card_underline(
+  nav_panel("Plot", plotOutput("plot"))
+)
+```
+
+The same applies to `navset_card_tab()` and `navset_card_pill()`.
 
 ### navset_card_tab()
 
@@ -203,8 +219,8 @@ nav_panel(
   title = "Panel Label",     # Shown in navigation
   value = "panel_id",         # Optional ID for programmatic control
   icon = bsicons::bs_icon("graph-up"),  # Optional icon
-  # Content arguments
-  card(...)
+  # Content: outputs, text, layout functions — not card() when inside navset_card_*
+  plotOutput("plot")
 )
 ```
 

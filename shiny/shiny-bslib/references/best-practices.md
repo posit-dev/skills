@@ -292,6 +292,26 @@ metric_card <- function(title, value, theme = "primary") {
 
 ## Common Gotchas
 
+### Unnecessary Card Nesting
+
+**Problem:** Wrapping content in `card()` inside a context that already provides a card container.
+
+**Cause:** `navset_card_*()` functions (`navset_card_underline()`, `navset_card_tab()`, `navset_card_pill()`) are already cards. Each `nav_panel()` inside them behaves like a card body. Adding `card()` inside a `nav_panel()` creates a card-within-a-card.
+
+```r
+# Wrong: double-nested card
+navset_card_underline(
+  nav_panel("Plot", card(plotOutput("plot")))
+)
+
+# Right: content goes directly in nav_panel
+navset_card_underline(
+  nav_panel("Plot", plotOutput("plot"))
+)
+```
+
+More broadly, not every piece of content needs a card. Cards are for grouping and visually separating content at the dashboard level — content that's already inside a card context doesn't need another one.
+
 ### Fill Chain Breaks
 
 **Problem:** Output doesn't fill despite being in a filling layout.
