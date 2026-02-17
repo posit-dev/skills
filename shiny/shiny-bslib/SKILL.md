@@ -16,7 +16,7 @@ library(bslib)
 
 ui <- page_sidebar(
   title = "My Dashboard",
-  theme = bs_theme(version = 5, bootswatch = "flatly"),
+  theme = bs_theme(version = 5, preset = "flatly"),
   sidebar = sidebar(
     selectInput("variable", "Variable", choices = names(mtcars))
   ),

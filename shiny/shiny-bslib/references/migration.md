@@ -22,7 +22,7 @@ This reference maps legacy Shiny UI patterns to their modern bslib equivalents. 
 | `fluidRow(column(...))` | `layout_columns()` or `layout_column_wrap()` | Works with filling layouts |
 | `tabsetPanel(tabPanel(...))` | `navset_card_underline(nav_panel(...))` | Card integration, full-screen |
 | `wellPanel()` | `card()` | Full-screen, headers, filling |
-| `shinythemes::shinytheme()` | `bs_theme(bootswatch = ...)` | Bootstrap 5, Sass variables |
+| `shinythemes::shinytheme()` | `bs_theme(preset = ...)` | Bootstrap 5, Sass variables |
 | `plotOutput("plot")` (bare) | `card(full_screen = TRUE, plotOutput("plot"))` | Full-screen expansion |
 | `conditionalPanel()` in sidebar | `accordion()` in `sidebar()` | Better organization, native styling |
 | `checkboxInput()` for toggles | `input_switch()` | Modern toggle UI |
@@ -219,7 +219,7 @@ fluidPage(
 page_sidebar(
   theme = bs_theme(
     version = 5,
-    bootswatch = "cerulean",
+    preset = "cerulean",
     base_font = font_google("Roboto")
   ),
   ...
@@ -284,7 +284,7 @@ library(bslib)
 
 ui <- page_navbar(
   title = "Sales Dashboard",
-  theme = bs_theme(version = 5, bootswatch = "flatly"),
+  theme = bs_theme(version = 5, preset = "flatly"),
   nav_panel("Overview",
     layout_sidebar(
       sidebar = sidebar(

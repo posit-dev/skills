@@ -224,7 +224,7 @@ Pass a `bs_theme()` object to customize appearance:
 ```r
 ui <- page_navbar(
   theme = bs_theme(
-    bootswatch = "minty",
+    preset = "minty",
     base_font = font_google("Roboto")
   ),
   ...

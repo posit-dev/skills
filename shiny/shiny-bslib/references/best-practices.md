@@ -269,7 +269,7 @@ Extract theme configuration into a helper:
 app_theme <- function() {
   bs_theme(
     version = 5,
-    bootswatch = "flatly",
+    preset = "flatly",
     primary = "#2c3e50",
     base_font = font_google("Lato")
   ) |>

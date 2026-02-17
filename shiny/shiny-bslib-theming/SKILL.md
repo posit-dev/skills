@@ -12,7 +12,7 @@ Customize Shiny app appearance using bslib's Bootstrap 5 theming system. From qu
 **Bootswatch theme (fastest):**
 ```r
 page_sidebar(
-  theme = bs_theme(bootswatch = "flatly"),
+  theme = bs_theme(preset = "flatly"),
   ...
 )
 ```
@@ -53,7 +53,7 @@ bs_theme(brand = "path/to/brand.yml")  # Explicit path
 
 **Example:**
 ```r
-theme <- bs_theme(bootswatch = "minty") |>
+theme <- bs_theme(preset = "minty") |>
   bs_theme_update(
     primary = "#1a9a7f",
     base_font = font_google("Lato")
@@ -78,7 +78,8 @@ bs_theme(
   success = NULL, info = NULL, warning = NULL, danger = NULL,
   base_font = NULL, code_font = NULL, heading_font = NULL,
   font_scale = NULL,    # Scalar multiplier for base font size (e.g., 1.5 = 150%)
-  bootswatch = NULL     # Bootswatch theme name (shorthand for preset)
+  preset = NULL,        # Bootswatch or bslib preset theme name
+  bootswatch = NULL     # Alias for preset
 )
 ```
 
@@ -190,7 +191,7 @@ Add or override Bootstrap Sass variable defaults:
 
 ```r
 theme <- bs_add_variables(
-  bs_theme(bootswatch = "sketchy", primary = "orange"),
+  bs_theme(preset = "sketchy", primary = "orange"),
   "body-bg" = "#EEEEEE",
   "font-family-base" = "monospace",
   "font-size-base" = "1.4rem",
@@ -335,7 +336,7 @@ Standalone demo app for previewing a theme with many example UI components:
 
 ```r
 bslib::bs_theme_preview()                        # Default theme
-bslib::bs_theme_preview(bs_theme(bootswatch = "darkly"))  # Custom theme
+bslib::bs_theme_preview(bs_theme(preset = "darkly"))  # Custom theme
 ```
 
 Includes the theming UI by default (`with_themer = TRUE`).
@@ -368,7 +369,7 @@ All three tools print the resulting `bs_theme()` code to the R console for easy 
 ```r
 vars <- c("body-bg", "body-color", "primary", "border-radius")
 bs_get_variables(bs_theme(), varnames = vars)
-bs_get_variables(bs_theme(bootswatch = "darkly"), varnames = vars)
+bs_get_variables(bs_theme(preset = "darkly"), varnames = vars)
 ```
 
 **Check contrast (for accessibility):**
@@ -393,7 +394,7 @@ Aim for WCAG AA compliance: 4.5:1 for normal text, 3:1 for large text.
 app_theme <- function() {
   bs_theme(
     version = 5,
-    bootswatch = "flatly",
+    preset = "flatly",
     primary = "#2c3e50",
     base_font = font_google("Lato"),
     heading_font = font_google("Montserrat", wght = c(400, 700))

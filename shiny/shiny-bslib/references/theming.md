@@ -5,7 +5,7 @@ Basic theming for Shiny apps using `bs_theme()`. For comprehensive theming (Sass
 ## Table of Contents
 
 - [Quick Start](#quick-start)
-- [Bootswatch Themes](#bootswatch-themes)
+- [Preset Themes](#preset-themes)
 - [Main Colors](#main-colors)
 - [Typography](#typography)
 - [Brand YAML](#brand-yaml)
@@ -17,22 +17,22 @@ Basic theming for Shiny apps using `bs_theme()`. For comprehensive theming (Sass
 page_sidebar(
   theme = bs_theme(
     version = 5,
-    bootswatch = "flatly"
+    preset = "flatly"
   ),
   ...
 )
 ```
 
-## Bootswatch Themes
+## Preset Themes
 
-Pre-packaged professional themes. List all with `bootswatch_themes()`.
+Pre-packaged professional themes. List all with `bootswatch_themes()`. The `bootswatch` argument is an alias for `preset`.
 
 Popular options: `"flatly"`, `"minty"`, `"cosmo"`, `"litera"`, `"darkly"`, `"cyborg"`, `"simplex"`, `"zephyr"`.
 
 ```r
 page_navbar(
   title = "My App",
-  theme = bs_theme(bootswatch = "flatly"),
+  theme = bs_theme(preset = "flatly"),
   ...
 )
 ```
