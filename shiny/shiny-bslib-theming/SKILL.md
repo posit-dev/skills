@@ -9,10 +9,18 @@ Customize Shiny app appearance using bslib's Bootstrap 5 theming system. From qu
 
 ## Quick Start
 
-**Bootswatch theme (fastest):**
+**"shiny" preset (recommended starting point):**
 ```r
 page_sidebar(
-  theme = bs_theme(preset = "flatly"),
+  theme = bs_theme(),  # "shiny" preset by default — polished, not plain Bootstrap
+  ...
+)
+```
+
+**Bootswatch theme (for a different visual style):**
+```r
+page_sidebar(
+  theme = bs_theme(preset = "zephyr"),  # or "cosmo", "minty", "darkly", etc.
   ...
 )
 ```
@@ -43,7 +51,7 @@ bs_theme(brand = "path/to/brand.yml")  # Explicit path
 
 ## Theming Workflow
 
-1. Start with a preset or Bootswatch theme close to your desired look
+1. Start with the `"shiny"` preset (default) or a Bootswatch theme close to your desired look
 2. Customize main colors (`bg`, `fg`, `primary`)
 3. Adjust fonts with `font_google()` or other font helpers
 4. Fine-tune with Bootstrap Sass variables via `...` or `bs_add_variables()`
@@ -78,7 +86,6 @@ bs_theme(
   success = NULL, info = NULL, warning = NULL, danger = NULL,
   base_font = NULL, code_font = NULL, heading_font = NULL,
   font_scale = NULL,    # Scalar multiplier for base font size (e.g., 1.5 = 150%)
-  preset = NULL,        # Bootswatch or bslib preset theme name
   bootswatch = NULL     # Alias for preset
 )
 ```
@@ -87,11 +94,15 @@ Use `bs_theme_update(theme, ...)` to modify an existing theme. Use `is_bs_theme(
 
 ### Presets and Bootswatch
 
-**Built-in presets:** `builtin_themes()` lists bslib's own presets. For Bootstrap 5+, the default preset is `"shiny"`. Use `preset = "bootstrap"` for vanilla Bootstrap styling.
+**The "shiny" preset (recommended):** `bs_theme()` defaults to `preset = "shiny"` for Bootstrap 5+. This is a polished, purpose-built theme designed specifically for Shiny apps — it is **not** plain Bootstrap. It provides professional styling with well-chosen defaults for cards, sidebars, value boxes, and other bslib components. Start here and customize with colors and fonts before reaching for a Bootswatch theme.
 
-**Bootswatch themes:** `bootswatch_themes()` lists all available Bootswatch themes.
+**Vanilla Bootstrap:** Use `preset = "bootstrap"` to remove the "shiny" preset and get unmodified Bootstrap 5 styling.
 
-Popular options: `"flatly"` (flat design), `"minty"` (fresh green), `"cosmo"` (modern), `"litera"` (crisp), `"darkly"` (dark), `"cyborg"` (dark), `"simplex"` (minimalist), `"zephyr"` (modern), `"sketchy"` (hand-drawn).
+**Built-in presets:** `builtin_themes()` lists bslib's own presets.
+
+**Bootswatch themes:** `bootswatch_themes()` lists all available Bootswatch themes. Choose one that fits the app's purpose and audience — don't apply one by default.
+
+Popular options: `"zephyr"` (light, modern), `"cosmo"` (clean), `"minty"` (fresh green), `"flatly"` (flat design), `"litera"` (crisp), `"darkly"` (dark), `"cyborg"` (dark), `"simplex"` (minimalist), `"sketchy"` (hand-drawn).
 
 ### Main Colors
 
@@ -328,6 +339,35 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+## Dashboard Background Styling
+
+The `bslib-page-dashboard` CSS class adds a light gray background behind the main content area, giving dashboard-style apps a polished look where cards stand out against the background. This is a theming detail — it doesn't change layout behavior, only the visual treatment.
+
+**For `page_sidebar()` dashboards:**
+```r
+page_sidebar(
+  class = "bslib-page-dashboard",
+  title = "My Dashboard",
+  sidebar = sidebar(...),
+  ...
+)
+```
+
+**For `page_navbar()` with dashboard-focused pages:**
+Apply the class to individual `nav_panel()` containers (not `page_navbar()` itself) so only dashboard-oriented pages get the gray background:
+```r
+page_navbar(
+  title = "Analytics",
+  nav_panel("Dashboard", class = "bslib-page-dashboard",
+    layout_column_wrap(...)
+  ),
+  nav_panel("Report",
+    # No dashboard class — standard white background for prose/reports
+    ...
+  )
+)
+```
+
 ## Interactive Theming Tools
 
 ### bs_theme_preview()
@@ -394,7 +434,6 @@ Aim for WCAG AA compliance: 4.5:1 for normal text, 3:1 for large text.
 app_theme <- function() {
   bs_theme(
     version = 5,
-    preset = "flatly",
     primary = "#2c3e50",
     base_font = font_google("Lato"),
     heading_font = font_google("Montserrat", wght = c(400, 700))
