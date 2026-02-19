@@ -60,12 +60,17 @@ ui <- page_navbar(
 2. **Use `layout_column_wrap()` or `layout_columns()`** for grid layouts instead of `fluidRow()`/`column()`, which don't support filling layouts
 3. **Wrap outputs in `card(full_screen = TRUE)`** when building dashboards -- full-screen expansion is a high-value feature
 4. **Set `fill = FALSE`** on `layout_column_wrap()` containers holding value boxes (they shouldn't stretch to fill height)
-5. **Don't nest cards unnecessarily** -- `navset_card_*()` functions are already cards; `nav_panel()` content goes directly inside them without wrapping in `card()`
-6. **Pin Bootstrap version**: include `theme = bs_theme(version = 5)` or a preset theme
-7. **Use `thematic::thematic_shiny()`** in the server so base R and ggplot2 plots match the app theme
-8. **Use responsive widths** like `width = "250px"` in `layout_column_wrap()` for auto-adjusting columns
-9. **Group sidebar inputs** with `accordion()` when sidebars have many controls
-10. **See [migration.md](references/migration.md)** for mapping legacy Shiny patterns to modern bslib equivalents
+5. **Pin Bootstrap version**: include `theme = bs_theme(version = 5)` or a preset theme
+6. **Use `thematic::thematic_shiny()`** in the server so base R and ggplot2 plots match the app theme
+7. **Use responsive widths** like `width = "250px"` in `layout_column_wrap()` for auto-adjusting columns
+8. **Group sidebar inputs** with `accordion()` when sidebars have many controls
+9. **See [migration.md](references/migration.md)** for mapping legacy Shiny patterns to modern bslib equivalents
+
+## Avoid Common Errors
+
+1. Avoid directly nesting `card()` containers. `navset_card_*()` functions are already cards; `nav_panel()` content goes directly inside them without wrapping in `card()`
+2. Only use `layout_columns()` and `layout_column_wrap()` for laying out multiple elements. Single children should be passed directly to their container functions.
+3. Never nest `page_*()` functions. Only use one top-level page function per app.
 
 ## Core Concepts
 
