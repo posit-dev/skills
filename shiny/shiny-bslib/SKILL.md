@@ -123,6 +123,40 @@ See [theming.md](references/theming.md) for detailed guidance.
 
 See [accordions.md](references/accordions.md), [tooltips-popovers.md](references/tooltips-popovers.md), and [toasts.md](references/toasts.md).
 
+### Icons
+
+**Recommended: `bsicons` package** (Bootstrap Icons, designed for bslib):
+```r
+bsicons::bs_icon("graph-up")
+bsicons::bs_icon("people", size = "2em")
+```
+
+Browse icons: https://icons.getbootstrap.com/
+
+**Alternative: `fontawesome` package:**
+```r
+fontawesome::fa("envelope")
+```
+
+**Accessibility for icon-only triggers:** When an icon is used as the sole trigger for a tooltip, popover, or similar interactive element (no accompanying text), it must be accessible to screen readers. By default, icon packages mark icons as decorative (`aria-hidden="true"`), which hides them from assistive technology.
+
+- **`bsicons::bs_icon()`**: Provide `title` — this automatically sets `a11y = "sem"`
+  ```r
+  tooltip(
+    bs_icon("info-circle", title = "More information"),
+    "Tooltip content here"
+  )
+  ```
+- **`fontawesome::fa()`**: Set `a11y = "sem"` and provide `title`
+  ```r
+  tooltip(
+    fa("circle-info", a11y = "sem", title = "More information"),
+    "Tooltip content here"
+  )
+  ```
+
+The `title` should describe the purpose of the trigger (e.g., "More information", "Settings"), not the icon itself (e.g., not "info circle icon").
+
 ### Special Inputs
 
 - **`input_switch()`** -- Toggle switch (modern checkbox alternative)
