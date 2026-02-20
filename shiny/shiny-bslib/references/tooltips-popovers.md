@@ -13,7 +13,8 @@ Tooltips and popovers add contextual information and secondary controls to your 
 
 ### Basic Usage
 
-**Wrap any UI element:**
+Wrap any UI element in `tooltip()` to add a hover message:
+
 ```r
 tooltip(
   actionButton("analyze", "Analyze"),
@@ -21,86 +22,23 @@ tooltip(
 )
 ```
 
-**With icons:**
-```r
-card_header(
-  "Sales Dashboard",
-  tooltip(
-    bsicons::bs_icon("info-circle"),
-    "Shows sales data for the selected time period"
-  )
-)
-```
+**Key insight:** `tooltip()` uses the **last HTML element** in its first argument as the trigger. This means you can place an icon next to text using `span()` or `tagList()`, and only the icon becomes the trigger.
 
-**Key insight:** `tooltip()` uses the **last HTML element** in its first argument as the trigger.
-
-**Icon-only trigger (using tagList):**
-```r
-tagList(
-  "Revenue ",
-  tooltip(
-    bsicons::bs_icon("question-circle"),
-    "Total revenue from all sources"
-  )
-)
-```
-
-### Common Patterns
-
-**Input labels:**
-```r
-textInput(
-  "username",
-  tooltip(
-    span("Username", bsicons::bs_icon("info-circle")),
-    "Your username must be 3-20 characters"
-  )
-)
-```
-
-**Card headers:**
-```r
-card(
-  card_header(
-    "Key Metrics",
-    tooltip(
-      bsicons::bs_icon("info-circle"),
-      "Metrics are updated every hour"
-    )
-  ),
-  value_box(title = "Users", value = "1,234")
-)
-```
-
-**Value boxes:**
-```r
-value_box(
-  title = tooltip(
-    span("MRR", bsicons::bs_icon("question-circle")),
-    "Monthly Recurring Revenue"
-  ),
-  value = "$45,678"
-)
-```
+Common placements: wrap an `bsicons::bs_icon("info-circle")` inside `card_header()`, use `span("Label", bsicons::bs_icon("info-circle"))` as an input label, or nest inside a `value_box()` `title`.
 
 ### Dynamic Tooltips
 
-**toggle_tooltip()** -- show or hide programmatically:
+**`toggle_tooltip()`** shows or hides a tooltip programmatically. **`update_tooltip()`** changes its content:
+
 ```r
-tooltip(
-  id = "help_tip",
-  actionButton("analyze", "Analyze"),
-  "Click to run analysis"
-)
+# UI
+tooltip(id = "help_tip", actionButton("analyze", "Analyze"), "Click to run analysis")
 
 # Server
 observe({
   toggle_tooltip("help_tip", show = TRUE)
 }) |> bindEvent(once = TRUE)
-```
 
-**update_tooltip()** -- change content dynamically:
-```r
 observeEvent(input$update_status, {
   update_tooltip("status_tip", paste("Last updated:", Sys.time()))
 })
@@ -110,24 +48,8 @@ observeEvent(input$update_status, {
 
 ### Basic Usage
 
-**Basic popover:**
-```r
-popover(
-  actionButton("info", "More Info"),
-  "Additional details go here"
-)
-```
+`popover()` accepts any content as additional arguments and an optional `title`:
 
-**With title:**
-```r
-popover(
-  bsicons::bs_icon("gear"),
-  title = "Settings",
-  "Configuration options..."
-)
-```
-
-**With HTML content:**
 ```r
 popover(
   actionButton("help", "Help"),
@@ -143,6 +65,7 @@ popover(
 ### Common Patterns
 
 **Input toolbars in card headers** -- secondary controls that don't warrant sidebar space:
+
 ```r
 card(
   full_screen = TRUE,
@@ -176,25 +99,12 @@ card(
 )
 ```
 
-**Contextual help in sidebar:**
-```r
-sidebar(
-  title = "Filters",
-  popover(
-    bsicons::bs_icon("question-circle"),
-    title = "How to Use Filters",
-    tags$p("Filters are applied in real-time as you change selections."),
-    tags$p(tags$strong("Tip:"), " Use Shift+Click to select multiple items.")
-  ),
-  selectInput("category", "Category", ...),
-  dateRangeInput("dates", "Date Range", ...)
-)
-```
-
 ### Dynamic Popovers
 
-**toggle_popover():**
+**`toggle_popover()`** and **`update_popover()`** work like their tooltip counterparts:
+
 ```r
+# UI
 popover(
   id = "welcome_pop",
   actionButton("start", "Start"),
@@ -210,14 +120,9 @@ observe({
 observeEvent(input$start, {
   toggle_popover("welcome_pop", show = FALSE)
 })
-```
 
-**update_popover():**
-```r
 observeEvent(input$run, {
   update_popover("progress_pop", "Running analysis...")
-  Sys.sleep(2)
-  update_popover("progress_pop", "Complete!")
 })
 ```
 

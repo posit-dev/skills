@@ -30,14 +30,7 @@ page_sidebar(
 
 ### Bootswatch presets
 
-For a different visual style, use a Bootswatch preset. Choose one that fits the app's purpose and audience — don't apply one by default. List all options with `bootswatch_themes()`.
-
-```r
-bs_theme(version = 5, preset = "minty")   # soft green, friendly
-bs_theme(version = 5, preset = "cosmo")   # clean and modern
-bs_theme(version = 5, preset = "darkly")  # dark background
-bs_theme(version = 5, preset = "zephyr")  # light, airy
-```
+For a different visual style, use a Bootswatch preset via `bs_theme(version = 5, preset = "<name>")`. Popular options include `"minty"` (soft green), `"cosmo"` (clean and modern), `"darkly"` (dark background), and `"zephyr"` (light, airy). List all options with `bootswatch_themes()`. Choose one that fits the app's purpose and audience — don't apply one by default.
 
 The `bootswatch` argument is an alias for `preset`.
 
@@ -72,18 +65,7 @@ bs_theme(
 
 ## Typography
 
-Three font arguments: `base_font`, `heading_font`, `code_font`.
-
-**Google Fonts (most common):**
-```r
-bs_theme(
-  base_font = font_google("Roboto"),
-  heading_font = font_google("Montserrat"),
-  code_font = font_google("Fira Code")
-)
-```
-
-Also available: `font_link()` (custom URL), `font_face()` (local files), `font_collection()` (fallback stacks).
+Three font arguments: `base_font`, `heading_font`, `code_font`. Each accepts `font_google("Name")` (most common), `font_link()` (custom URL), `font_face()` (local files), or `font_collection()` (fallback stacks).
 
 ## Brand YAML
 

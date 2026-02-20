@@ -61,35 +61,10 @@ page_fillable(  # Height set to viewport
 
 ### Multiple Fill Items
 
-When multiple fill items share a fillable container, they divide the available space equally:
+When multiple fill items share a fillable container, they divide the available space equally. Non-fill items keep their natural size; fill items divide whatever space remains.
 
-**Example:**
-```r
-card(
-  height = 400,
-  card_body(plotOutput("plot1")),  # Gets 200px
-  card_body(plotOutput("plot2"))   # Gets 200px
-)
-```
+**Warning:** If non-fill items are larger than the container, fill items won't be visible:
 
-### Mixed Fill and Non-Fill Items
-
-Non-fill items keep their natural size. Fill items divide whatever space remains.
-
-**Example:**
-```r
-card(
-  height = 400,
-  # Non-fill header (50px natural height)
-  card_header("Title"),
-  # Fill item gets remaining 350px
-  card_body(plotOutput("plot"))
-)
-```
-
-**Warning:** If non-fill items are larger than the container, fill items won't be visible!
-
-**Problematic example:**
 ```r
 card(
   height = 300,
@@ -100,11 +75,10 @@ card(
 
 ## Fill Carriers
 
-### The Problem
+### Parent-Child Relationship
 
-Fill items require their **immediate parent** to be a fillable container. Non-fill elements between a fillable container and fill item break the chain.
+Fill items require their **immediate parent** to be a fillable container. Non-fill elements between a fillable container and fill item break the chain:
 
-**Broken chain example:**
 ```r
 card(
   height = 400,
@@ -119,14 +93,12 @@ card(
 
 ### The Solution
 
-A **fill carrier** is both a fill item and a fillable container, preserving the fill chain.
+A **fill carrier** is both a fill item and a fillable container, preserving the fill chain. Use `as_fill_carrier()` to promote any element:
 
-**Fixed example:**
 ```r
 card(
   height = 400,
   card_body(
-    # Make the div a fill carrier
     as_fill_carrier(
       div(
         plotOutput("plot")  # Now fills properly
@@ -136,111 +108,19 @@ card(
 )
 ```
 
-**Automatic fill carrier:** `card_body()` is a fill carrier by default (both `fillable = TRUE` and `fill = TRUE`).
+`card_body()` is a fill carrier by default (both `fillable = TRUE` and `fill = TRUE`).
 
 ## Key Components and Their Fill Behavior
 
-### page_fillable()
-
-- **Is fillable:** Yes
-- **Is fill item:** N/A (top level)
-- **Behavior:** Sets height to browser viewport, activating fill for direct children
-- **Mobile:** Disabled by default (`fillable_mobile = FALSE`)
-
-**Example:**
-```r
-page_fillable(
-  card(plotOutput("plot"))  # Fills viewport
-)
-```
-
-### card() and card_body()
-
-- **Is fillable:** Yes (default `fillable = TRUE`)
-- **Is fill item:** Yes (default `fill = TRUE`)
-- **Role:** Fill carriers by default
-- **Behavior:** Grow/shrink themselves AND allow children to do the same
-
-**Example:**
-```r
-page_fillable(
-  card(  # Fills page
-    card_header("Plot"),
-    card_body(  # Fills card
-      plotOutput("plot")  # Fills card_body
-    )
-  )
-)
-```
-
-### layout_columns()
-
-- **Is fillable:** Yes (default `fillable = TRUE`)
-- **Is fill item:** Yes (default)
-- **Behavior:** Each column wrapped in a fillable container
-
-**Example:**
-```r
-page_fillable(
-  layout_columns(
-    card(plotOutput("plot1")),
-    card(plotOutput("plot2"))
-  )
-)
-```
-
-### layout_column_wrap()
-
-- **Is fillable:** Depends on context
-- **Is fill item:** Yes (default `fill = TRUE`)
-- **Behavior:** Children can be fill items
-
-**Example:**
-```r
-page_fillable(
-  layout_column_wrap(
-    width = 1/2,
-    card(plotOutput("plot1")),
-    card(plotOutput("plot2"))
-  )
-)
-```
-
-### layout_sidebar()
-
-- **Is fillable:** Main content area is fillable by default
-- **Is fill item:** Yes (default)
-- **Behavior:** Allows outputs in main area to fill
-
-**Example:**
-```r
-card(
-  height = 400,
-  layout_sidebar(
-    fillable = TRUE,  # Ensure main area is fillable
-    sidebar = sidebar("Controls"),
-    plotOutput("plot")  # Fills main area
-  )
-)
-```
-
-### value_box()
-
-- **Is fillable:** Depends
-- **Is fill item:** Yes (default)
-- **Behavior:** Maintains common baseline in multi-column layouts
-
-**Example:**
-```r
-layout_column_wrap(
-  width = 1/3,
-  value_box(title = "Users", value = "1,234"),
-  value_box(title = "Revenue", value = "$56K"),
-  value_box(title = "Growth", value = "+12%")
-)
-```
-
-All value boxes maintain equal height.
+| Component | Fillable | Fill item | Notes |
+|---|---|---|---|
+| `page_fillable()` | Yes | N/A | Sets height to viewport; `fillable_mobile = FALSE` by default |
+| `card()` | Yes | Yes | Fill carrier by default |
+| `card_body()` | Yes | Yes | Fill carrier by default |
+| `layout_columns()` | Yes | Yes | Each column wrapped in a fillable container |
+| `layout_column_wrap()` | Context-dependent | Yes | Children can be fill items |
+| `layout_sidebar()` | Main area yes | Yes | Set `fillable = TRUE` to ensure main area is fillable |
+| `value_box()` | Context-dependent | Yes | Maintains equal height in multi-column layouts |
 
 ## When Filling May Not Be Desired
 
@@ -250,7 +130,8 @@ Fillable containers use CSS flexbox, which changes child rendering:
 - Inline elements appear on separate lines
 - Normal flow is disrupted
 
-**Solution:** Use `fillable = FALSE` when needed:
+Use `fillable = FALSE` when needed:
+
 ```r
 card_body(
   fillable = FALSE,
@@ -260,12 +141,10 @@ card_body(
 
 ### Value Boxes in Filling Layouts
 
-Value boxes shouldn't expand excessively. Set `fill = FALSE` on the layout container:
+Value boxes shouldn't expand to fill the entire page. Use `fill = FALSE` on the wrapping layout container so value boxes keep a natural height and the remaining space goes to other fill items:
 
-**Example:**
 ```r
 page_fillable(
-  # Value boxes at top - fixed height
   layout_column_wrap(
     width = 1/3,
     fill = FALSE,  # Important!
@@ -273,74 +152,28 @@ page_fillable(
     value_box(title = "KPI 2", value = "456"),
     value_box(title = "KPI 3", value = "789")
   ),
-  # Plot fills remaining space
-  card(plotOutput("main_plot"))
+  card(plotOutput("main_plot"))  # Fills remaining space
 )
 ```
 
 ### Disabling Filling for Scrolling
 
-Switch from `page_fillable()` to `page_fluid()` or `page_fixed()` to disable filling:
-
-**Example:**
-```r
-page_fluid(  # Scrolling page
-  card(plotOutput("plot1")),  # 400px default
-  card(plotOutput("plot2")),  # 400px default
-  card(plotOutput("plot3")),  # 400px default
-  # Page scrolls
-)
-```
-
-Even without page-level filling, cards with `full_screen = TRUE` still fill when expanded.
+Switch from `page_fillable()` to `page_fluid()` or `page_fixed()` to get a scrolling page with natural content heights. Even without page-level filling, cards with `full_screen = TRUE` still fill when expanded.
 
 ## Scrolling vs Filling
 
-### Filling Layout
+**Filling layout** (`page_fillable()`): content adapts to viewport size with no page scroll — professional dashboard feel, but requires careful height management.
 
-**Characteristics:**
-- Content adapts to viewport size
-- No page scrolling (when content fits)
-- Professional dashboard feel
-- Requires careful height management
-
-**Example:**
-```r
-page_fillable(
-  layout_columns(
-    col_widths = c(4, 8),
-    card(height = "100%", "Sidebar content"),
-    card(plotlyOutput("plot"))
-  )
-)
-```
-
-### Scrolling Layout
-
-**Characteristics:**
-- Content uses natural heights
-- Page scrolls vertically
-- Simpler to implement
-- Better for long-form content
-
-**Example:**
-```r
-page_fluid(
-  card(plotOutput("plot1")),
-  card(plotOutput("plot2")),
-  card(plotOutput("plot3")),
-  card(plotOutput("plot4"))
-)
-```
+**Scrolling layout** (`page_fluid()` / `page_fixed()`): content uses natural heights and the page scrolls — simpler to implement and better for long-form content.
 
 ### Hybrid Approach
 
-**Mixed scrolling and filling:**
+Use `fillable = FALSE` on the page but explicit heights on individual cards so each card can still use `full_screen = TRUE` filling:
+
 ```r
 page_sidebar(
   fillable = FALSE,  # Page scrolls
   sidebar = sidebar("Controls"),
-  # Each card can still use filling internally
   card(
     height = 400,
     full_screen = TRUE,
@@ -360,9 +193,8 @@ page_sidebar(
 
 ### Dynamic UI (uiOutput)
 
-`uiOutput()` wraps content in an extra element, breaking the fill chain.
+`uiOutput()` wraps content in an extra element, breaking the fill chain. Mark it as a fill carrier:
 
-**Solution:** Mark it as a fill carrier:
 ```r
 card_body(
   as_fill_carrier(
@@ -380,9 +212,7 @@ output$dynamic_plot <- renderUI({
 
 DataTables require explicit configuration to participate in filling:
 
-**Example:**
 ```r
-# Server
 output$table <- DT::renderDataTable({
   DT::datatable(
     data,
@@ -394,40 +224,22 @@ output$table <- DT::renderDataTable({
 
 ### htmlwidgets
 
-Most htmlwidgets are fill items by default, but behavior can be controlled:
-
-**Disable filling for specific widget:**
-```r
-card_body(
-  remove_all_fill(plotlyOutput("plot"))
-)
-```
-
-**Enable filling explicitly:**
-```r
-card_body(
-  as_fill_item(custom_widget_output("widget"))
-)
-```
+Most htmlwidgets are fill items by default. Use `remove_all_fill()` to opt a widget out, or `as_fill_item()` to explicitly opt a custom widget in.
 
 ### fluidRow() and column()
 
-The traditional Shiny grid system is "mostly incompatible" with filling layout due to Bootstrap's flexbox grid.
+The traditional Shiny grid system is mostly incompatible with filling layout due to Bootstrap's flexbox grid. Prefer `layout_columns()` instead:
 
-**Solution:** Use `layout_columns()` instead:
-
-**Avoid:**
 ```r
+# Avoid
 page_fillable(
-  fluidRow(  # Incompatible with filling
+  fluidRow(
     column(6, plotOutput("plot1")),
     column(6, plotOutput("plot2"))
   )
 )
-```
 
-**Prefer:**
-```r
+# Prefer
 page_fillable(
   layout_columns(
     col_widths = c(6, 6),
@@ -441,93 +253,48 @@ page_fillable(
 
 ### Output Not Filling
 
-**Symptoms:** Output stays at default height despite being in filling layout.
+**Symptoms:** Output stays at default height despite being in a filling layout.
 
-**Common causes:**
-1. Container doesn't have defined height
-2. Broken fill chain (non-fill carrier in between)
-3. Output isn't a fill item by default
+**Common causes and solutions:**
 
-**Solutions:**
-```r
-# 1. Ensure container has height
-card(
-  height = 400,  # Add explicit height
-  plotOutput("plot")
-)
-
-# 2. Fix fill chain
-card_body(
-  as_fill_carrier(
-    div(
-      plotOutput("plot")
-    )
-  )
-)
-
-# 3. Mark output as fill item
-card_body(
-  as_fill_item(custom_output("out"))
-)
-```
+1. **Container has no defined height** — add an explicit `height` to the card or use `page_fillable()`.
+2. **Broken fill chain** — wrap the intermediate element with `as_fill_carrier()`.
+3. **Output isn't a fill item** — mark it with `as_fill_item()`.
 
 ### Output Too Small
 
 **Symptoms:** Fill item shrinks below usable size.
 
-**Solution:** Set `min_height`:
-```r
-card_body(
-  min_height = 300,
-  plotOutput("plot")
-)
-```
+Set `min_height` on the containing `card_body()` to prevent shrinking too small. Similarly, `max_height` enables scrolling when content exceeds a threshold.
 
 ### Multiple Outputs Not Dividing Space
 
 **Symptoms:** Only one output visible or unequal spacing.
 
-**Solution:** Ensure all are fill items in same fillable container:
-```r
-card_body(
-  plotOutput("plot1"),  # Fill item
-  plotOutput("plot2"),  # Fill item
-  plotOutput("plot3")   # Fill item
-  # All three divide space equally
-)
-```
+Ensure all outputs are fill items inside the same fillable container (e.g., directly inside one `card_body()`). Multiple `plotOutput()` calls in a single `card_body()` will divide space equally.
 
 ### Full-Screen Mode Not Working
 
-**Symptoms:** Full-screen button doesn't appear or doesn't work properly.
+**Symptoms:** Full-screen button doesn't appear or content doesn't fill the expanded card.
 
-**Solution:** Ensure card contains fill items:
-```r
-card(
-  full_screen = TRUE,
-  card_header("Plot"),
-  plotlyOutput("plot")  # Must be a fill item
-)
-```
+Ensure the card contains fill items (e.g., `plotlyOutput()`, `plotOutput()`) and that `full_screen = TRUE` is set on the `card()`.
 
 ## Best Practices
 
 ### Use Filling for Dashboards
 
-Filling layouts create professional dashboards:
+`page_fillable()` creates professional dashboards where content adapts to the viewport. A typical pattern combines a fixed-height KPI row with filling plot cards:
+
 ```r
 page_fillable(
   layout_columns(
     col_widths = c(12, 4, 8),
-    # Header with KPIs
     layout_column_wrap(
       width = 1/3,
       fill = FALSE,
       value_box(...), value_box(...), value_box(...)
     ),
-    # Sidebar
     card(...),
-    # Main plot
     card(plotlyOutput("main"))
   )
 )
@@ -535,57 +302,29 @@ page_fillable(
 
 ### Set Appropriate Heights
 
-Use these height constraints:
-- `height`: Fixed height
-- `min_height`: Minimum height (prevents shrinking too small)
-- `max_height`: Maximum height (enables scrolling when exceeded)
-
-**Example:**
-```r
-card(
-  min_height = 300,  # Don't shrink below 300px
-  max_height = 600,  # Scroll if content exceeds 600px
-  verbatimTextOutput("output")
-)
-```
-
-### Test Fill Behavior
-
-Always test:
-- Different viewport sizes
-- Content with varying amounts of data
-- Full-screen expansion
-- Mobile devices
+Use `height` for a fixed size, `min_height` to prevent shrinking too small, and `max_height` to cap growth and enable scrolling beyond that point.
 
 ### Use page_fillable() for Single-Page Apps
 
-Best for:
-- Dashboards
-- Data exploration apps
-- Apps where all content should be visible
+Best for dashboards, data exploration apps, and apps where all content should be visible without scrolling.
 
 ### Use page_fluid() for Long-Form Content
 
-Best for:
-- Reports with many sections
-- Documentation
-- Apps with extensive text content
-- When natural scrolling is preferred
+Best for reports, documentation, apps with extensive text, or when natural vertical scrolling is preferred.
 
 ### Combine Approaches
 
-Use filling layouts for main dashboard areas and scrolling for detail pages:
+Use `page_navbar()` with a `fillable` vector to enable filling on specific tabs only:
 
 ```r
 page_navbar(
   title = "App",
   fillable = c("Dashboard"),  # Only "Dashboard" page fills
   nav_panel("Dashboard",
-    layout_columns(...)  # Content fills viewport
+    layout_columns(...)
   ),
   nav_panel("Details",
-    # Scrolling layout (not in fillable list)
-    card(...), card(...), card(...)
+    card(...), card(...), card(...)  # Scrolling layout
   )
 )
 ```
@@ -607,34 +346,8 @@ card(
 
 ### Be Mindful of Fill Carriers
 
-When wrapping outputs, ensure the wrapper is a fill carrier:
-
-**Problematic:**
-```r
-card_body(
-  div(class = "my-wrapper",
-    plotOutput("plot")  # Won't fill
-  )
-)
-```
-
-**Fixed:**
-```r
-card_body(
-  as_fill_carrier(
-    div(class = "my-wrapper",
-      plotOutput("plot")  # Fills properly
-    )
-  )
-)
-```
+When wrapping outputs in custom `div()` elements, use `as_fill_carrier()` on the wrapper; otherwise the fill chain is broken and the output won't resize.
 
 ### Document Fill Behavior
 
-When creating custom components, document whether they're:
-- Fillable containers
-- Fill items
-- Fill carriers
-- None of the above
-
-This helps other developers use them correctly in filling layouts.
+When creating custom components, document whether they are fillable containers, fill items, fill carriers, or none of the above, so other developers can use them correctly in filling layouts.

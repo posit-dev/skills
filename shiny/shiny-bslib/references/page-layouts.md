@@ -117,17 +117,7 @@ page_navbar(
 
 A screen-filling page layout where content grows/shrinks to fit the browser window. This is the foundation for filling layouts in bslib.
 
-**Basic structure:**
-```r
-ui <- page_fillable(
-  layout_columns(
-    card(...),
-    card(...)
-  )
-)
-```
-
-**Key behavior:** Direct children of `page_fillable()` become fill items, meaning they'll resize to fill available space. This is ideal for dashboards where you want outputs to adapt to the viewport size.
+**Key behavior:** Direct children of `page_fillable()` become fill items, meaning they'll resize to fill available space. This is ideal for dashboards where you want outputs to adapt to the viewport size. Typical usage wraps `layout_columns()` (or similar layout containers) and `card()` components as direct children.
 
 **When to use:**
 - Dashboards with plots/maps that should expand to fill the screen
@@ -173,19 +163,7 @@ layout_columns(
 
 ### Scrolling Layouts
 
-For pages with many outputs or long content, set `fillable = FALSE` to disable filling behavior. This causes outputs to fall back to their default heights (~400px for plots) with page scrolling enabled.
-
-**Example:**
-```r
-ui <- page_sidebar(
-  fillable = FALSE,
-  sidebar = sidebar(...),
-  card(card_header("Plot 1"), plotOutput("plot1")),
-  card(card_header("Plot 2"), plotOutput("plot2")),
-  card(card_header("Plot 3"), plotOutput("plot3")),
-  card(card_header("Plot 4"), plotOutput("plot4"))
-)
-```
+For pages with many outputs or long content, set `fillable = FALSE` to disable filling behavior. This causes outputs to fall back to their default heights (~400px for plots) with page scrolling enabled. Pass `fillable = FALSE` directly to `page_sidebar()` or `page_navbar()`.
 
 **For page_navbar(), use selective filling:**
 ```r
@@ -200,15 +178,7 @@ ui <- page_navbar(
 
 ## Mobile Considerations
 
-By default, filling layout is disabled on mobile devices to prevent awkward resizing on small screens.
-
-**Enable mobile filling:**
-```r
-ui <- page_sidebar(
-  fillable_mobile = TRUE,
-  ...
-)
-```
+By default, filling layout is disabled on mobile devices to prevent awkward resizing on small screens. Set `fillable_mobile = TRUE` on `page_sidebar()` or `page_navbar()` to enable filling on mobile.
 
 **Best practices for mobile:**
 - Use `min_height` on cards to prevent excessive shrinking
@@ -220,43 +190,15 @@ ui <- page_sidebar(
 
 ### Pin Bootstrap Version
 
-Before deploying to production, hard-code the Bootstrap version to prevent breakage on updates:
-
-```r
-ui <- page_sidebar(
-  theme = bs_theme(version = 5),
-  ...
-)
-```
-
-This ensures your app uses Bootstrap 5 (recommended for modern features) and won't break if bslib's default version changes.
+Before deploying to production, hard-code the Bootstrap version to prevent breakage on updates. Pass `theme = bs_theme(version = 5)` to any page function. This ensures your app uses Bootstrap 5 (recommended for modern features) and won't break if bslib's default version changes.
 
 ### Theming
 
-Pass a `bs_theme()` object to customize appearance:
-
-```r
-ui <- page_navbar(
-  theme = bs_theme(
-    preset = "minty",
-    base_font = font_google("Roboto")
-  ),
-  ...
-)
-```
-
-See [theming.md](theming.md) for comprehensive theming guidance.
+Pass a `bs_theme()` object to the `theme` parameter of any page function to customize appearance. See [theming.md](theming.md) for comprehensive theming guidance.
 
 ### Plot Styling
 
-Use the `thematic` package to ensure plots match your theme:
-
-```r
-# In your server function or app.R
-thematic::thematic_shiny()
-```
-
-This automatically styles `plotOutput()` to match your CSS theme colors.
+Use the `thematic` package to ensure plots match your theme. Call `thematic::thematic_shiny()` in your server function or `app.R` to automatically style `plotOutput()` to match your CSS theme colors.
 
 ### Performance Tips
 

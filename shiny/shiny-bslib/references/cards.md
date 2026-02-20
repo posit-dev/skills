@@ -63,26 +63,7 @@ card(
 
 ### card_header()
 
-Top section of the card, useful for titles and controls. The header is a flex container by default, so child elements are laid out horizontally.
-
-**Basic usage:**
-```r
-card(
-  card_header("Sales Dashboard"),
-  plotOutput("sales_plot")
-)
-```
-
-**With styling:**
-```r
-card(
-  card_header(
-    class = "bg-primary text-white",
-    "Featured Analysis"
-  ),
-  ...
-)
-```
+Top section of the card, useful for titles and controls. The header is a flex container by default, so child elements are laid out horizontally. Use Bootstrap utility classes (e.g., `class = "bg-primary text-white"`) to style it, and the `gap` argument to control spacing between child elements.
 
 **With icons or buttons (flex layout):**
 ```r
@@ -99,27 +80,12 @@ card(
 
 ### card_body()
 
-Main content area. Usually implicit, but useful for:
-- Adding multiple body sections
-- Controlling padding and styling
-- Setting min/max heights for filling behavior
-
-**Example with custom styling:**
-```r
-card(
-  card_header("Data"),
-  card_body(
-    class = "p-0",  # Remove padding
-    plotlyOutput("plot")
-  )
-)
-```
+Main content area. Usually implicit, but useful for adding multiple body sections, controlling padding and styling, or setting min/max heights for filling behavior. Use `class = "p-0"` to remove padding for edge-to-edge content like maps.
 
 ### card_footer()
 
 Bottom section for metadata, actions, or links.
 
-**Example:**
 ```r
 card(
   card_header("Analysis Results"),
@@ -133,65 +99,19 @@ card(
 
 ### card_title()
 
-Styled title element that can be used within card_body() or card_header().
-
-**Example:**
-```r
-card(
-  card_body(
-    card_title("Section Title"),
-    p("Content goes here")
-  )
-)
-```
+Styled title element that can be used within `card_body()` or `card_header()`.
 
 ## Height Control & Scrolling
 
-Cards grow by default to fit their contents. Control sizing with named arguments:
+Cards grow by default to fit their contents. Control sizing with `height` (fixed), `min_height` (floor), and `max_height` (ceiling) arguments. When content exceeds the card's height, scrolling is automatically enabled.
 
-**Fixed height:**
-```r
-card(
-  height = 400,
-  card_header("Fixed Height Card"),
-  lorem::ipsum(paragraphs = 10)  # Will scroll if content exceeds height
-)
-```
-
-**Maximum height:**
-```r
-card(
-  max_height = 250,
-  card_header("Scrollable Card"),
-  verbatimTextOutput("long_output")
-)
-```
-
-**Minimum height:**
-```r
-card(
-  min_height = 300,
-  card_header("Flexible Card"),
-  plotOutput("plot")  # Won't shrink below 300px
-)
-```
-
-When content exceeds the card's height, scrolling is automatically enabled.
+- Use `min_height` to prevent cards from becoming too small in filling layouts.
+- Use `max_height` on cards with potentially long scrollable content.
+- Use fixed `height` sparingly — `min_height` is usually more flexible.
 
 ## Full-Screen Expansion
 
-Add `full_screen = TRUE` to enable an expand icon that shows the card in full browser window size:
-
-**Basic usage:**
-```r
-card(
-  full_screen = TRUE,
-  card_header("Expandable Plot"),
-  plotlyOutput("plot")
-)
-```
-
-**Best practice:** Enable full-screen for all cards containing plots, maps, or detailed tables. This is highly valued by users.
+Add `full_screen = TRUE` to enable an expand icon that shows the card in full browser window size. Enable this for all cards containing plots, maps, or detailed tables — it is highly valued by users. When expanded, `max_height` and `height` constraints are ignored.
 
 **Tracking full-screen state in Shiny:** Provide an `id` to the card to observe its full-screen state:
 ```r
@@ -210,21 +130,11 @@ observe({
 })
 ```
 
-**Important:** When expanded to full-screen, `max_height` and `height` constraints are ignored, allowing content to use the full viewport.
-
-**Example with scrolling and full-screen:**
-```r
-card(
-  max_height = 250,
-  full_screen = TRUE,
-  card_header("Analysis Details"),
-  lorem::ipsum(paragraphs = 10)
-)
-```
+**Combining with scrolling:** `max_height` and `full_screen = TRUE` work well together — the card scrolls at normal size and expands to show all content at full screen.
 
 ## Filling Outputs
 
-Cards are optimized for filling layouts. When a **fill item** (like plotly, leaflet, or most htmlwidgets) is a direct child of `card_body()`, it resizes to match the card's specified height.
+Cards are optimized for filling layouts. When a **fill item** (like plotly, leaflet, or most htmlwidgets) is a direct child of `card_body()`, it resizes to match the card's specified height. Fill items by default include most htmlwidgets (plotly, leaflet, DT, etc.), `plotOutput()`, and `imageOutput()`.
 
 **Example:**
 ```r
@@ -239,12 +149,8 @@ card(
 )
 ```
 
-**Fill items by default:**
-- Most htmlwidgets (plotly, leaflet, DT, etc.)
-- `plotOutput()`
-- `imageOutput()`
+Use `min_height` on `card_body()` to prevent excessive shrinking when multiple fill outputs share a body:
 
-**Preventing excessive shrinking:**
 ```r
 card_body(
   min_height = 250,
@@ -255,7 +161,7 @@ card_body(
 
 ## Multiple card_body() Sections
 
-A single card can contain several `card_body()` elements, useful for combining resizable and fixed-size content.
+A single card can contain several `card_body()` elements, useful for combining resizable and fixed-size content. Set `fill = FALSE` on body sections that should maintain their natural size and not participate in filling behavior.
 
 **Example:**
 ```r
@@ -282,13 +188,10 @@ card(
 )
 ```
 
-**Key insight:** Set `fill = FALSE` on body sections that should maintain their natural size and not participate in filling behavior.
-
 ## Multi-Column Layouts Within Cards
 
 Use `layout_column_wrap()` for responsive multi-column arrangements inside cards:
 
-**Example:**
 ```r
 card(
   card_header("Quarterly Metrics"),
@@ -309,7 +212,6 @@ card(
 
 Use `navset_card_tab()`, `navset_card_pill()`, or `navset_card_underline()` to create multi-tab cards:
 
-**Example:**
 ```r
 navset_card_underline(
   title = "Analysis",
@@ -329,9 +231,8 @@ See [navigation.md](navigation.md) for more details on navset functions.
 
 ## Sidebar Integration
 
-`layout_sidebar()` works inside cards to create component-level sidebars:
+`layout_sidebar()` works inside cards to create component-level sidebars. Set `fillable = TRUE` on `layout_sidebar()` to preserve fill behavior for outputs.
 
-**Example:**
 ```r
 card(
   full_screen = TRUE,
@@ -349,15 +250,12 @@ card(
 )
 ```
 
-**Important:** Set `fillable = TRUE` on `layout_sidebar()` to preserve fill behavior for outputs.
-
 See [sidebars.md](sidebars.md) for more sidebar patterns.
 
 ## Static Images
 
-`card_image()` embeds pre-generated images:
+`card_image()` embeds pre-generated images. Key arguments: `file` (path to image), `alt` (accessibility text), `href` (optional URL to make the image a clickable link), and `border_radius` (corner rounding).
 
-**Example:**
 ```r
 card(
   card_header("Project Logo"),
@@ -370,20 +268,11 @@ card(
 )
 ```
 
-**Parameters:**
-- `file`: Path to image file
-- `alt`: Alt text for accessibility
-- `href`: Optional URL to make image a clickable link
-- `border_radius`: Control corner rounding
-
 ## Flexbox Behavior
 
-Both `card()` and `card_body()` default to `fillable = TRUE`, making them CSS flexbox containers. This enables fill behavior but changes how inline elements render.
+Both `card()` and `card_body()` default to `fillable = TRUE`, making them CSS flexbox containers. This enables fill behavior but changes how inline elements render — inline tags like `span()` and `a()` appear on separate lines.
 
-**Side effect:** Inline tags (like `span()`, `a()`) appear on separate lines in flexbox containers.
-
-**Solution for inline content:**
-Set `fillable = FALSE` to restore normal inline flow:
+**Solution for inline content:** Set `fillable = FALSE` to restore normal inline flow:
 
 ```r
 card(
@@ -396,32 +285,7 @@ card(
 
 ### Flexbox Utilities
 
-Use Bootstrap flex utility classes for precise control:
-
-**Horizontal spacing:**
-```r
-card_header(
-  class = "d-flex justify-content-between",
-  tags$span("Title"),
-  actionButton("refresh", "Refresh")
-)
-```
-
-**Vertical alignment:**
-```r
-card_body(
-  class = "d-flex align-items-center",
-  ...
-)
-```
-
-**Gap control:**
-```r
-card_body(
-  gap = 10,  # Gap between children in pixels
-  ...
-)
-```
+Use Bootstrap flex utility classes and the `gap` argument for precise layout control. For example, `class = "d-flex justify-content-between"` on `card_header()` spaces title and action elements to opposite ends, `class = "d-flex align-items-center"` on `card_body()` vertically centers content, and `gap = 10` sets pixel spacing between children.
 
 ## Shiny-Specific Features
 
@@ -429,7 +293,6 @@ card_body(
 
 Use `shiny::getCurrentOutputInfo()` to render different content based on whether the card is expanded:
 
-**Example:**
 ```r
 output$plot <- renderPlot({
   info <- getCurrentOutputInfo()
@@ -458,14 +321,6 @@ Enable `full_screen = TRUE` on cards containing:
 - Tables with many rows
 - Any content that benefits from more space
 
-```r
-card(
-  full_screen = TRUE,  # Always include for viz cards
-  card_header("Key Metrics"),
-  plotOutput("metrics_plot")
-)
-```
-
 ### Use Appropriate Heights
 
 - Set `min_height` to prevent cards from becoming too small in filling layouts
@@ -474,14 +329,7 @@ card(
 
 ### Remove Padding for Edge-to-Edge Content
 
-Use `class = "p-0"` on `card_body()` for maps and certain visualizations:
-
-```r
-card_body(
-  class = "p-0",
-  leafletOutput("map")
-)
-```
+Use `class = "p-0"` on `card_body()` for full-bleed maps and visualizations.
 
 ### Organize Related Content
 

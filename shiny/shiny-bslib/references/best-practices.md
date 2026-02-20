@@ -147,42 +147,17 @@ layout_columns(
 )
 ```
 
-### Mobile-Friendly Sidebars
+### Mobile-Friendly Designs
 
-```r
-sidebar(
-  open = "desktop",  # Open on desktop, closed on mobile (recommended default)
-  ...
-)
-```
-
-### Minimum Heights for Cards
-
-Prevent cards from becoming too small on mobile:
-
-```r
-card(
-  min_height = 300,
-  plotOutput("plot")
-)
-```
-
-### fillable_mobile
-
-By default, filling is disabled on mobile. Enable only after thorough testing:
-
-```r
-page_sidebar(
-  fillable_mobile = TRUE,  # Test thoroughly before enabling
-  ...
-)
-```
+* Set `min_height` on cards (e.g., `min_height = 300`) to prevent them from becoming too small on narrow viewports.
+* By default, filling is disabled on mobile. Enable `fillable_mobile = TRUE` on the page function only after thorough testing on actual mobile devices.
 
 ## User Experience with bslib Components
 
 ### Add Contextual Help
 
-**Tooltips for quick help:**
+Place a `tooltip()` or `popover()` in `card_header()` to provide inline help. Use `tooltip()` for a brief one-line description and `popover()` when secondary controls or longer content are needed:
+
 ```r
 card_header(
   "Revenue",
@@ -191,10 +166,7 @@ card_header(
     "Total revenue from all sources"
   )
 )
-```
 
-**Popovers for secondary controls:**
-```r
 card_header(
   "Plot",
   popover(

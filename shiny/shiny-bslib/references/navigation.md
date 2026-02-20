@@ -34,72 +34,17 @@ navset_*(
 
 ## Navigation Containers
 
-### navset_underline()
+All `navset_*()` functions accept any number of `nav_panel()` items as their primary arguments. Choose the variant based on visual style and layout needs:
 
-Modern underline-style navigation (recommended for most use cases).
-
-**Example:**
-```r
-navset_underline(
-  nav_panel("Overview", plotOutput("overview")),
-  nav_panel("Details", tableOutput("details")),
-  nav_panel("Settings", uiOutput("settings"))
-)
-```
-
-**Use when:** You want a clean, modern look with subtle visual emphasis on the active tab.
-
-### navset_tab()
-
-Traditional tab-style navigation with filled backgrounds.
-
-**Example:**
-```r
-navset_tab(
-  nav_panel("Plot", plotOutput("plot")),
-  nav_panel("Summary", verbatimTextOutput("summary")),
-  nav_panel("Data", tableOutput("data"))
-)
-```
-
-**Use when:** You want classic Bootstrap tab styling or need stronger visual separation between tabs.
-
-### navset_pill()
-
-Horizontal pill-style navigation with rounded backgrounds.
-
-**Example:**
-```r
-navset_pill(
-  nav_panel("Analysis", plotOutput("analysis")),
-  nav_panel("Report", uiOutput("report")),
-  nav_panel("Export", downloadButton("export"))
-)
-```
-
-**Use when:** You want a more button-like appearance for navigation items.
-
-### navset_pill_list()
-
-Vertical pill list navigation, sidebar-style.
-
-**Example:**
-```r
-navset_pill_list(
-  nav_panel("Section 1", "Content 1"),
-  nav_panel("Section 2", "Content 2"),
-  nav_panel("Section 3", "Content 3"),
-  nav_panel("Section 4", "Content 4")
-)
-```
-
-**Use when:** You have many navigation items and want them displayed vertically, or when the vertical layout fits your design better.
+- **`navset_underline()`** — Modern underline-style; recommended for most use cases. Use for clean, modern interfaces with 2–5 items.
+- **`navset_tab()`** — Traditional filled-background tabs. Use when users expect classic Bootstrap tab styling or need stronger visual separation.
+- **`navset_pill()`** — Horizontal rounded pill buttons. Use when you want a button-like appearance for navigation items.
+- **`navset_pill_list()`** — Vertical sidebar-style pill list. Use when you have many items (5+) or when vertical layout fits the design.
 
 ### navset_bar()
 
-Navigation bar style, similar to page_navbar() but without being a full page layout.
+Navigation bar style, similar to `page_navbar()` but without being a full page layout. Supports a `title` parameter and `nav_menu()` dropdowns.
 
-**Example:**
 ```r
 navset_bar(
   title = "App Section",
@@ -119,7 +64,6 @@ navset_bar(
 
 Navigation container without visible navigation controls. Useful for programmatic tab switching.
 
-**Example:**
 ```r
 # UI
 navset_hidden(
@@ -142,11 +86,8 @@ observeEvent(input$next2, {
 
 ## Card Navigation
 
-Functions with `card` in their name wrap the navigation in a card container:
+Functions with `card` in their name wrap the navigation in a card container: `navset_card_underline()`, `navset_card_tab()`, and `navset_card_pill()`. They mirror their non-card counterparts but add card styling and accept `title` and `full_screen` arguments.
 
-### navset_card_underline()
-
-**Example:**
 ```r
 navset_card_underline(
   title = "Analysis Results",
@@ -172,38 +113,13 @@ navset_card_underline(
 
 # Right: output directly in nav_panel
 navset_card_underline(
+  title = "Analysis Results",
+  full_screen = TRUE,
   nav_panel("Plot", plotOutput("plot"))
 )
 ```
 
-The same applies to `navset_card_tab()` and `navset_card_pill()`.
-
-### navset_card_tab()
-
-Tab-style navigation in a card.
-
-```r
-navset_card_tab(
-  title = "Data Explorer",
-  nav_panel("Visualize", plotOutput("plot")),
-  nav_panel("Summarize", verbatimTextOutput("summary"))
-)
-```
-
-### navset_card_pill()
-
-Pill-style navigation in a card.
-
-```r
-navset_card_pill(
-  title = "Reports",
-  nav_panel("Monthly", uiOutput("monthly")),
-  nav_panel("Quarterly", uiOutput("quarterly")),
-  nav_panel("Annual", uiOutput("annual"))
-)
-```
-
-**Best practice:** Card navigation containers are excellent for organizing related outputs within a dashboard. Always enable `full_screen = TRUE` when panels contain visualizations.
+**Best practice:** Always enable `full_screen = TRUE` when panels contain visualizations.
 
 ## Navigation Items
 
@@ -211,24 +127,18 @@ Beyond `nav_panel()`, several helper functions control navigation appearance:
 
 ### nav_panel()
 
-The primary content container.
+The primary content container. Key parameters:
 
-**Parameters:**
-```r
-nav_panel(
-  title = "Panel Label",     # Shown in navigation
-  value = "panel_id",         # Optional ID for programmatic control
-  icon = bsicons::bs_icon("graph-up"),  # Optional icon
-  # Content: outputs, text, layout functions — not card() when inside navset_card_*
-  plotOutput("plot")
-)
-```
+- `title` — label shown in the navigation
+- `value` — optional ID string for programmatic control (defaults to `title`)
+- `icon` — optional icon, e.g. `bsicons::bs_icon("graph-up")`
+
+Content can be any outputs, text, or layout functions. Do not wrap content in `card()` when inside a `navset_card_*` container.
 
 ### nav_spacer()
 
-Adds flexible space, pushing subsequent items to the right (horizontal) or bottom (vertical).
+Adds flexible space, pushing subsequent items to the right (horizontal) or bottom (vertical). Commonly used to align utility links to the far right of a navbar:
 
-**Example:**
 ```r
 page_navbar(
   title = "My App",
@@ -242,9 +152,8 @@ page_navbar(
 
 ### nav_menu()
 
-Creates a dropdown menu of nav panels.
+Creates a dropdown menu of nav panels:
 
-**Example:**
 ```r
 navset_tab(
   nav_panel("Overview", "..."),
@@ -253,34 +162,23 @@ navset_tab(
     nav_panel("Trends", plotOutput("trends")),
     nav_panel("Comparisons", plotOutput("comparisons")),
     nav_panel("Forecasts", plotOutput("forecasts"))
-  ),
-  nav_menu(
-    "Admin",
-    nav_panel("Users", tableOutput("users")),
-    nav_panel("Settings", uiOutput("settings"))
   )
 )
 ```
 
 ### nav_item()
 
-Adds arbitrary HTML to navigation without creating a panel. Useful for links, buttons, or custom elements.
+Adds arbitrary HTML to navigation without creating a panel. Useful for links, buttons, or custom elements:
 
-**Example:**
 ```r
-page_navbar(
-  title = "Dashboard",
-  nav_panel("Home", "..."),
-  nav_item(tags$a("Docs", href = "https://docs.example.com", target = "_blank")),
-  nav_item(actionLink("refresh", "Refresh Data"))
-)
+nav_item(tags$a("Docs", href = "https://docs.example.com", target = "_blank"))
+nav_item(actionLink("refresh", "Refresh Data"))
 ```
 
 ### nav_panel_hidden()
 
-A panel that exists but isn't shown in navigation. Useful for programmatically accessible panels.
+A panel that exists but isn't shown in navigation. Useful for programmatically accessible panels:
 
-**Example:**
 ```r
 navset_tab(
   id = "tabs",
@@ -301,7 +199,6 @@ observe({
 
 Use `page_navbar()` to create full multi-page applications. This is covered in detail in [page-layouts.md](page-layouts.md), but here's the navigation pattern:
 
-**Basic multi-page app:**
 ```r
 page_navbar(
   title = "My Application",
@@ -322,7 +219,6 @@ page_navbar(
 
 Provide an `id` argument to track which panel is selected:
 
-**Example:**
 ```r
 # UI
 navset_card_underline(
@@ -334,18 +230,11 @@ navset_card_underline(
 
 # Server
 observe({
-  # Access current tab
   current_tab <- input$selected_tab
 
-  # Do something based on active tab
   if (current_tab == "Plot") {
     # Trigger plot-specific actions
   }
-})
-
-# Display current tab
-output$current_display <- renderText({
-  paste("Currently viewing:", input$selected_tab)
 })
 ```
 
@@ -357,48 +246,20 @@ output$current_display <- renderText({
 
 ## Dynamic Navigation
 
-Programmatically control navigation with these functions:
+Programmatically control navigation with these functions. All take the navset's `id` as the first argument and a panel's `value` (or `title`) as the second.
 
-### nav_select()
-
-Switch to a specific panel.
+- **`nav_select("id", "panel")`** — Switch to the specified panel.
+- **`nav_show("id", "panel")`** / **`nav_hide("id", "panel")`** — Show or hide a panel in the navigation.
+- **`nav_remove("id", "panel")`** — Remove a panel entirely.
+- **`nav_insert("id", panel, position, target)`** — Insert a new `nav_panel()` before or after a target panel.
 
 ```r
-# UI
-actionButton("show_plot", "View Plot"),
-navset_tab(
-  id = "tabs",
-  nav_panel("Home", "Home content"),
-  nav_panel("Plot", plotOutput("plot"))
-)
-
-# Server
+# Switch to a panel on button click
 observeEvent(input$show_plot, {
   nav_select("tabs", "Plot")
 })
-```
 
-### nav_show() / nav_hide()
-
-Show or hide specific panels dynamically.
-
-```r
-# Server
-observeEvent(input$enable_advanced, {
-  nav_show("tabs", "advanced_panel")
-})
-
-observeEvent(input$disable_advanced, {
-  nav_hide("tabs", "advanced_panel")
-})
-```
-
-### nav_insert()
-
-Add a new panel dynamically.
-
-```r
-# Server
+# Insert a new panel after "Home"
 observeEvent(input$add_panel, {
   nav_insert(
     "tabs",
@@ -406,17 +267,6 @@ observeEvent(input$add_panel, {
     position = "after",
     target = "Home"
   )
-})
-```
-
-### nav_remove()
-
-Remove a panel dynamically.
-
-```r
-# Server
-observeEvent(input$remove_panel, {
-  nav_remove("tabs", "panel_to_remove")
 })
 ```
 
@@ -475,7 +325,6 @@ page_navbar(
 
 When multiple tabs share data, use reactive expressions:
 
-**Example:**
 ```r
 # Server
 # Single reactive for shared data

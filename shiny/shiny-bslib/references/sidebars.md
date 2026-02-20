@@ -20,7 +20,6 @@ Sidebars organize inputs and controls in Shiny dashboards. bslib provides flexib
 ```r
 sidebar(
   title = "Controls",
-  open = TRUE,
   position = "left",
   selectInput("var", "Variable", choices = names(data)),
   sliderInput("bins", "Bins", min = 1, max = 50, value = 30)
@@ -32,15 +31,26 @@ sidebar(
 | Parameter | Default | Description |
 |---|---|---|
 | `title` | `NULL` | Title at top |
-| `open` | `TRUE` | Initial state: `TRUE`, `FALSE`, `"desktop"`, `"closed"`, `"always"` |
+| `open` | `"desktop"` | Initial open/closed state — see below |
 | `position` | `"left"` | `"left"` or `"right"` |
 | `width` | `"250px"` | CSS width. Users can resize by dragging the edge |
-| `id` | `NULL` | For programmatic control via `toggle_sidebar()` |
+| `id` | `NULL` | For programmatic control via `sidebar_toggle()` |
 | `bg` | | Background color (auto-contrasts `fg`) |
 | `fg` | | Foreground color |
 | `fillable` | `FALSE` | Whether contents fill vertically |
 | `gap` | | CSS spacing between children |
 | `padding` | | CSS padding within sidebar |
+
+**`open` values:**
+
+- `"desktop"` *(default)* — open on desktop, closed on mobile
+- `"open"` / `TRUE` — starts open on all screen sizes
+- `"closed"` / `FALSE` — starts closed on all screen sizes
+- `"always"` / `NA` — always open, no collapse button shown
+
+For independent desktop/mobile control, pass a named list: `open = list(desktop = "open", mobile = "always-above")`. The `"always-above"` mobile option places the sidebar above the main content rather than as an overlay. The `"desktop"` shorthand is equivalent to `list(desktop = "open", mobile = "closed")`.
+
+Note: `sidebar_toggle()` only supports `"open"`/`TRUE` and `"closed"`/`FALSE`; its default `open = NULL` toggles the current state.
 
 ## Page-Level Sidebars
 
@@ -247,39 +257,13 @@ Use `fillable = TRUE`, `class = "p-0"`, and `border = FALSE` for seamless nestin
 
 ## Styling
 
-**Background color** (auto-contrasts `fg`):
-```r
-sidebar(bg = "#f8f9fa", ...)
-sidebar(bg = "primary", ...)    # Theme color name
-```
-
-**Width:**
-```r
-sidebar(width = "300px", ...)   # Fixed
-sidebar(width = "20%", ...)     # Proportional
-```
-
-**Bootstrap utility classes:**
-```r
-sidebar(class = "border-start border-3 border-primary", ...)
-```
+Set `bg` to a CSS color or theme color name (e.g., `"#f8f9fa"`, `"primary"`); foreground color auto-contrasts when `fg` is also set. Set `width` to a fixed value (`"300px"`) or proportional value (`"20%"`). Apply Bootstrap utility classes via `class` (e.g., `class = "border-start border-3 border-primary"`).
 
 ## Best Practices
 
-**Organize many inputs with accordions:**
-```r
-sidebar(
-  accordion(
-    accordion_panel("Essential", essential_inputs),
-    accordion_panel("Advanced", advanced_inputs)
-  )
-)
-```
+**Organize many inputs with accordions:** wrap inputs in `accordion()` with `accordion_panel()` groups (e.g., "Essential", "Advanced"). See [Accordions in Sidebars](#accordions-in-sidebars) above.
 
-**Handle sidebar state responsively:**
-- `open = "desktop"` — open on desktop, closed on mobile (good default)
-- `open = FALSE` — start closed for secondary sidebars
-- `open = "always"` — no collapse button
+**Handle sidebar state responsively:** the default `open = "desktop"` suits most dashboards. Override when needed: `open = FALSE` for secondary sidebars that start collapsed, `open = "always"` when you never want a collapse button.
 
 **Use right sidebars** for secondary/optional controls, keeping content focus on the left.
 

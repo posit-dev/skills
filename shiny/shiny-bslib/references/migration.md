@@ -75,6 +75,8 @@ page_fluid(
 
 ### Use Instead
 
+Use `layout_columns()` when columns have unequal or explicit widths, and `layout_column_wrap()` when all columns should be equal or auto-sized.
+
 **Legacy:**
 ```r
 fluidRow(
@@ -149,6 +151,10 @@ card(
 
 ### Use Instead
 
+Replace `tabsetPanel()` with a `navset_card_*()` variant (e.g., `navset_card_underline()`), and replace each `tabPanel()` with `nav_panel()`. The navset card variant accepts `title` and `full_screen` arguments directly.
+
+For top-level navigation, `navbarPage()` with `tabPanel()` and `navbarMenu()` maps directly to `page_navbar()` with `nav_panel()` and `nav_menu()`:
+
 **Legacy:**
 ```r
 tabsetPanel(
@@ -182,7 +188,7 @@ navbarPage(
 )
 ```
 
-**Modern multi-page:**
+**Modern:**
 ```r
 page_navbar(
   title = "My App",

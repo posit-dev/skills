@@ -58,7 +58,8 @@ The `showcase` parameter accepts icons or small plots. Three layout functions co
 
 ### Showcase Layouts
 
-**1. `showcase_left_center()` (default):**
+Pass `showcase_layout` one of three options: `showcase_left_center()` (default), `showcase_top_right()`, or `showcase_bottom()`. String shorthands `"left center"`, `"top right"`, and `"bottom"` also work. Each function accepts optional `width` and `max_height` parameters for fine-grained control over the showcase area dimensions.
+
 ```r
 value_box(
   title = "New Users",
@@ -68,53 +69,10 @@ value_box(
 )
 ```
 
-**2. `showcase_top_right()`:**
-```r
-value_box(
-  title = "Revenue",
-  value = "$125K",
-  showcase = bsicons::bs_icon("currency-dollar"),
-  showcase_layout = showcase_top_right()
-)
-```
-
-**3. `showcase_bottom()`:**
-```r
-value_box(
-  title = "Growth",
-  value = "+18%",
-  showcase = bsicons::bs_icon("graph-up"),
-  showcase_layout = showcase_bottom()
-)
-```
-
-These functions accept optional customization parameters like `width` and `max_height` for fine-grained control over the showcase area dimensions. String shorthands like `"left center"`, `"top right"`, and `"bottom"` also work.
-
 ### Icons
 
-**Recommended: bsicons package** (designed for Bootstrap):
-```r
-library(bsicons)
+Use `bsicons::bs_icon()` (designed for Bootstrap) or `fontawesome::fa()` as the `showcase` value. Common dashboard icons:
 
-value_box(
-  title = "Active Sessions",
-  value = "234",
-  showcase = bs_icon("activity")
-)
-```
-
-**Alternative: fontawesome:**
-```r
-library(fontawesome)
-
-value_box(
-  title = "Messages",
-  value = "42",
-  showcase = fa("envelope")
-)
-```
-
-**Common dashboard icons:**
 - Users: `bs_icon("people")`, `bs_icon("person")`
 - Money: `bs_icon("currency-dollar")`, `bs_icon("cash")`
 - Trends: `bs_icon("graph-up")`, `bs_icon("graph-down")`, `bs_icon("arrow-up")`
@@ -142,58 +100,11 @@ See [Expandable Sparklines](#expandable-sparklines) for advanced patterns.
 
 The `theme` argument accepts a string class name or `value_box_theme()` for custom colors.
 
-**Background themes** set a solid colored background. Strings without a `bg-` or `text-` prefix get `bg-` prepended automatically, so `"success"` and `"bg-success"` are equivalent.
+**Background themes** set a solid colored background. Strings without a `bg-` or `text-` prefix get `bg-` prepended automatically, so `"success"` and `"bg-success"` are equivalent. Semantic options: `"primary"`, `"secondary"`, `"success"`, `"danger"`, `"warning"`, `"info"`. Named color options: `"blue"`, `"indigo"`, `"purple"`, `"pink"`, `"red"`, `"orange"`, `"yellow"`, `"green"`, `"teal"`, `"cyan"`.
 
-```r
-# Semantic
-theme = "success"    # green
-theme = "danger"     # red
-theme = "warning"    # yellow
-theme = "info"       # light blue
-theme = "primary"
-theme = "secondary"
+**Foreground themes** (`text-*`) use a white/light background with colored text — less visually dominant than solid backgrounds. Examples: `"text-success"`, `"text-primary"`, `"text-purple"`, `"text-danger"`.
 
-# Named colors (also valid as gradient from/to colors)
-theme = "blue"
-theme = "indigo"
-theme = "purple"
-theme = "pink"
-theme = "red"
-theme = "orange"
-theme = "yellow"
-theme = "green"
-theme = "teal"
-theme = "cyan"
-```
-
-**Foreground themes** (`text-*`) use a white/light background with colored text — less visually dominant than solid backgrounds:
-
-```r
-theme = "text-success"
-theme = "text-primary"
-theme = "text-purple"
-theme = "text-danger"
-```
-
-**Gradient themes** use Bootstrap 5's 10 named colors: `blue`, `indigo`, `purple`, `pink`, `red`, `orange`, `yellow`, `green`, `teal`, `cyan`. Every non-identical pair is available as `bg-gradient-{from}-{to}` (90 combinations):
-
-```r
-theme = "bg-gradient-blue-purple"
-theme = "bg-gradient-orange-red"
-theme = "bg-gradient-teal-cyan"
-```
-
-The gradient runs at 140° by default; the end color appears subtly at the far edge (stop at 180%). Foreground color is auto-computed from a 60/40 blend of the two colors. Override the gradient geometry with inline styles:
-
-```r
-value_box(
-  ...,
-  theme = "bg-gradient-orange-red",
-  style = "--bg-gradient-deg: 90deg; --bg-gradient-start: 20%; --bg-gradient-end: 100%;"
-)
-```
-
-Gradient themes require Bootstrap 5 and are not available with Bootstrap 3/4 themes.
+**Gradient themes** use Bootstrap 5's named colors. Every non-identical pair is available as `"bg-gradient-{from}-{to}"`, e.g. `"bg-gradient-blue-purple"`, `"bg-gradient-orange-red"`, `"bg-gradient-teal-cyan"`. Gradient themes require Bootstrap 5 and are not available with Bootstrap 3/4 themes.
 
 **Custom theme** with `value_box_theme()`:
 
@@ -249,7 +160,6 @@ layout_columns(
 
 When embedding value boxes within a larger filling layout, set `fill = FALSE` on the layout container to prevent boxes from consuming excess vertical space:
 
-**Example:**
 ```r
 page_fillable(
   # Value boxes at top - don't fill
@@ -289,8 +199,6 @@ output$user_count <- renderText({
   nrow(filtered_data())
 })
 ```
-
-**Why:** The value box appears immediately with the correct size, then the value populates when ready. Without the placeholder, the entire box would wait to render.
 
 **With additional dynamic content:**
 ```r
@@ -360,16 +268,18 @@ library(htmlwidgets)
 sparkline_widget <- htmlwidgets::createWidget(...)
 
 sparkline_widget |>
-  htmlwidgets::onRender("
-    function(el, x) {
-      // Detect container size and adjust display
-      if (el.offsetHeight > 200) {
-        // Show axes and labels
-      } else {
-        // Hide axes
-      }
-    }
-  ")
+  htmlwidgets::onRender(
+    "function(el) {
+      el.closest('.bslib-value-box')
+        .addEventListener('bslib.card', function(ev) {
+          if (ev.detail.fullScreen) {
+            // modify plot for full screen appearance
+          } else {
+            // trim plot for small style in value box
+          }
+        })
+    }"
+  )
 ```
 
 ## Best Practices
@@ -398,7 +308,7 @@ output$users <- renderText({
 })
 
 output$rate <- renderText({
-  paste0(round(success_rate * 100, 1), "%")
+  scales::percent(success_rate, accuracy = 1)
 })
 ```
 

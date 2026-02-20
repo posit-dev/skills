@@ -86,37 +86,7 @@ layout_column_wrap(
 
 ### Height Control
 
-#### Uniform Heights (Default)
-
-By default, all rows are given equal height:
-
-```r
-layout_column_wrap(
-  width = 1/2,
-  card(card_header("Card 1"), "Short content"),
-  card(card_header("Card 2"), "Short content"),
-  card(card_header("Card 3"), "Much longer content that extends further")
-)
-```
-
-All cards in all rows will match the height of the tallest card.
-
-#### Per-Row Heights
-
-Set `heights_equal = "row"` to allow each row to have its own independent height:
-
-```r
-layout_column_wrap(
-  width = 1/2,
-  heights_equal = "row",
-  card(...),  # Row 1: Both cards same height
-  card(...),
-  card(...),  # Row 2: Both cards same height (different from row 1)
-  card(...)
-)
-```
-
-#### Per-Card Heights
+By default, all rows are given equal height — all cards in all rows match the height of the tallest card. Set `heights_equal = "row"` to allow each row to have its own independent height instead.
 
 Since cards are fill items by default (`fill = TRUE`), they stretch to fill row height. Set `fill = FALSE` on individual cards to prevent stretching:
 
@@ -138,7 +108,6 @@ layout_column_wrap(
 
 For unequal column sizing, set `width = NULL` and provide a custom `grid-template-columns` CSS property:
 
-**Example - giving 1st and 3rd cards double space:**
 ```r
 layout_column_wrap(
   width = NULL,
@@ -155,7 +124,6 @@ layout_column_wrap(
 
 Create complex arrangements by nesting `layout_column_wrap()`:
 
-**Example:**
 ```r
 layout_column_wrap(
   width = 1/2,
@@ -180,20 +148,8 @@ At small window widths, all layouts collapse into a mobile-friendly "show each c
 
 ### Basic Grid System
 
-Without specifying widths, space is divided evenly:
+Without specifying `col_widths`, space is divided evenly among children. Supply `col_widths` to allocate columns out of a 12-column grid — common patterns include `c(6, 6)` for two equal columns, `c(4, 8)` for a sidebar/main split, `c(4, 4, 4)` for three equal columns, or `c(12, 4, 4, 4)` for a full-width top row followed by three equal columns below. Elements whose widths exceed 12 columns wrap to a new row.
 
-```r
-layout_columns(
-  card(...),
-  card(...)  # Each card gets 6/12 columns (50%)
-)
-```
-
-### Column Widths
-
-Supply `col_widths` to allocate columns out of a 12-column grid. Elements exceeding 12 columns wrap to a new row.
-
-**Example:**
 ```r
 layout_columns(
   col_widths = c(4, 8, 12),
@@ -222,18 +178,6 @@ col_widths = c(12, 4, 4, 4)
 
 Customize with `row_heights` (numeric values are fractional units):
 
-**Example:**
-```r
-layout_columns(
-  col_widths = c(6, 6, 12),
-  row_heights = c(1, 2),  # First row 1 unit, second row 2 units
-  card(...),
-  card(...),
-  card(...)
-)
-```
-
-**Combined example:**
 ```r
 layout_columns(
   col_widths = c(4, 8, 12),
@@ -246,9 +190,8 @@ layout_columns(
 
 ### Negative Space
 
-Negative `col_widths` create empty space:
+Negative `col_widths` create empty space, useful for gutters or visual separation:
 
-**Example:**
 ```r
 layout_columns(
   col_widths = c(4, 8, -2, 8, -2),
@@ -260,13 +203,10 @@ layout_columns(
 )
 ```
 
-This is useful for creating gutters or visual separation.
-
 ### Responsive Layouts
 
 Use `breakpoints()` to specify different widths at different screen sizes:
 
-**Example:**
 ```r
 layout_columns(
   col_widths = breakpoints(

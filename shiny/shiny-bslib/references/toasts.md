@@ -12,14 +12,13 @@ Toasts are lightweight, temporary notification messages that appear in a corner 
 
 ## Basic Usage
 
-**Simple toast (string shorthand):**
-```r
-# Server
-show_toast("Operation completed!")
-```
+Pass a string directly to `show_toast()` for a plain notification, or pass a `toast()` object for full control. The `type` argument (`"success"`, `"danger"`, `"warning"`, `"info"`, `"primary"`, etc.) sets the background color automatically.
 
-**Create a toast with `toast()`:**
 ```r
+# String shorthand
+show_toast("Operation completed!")
+
+# Full control with type and header
 show_toast(
   toast(
     "Your results are ready to view.",
@@ -29,22 +28,8 @@ show_toast(
 )
 ```
 
-**Using semantic types** for automatic background coloring:
-```r
-# Success
-toast("Saved successfully.", header = "Success", type = "success")
+Use `toast_header()` to add an icon and status text to the header:
 
-# Warning
-toast("Disk space low.", header = "Warning", type = "warning")
-
-# Error
-toast("Failed to connect.", header = "Error", type = "danger")
-
-# Info
-toast("New data available.", header = "Info", type = "info")
-```
-
-**Structured header with status text:**
 ```r
 toast(
   "Your settings have been saved.",
@@ -81,25 +66,10 @@ toast(
 
 ## Showing and Hiding Toasts
 
-**`show_toast()`** displays a toast and returns its ID:
-```r
-observeEvent(input$analyze, {
-  result <- run_analysis()
+`show_toast()` displays a toast and returns its ID. `hide_toast()` dismisses a toast by ID. Use a stable `id` when you need to hide a toast programmatically — for example, to replace a "Processing..." toast with a completion message:
 
-  show_toast(
-    toast(
-      "Results are now available in the table below.",
-      header = "Analysis Complete",
-      type = "success"
-    )
-  )
-})
-```
-
-**`hide_toast()`** dismisses a toast by ID:
 ```r
 observeEvent(input$start, {
-  # Show persistent toast (no auto-hide)
   show_toast(
     toast(
       "Processing...",

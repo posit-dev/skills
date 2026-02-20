@@ -20,21 +20,7 @@ input_switch("enable_feature", "Enable advanced features")
 input_switch("notifications", "Enable notifications", value = TRUE)
 ```
 
-**In sidebar:**
-```r
-sidebar(
-  title = "Plot Options",
-  input_switch("show_grid", "Show grid lines", value = TRUE),
-  input_switch("show_legend", "Show legend", value = TRUE),
-  input_switch("dark_bg", "Dark background")
-)
-```
-
-**Update and toggle from server:**
-```r
-update_switch("enable_feature", value = FALSE)
-toggle_switch("feature1")
-```
+Use `input_switch()` freely in sidebars, card bodies, or toolbars wherever a boolean toggle fits. Update from the server with `update_switch("id", value = FALSE)` or flip the current state with `toggle_switch("id")`.
 
 ## input_dark_mode()
 
@@ -166,11 +152,7 @@ input_submit_textarea(
 
 ### Update
 
-```r
-update_submit_textarea("user_input", value = "New text")
-update_submit_textarea("user_input", value = "Auto", submit = TRUE)  # Submit programmatically
-update_submit_textarea("user_input", focus = TRUE)  # Move focus
-```
+`update_submit_textarea()` accepts `value` to change the text, `submit = TRUE` to trigger submission programmatically, and `focus = TRUE` to move keyboard focus to the textarea.
 
 ### Chat Interface Pattern
 

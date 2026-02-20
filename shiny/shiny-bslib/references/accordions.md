@@ -11,28 +11,13 @@ Accordions provide collapsible sections for organizing content vertically. Espec
 
 ## Basic Usage
 
-**Create an accordion with `accordion()` and `accordion_panel()`:**
+Use `accordion()` and `accordion_panel()` to create collapsible sections. Pass `icon` to `accordion_panel()` to add a leading icon. Use `open` to specify which panels start open (by title), and `multiple = TRUE` to allow more than one panel open at a time (default is `FALSE`).
 
 ```r
 accordion(
-  accordion_panel(
-    "Section 1",
-    "Content for section 1"
-  ),
-  accordion_panel(
-    "Section 2",
-    "Content for section 2"
-  ),
-  accordion_panel(
-    "Section 3",
-    "Content for section 3"
-  )
-)
-```
-
-**With icons:**
-```r
-accordion(
+  id = "acc",
+  open = c("Visualizations"),
+  multiple = TRUE,
   accordion_panel(
     icon = bsicons::bs_icon("graph-up"),
     title = "Visualizations",
@@ -43,27 +28,6 @@ accordion(
     title = "Data Table",
     tableOutput("table")
   )
-)
-```
-
-**Control initial state:**
-```r
-accordion(
-  id = "acc",
-  open = c("Panel 1", "Panel 2"),  # Initially open panels
-  accordion_panel("Panel 1", "..."),
-  accordion_panel("Panel 2", "..."),
-  accordion_panel("Panel 3", "...")
-)
-```
-
-**Multiple open panels:**
-```r
-accordion(
-  multiple = TRUE,  # Allow multiple panels open simultaneously
-  accordion_panel("Panel 1", "..."),
-  accordion_panel("Panel 2", "..."),
-  accordion_panel("Panel 3", "...")
 )
 ```
 
@@ -112,25 +76,14 @@ page_sidebar(
 
 Programmatically control accordion state (requires `id` on the accordion):
 
-**Open/close specific panels:**
-```r
-observeEvent(input$show_advanced, {
-  accordion_panel_open("acc", "Advanced Settings")
-})
+- `accordion_panel_open("acc", "Panel Title")` — opens a panel
+- `accordion_panel_close("acc", "Panel Title")` — closes a panel
+- `accordion_panel_set("acc", c("Panel 1"))` — sets exactly which panels are open
+- `accordion_panel_remove("acc", "Panel Title")` — removes a panel
+- `accordion_panel_update("acc", "Panel Title", "New content")` — replaces panel body content
 
-observeEvent(input$hide_advanced, {
-  accordion_panel_close("acc", "Advanced Settings")
-})
-```
+**Insert a new panel** at a specific position:
 
-**Set which panels are open:**
-```r
-observeEvent(input$reset, {
-  accordion_panel_set("acc", c("Panel 1"))  # Only Panel 1 open
-})
-```
-
-**Insert new panels dynamically:**
 ```r
 observeEvent(input$add_panel, {
   accordion_panel_insert(
@@ -142,44 +95,18 @@ observeEvent(input$add_panel, {
 })
 ```
 
-**Remove panels:**
-```r
-observeEvent(input$remove, {
-  accordion_panel_remove("acc", "Panel to Remove")
-})
-```
-
-**Update panel content:**
-```r
-observeEvent(input$update, {
-  accordion_panel_update(
-    "acc",
-    "Panel 1",
-    "Updated content"
-  )
-})
-```
-
 ## Best Practices
-
-**Provide clear panel titles:**
-```r
-accordion(
-  accordion_panel("Data Filters", ...),     # Clear
-  accordion_panel("Plot Options", ...),     # Clear
-  # Not: accordion_panel("Options", ...)    # Too vague
-)
-```
 
 **Group logically:**
 - Related inputs in same panel
 - Order by importance or workflow
 - 3-6 panels is ideal; more than 8 becomes unwieldy
 
-**Set appropriate initial state:**
+**Set appropriate initial state:** Open the most important panel by default, and leave secondary or advanced panels closed:
+
 ```r
 accordion(
-  open = "Essential Filters",  # Most important panel open
+  open = "Essential Filters",
   accordion_panel("Essential Filters", ...),
   accordion_panel("Advanced Filters", ...),
   accordion_panel("Export Options", ...)
