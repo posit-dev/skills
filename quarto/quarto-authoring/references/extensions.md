@@ -310,3 +310,10 @@ If extensions conflict, try:
 2. Check changelogs for breaking changes
 3. Update one at a time
 
+## Resources
+
+- [Quarto Extensions Guide](https://quarto.org/docs/extensions/)
+- [Creating Extensions](https://quarto.org/docs/extensions/creating.html)
+- [Community Extensions](https://m.canouil.dev/quarto-extensions/)
+- [Extensions JSON API](https://m.canouil.dev/quarto-extensions/extensions.json)
+

@@ -523,3 +523,9 @@ Quarto themes differ from Hugo themes; expect visual changes.
 
 Check for Hugo-specific template syntax in content files.
 
+## Resources
+
+- [Quarto Websites](https://quarto.org/docs/websites/)
+- [Quarto Blogs](https://quarto.org/docs/websites/website-blog.html)
+- [Quarto Themes](https://quarto.org/docs/output-formats/html-themes.html)
+

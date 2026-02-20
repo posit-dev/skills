@@ -287,4 +287,9 @@ Basic HTML content.
 :::
 ````
 
+## Resources
+
+- [Quarto Conditional Content](https://quarto.org/docs/authoring/conditional.html)
+- [Project Profiles](https://quarto.org/docs/projects/profiles.html)
+
 

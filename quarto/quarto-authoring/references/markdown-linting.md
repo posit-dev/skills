@@ -80,3 +80,9 @@ Key points:
 - Blank line before opening `:::`.
 - Blank line after closing `:::`.
 - Use `::::` (four+ colons) for nesting outer divs.
+
+## Resources
+
+- [markdownlint Rules](https://github.com/markdownlint/markdownlint/blob/main/docs/RULES.md)
+- [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)
+- [Quarto Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html)

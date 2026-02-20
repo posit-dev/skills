@@ -307,3 +307,9 @@ crossref:
 
 For bookdown migration details, see [conversion-bookdown.md](conversion-bookdown.md).
 
+## Resources
+
+- [Quarto Cross-References](https://quarto.org/docs/authoring/cross-references.html)
+- [Figures](https://quarto.org/docs/authoring/figures.html)
+- [Tables](https://quarto.org/docs/authoring/tables.html)
+

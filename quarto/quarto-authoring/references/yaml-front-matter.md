@@ -411,3 +411,9 @@ format:
     theme: cosmo
 ```
 
+## Resources
+
+- [Quarto Document Options](https://quarto.org/docs/reference/formats/html.html)
+- [PDF Options](https://quarto.org/docs/reference/formats/pdf.html)
+- [Project Configuration](https://quarto.org/docs/projects/quarto-projects.html)
+

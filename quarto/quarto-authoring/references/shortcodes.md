@@ -366,3 +366,9 @@ Document:
 Version {{< var product.version >}} - Copyright {{< var product.year >}}
 ````
 
+## Resources
+
+- [Quarto Shortcodes](https://quarto.org/docs/extensions/shortcodes.html)
+- [Video Embedding](https://quarto.org/docs/authoring/videos.html)
+- [Includes](https://quarto.org/docs/authoring/includes.html)
+

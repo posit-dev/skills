@@ -291,4 +291,10 @@ csl: ieee.csl
 
 Or use `@Manual` for R packages.
 
+## Resources
+
+- [Quarto Citations](https://quarto.org/docs/authoring/citations.html)
+- [Pandoc Citations](https://pandoc.org/MANUAL.html#citations)
+- [CSL Styles](https://citationstyles.org/)
+
 

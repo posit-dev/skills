@@ -337,4 +337,9 @@ Special classes:
 - `.notes` - Speaker notes
 - `.r-fit-text` - Auto-fit text
 
+## Resources
+
+- [Pandoc Divs and Spans](https://pandoc.org/MANUAL.html#divs-and-spans)
+- [Quarto Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html)
+
 

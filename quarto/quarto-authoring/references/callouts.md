@@ -172,3 +172,7 @@ $callout-color-tip: #00cc66;
 | `#id`             | `nte-`, `tip-`, `wrn-`, `imp-`, `cau-` + name    | For cross-refs   |
 
 Callouts support any markdown content including lists, code blocks, images, and multiple paragraphs.
+
+## Resources
+
+- [Quarto Callouts](https://quarto.org/docs/authoring/callouts.html)

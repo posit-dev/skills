@@ -458,3 +458,9 @@ format:
     embed-resources: true
 ```
 
+## Resources
+
+- [Quarto RevealJS](https://quarto.org/docs/presentations/revealjs/)
+- [RevealJS Options](https://quarto.org/docs/reference/formats/presentations/revealjs.html)
+- [Presentation Features](https://quarto.org/docs/presentations/)
+

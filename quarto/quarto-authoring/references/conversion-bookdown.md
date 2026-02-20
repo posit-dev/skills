@@ -409,3 +409,9 @@ Ensure:
 
 Check theorem IDs are unique and properly formatted.
 
+## Resources
+
+- [Quarto Books](https://quarto.org/docs/books/)
+- [Cross-References](https://quarto.org/docs/authoring/cross-references.html)
+- [Theorems](https://quarto.org/docs/authoring/cross-references.html#theorems-and-proofs)
+

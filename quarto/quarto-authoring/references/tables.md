@@ -367,3 +367,9 @@ Summary.
 See @tbl-summary for details.
 ````
 
+## Resources
+
+- [Quarto Tables](https://quarto.org/docs/authoring/tables.html)
+- [Table Cross-References](https://quarto.org/docs/authoring/cross-references.html#tables)
+- [Pandoc List Tables](https://github.com/pandoc-ext/list-table)
+

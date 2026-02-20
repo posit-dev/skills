@@ -278,3 +278,10 @@ flowchart LR
 ```
 ````
 
+## Resources
+
+- [Quarto Diagrams](https://quarto.org/docs/authoring/diagrams.html)
+- [Mermaid Documentation](https://mermaid.js.org/)
+- [Graphviz Documentation](https://graphviz.org/documentation/)
+- [DOT Language](https://graphviz.org/doc/info/lang.html)
+

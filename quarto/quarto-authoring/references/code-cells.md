@@ -274,3 +274,9 @@ df = pd.read_csv("data.csv")
 
 R Markdown uses dots (`.`), Quarto uses dashes (`-`): `fig.cap` → `fig-cap`, `fig.width` → `fig-width`. Options move from chunk header to `#|` lines. `results="asis"` becomes `output: asis`. Setup chunks with `knitr::opts_chunk$set(...)` become `execute:` in YAML. See [conversion-rmarkdown.md](conversion-rmarkdown.md) for full details.
 
+## Resources
+
+- [Quarto Code Cells](https://quarto.org/docs/computations/execution-options.html)
+- [Quarto Figures](https://quarto.org/docs/authoring/figures.html)
+- [Code Annotation](https://quarto.org/docs/authoring/code-annotation.html)
+
