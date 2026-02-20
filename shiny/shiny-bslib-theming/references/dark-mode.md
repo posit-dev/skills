@@ -46,17 +46,38 @@ input_dark_mode(
 )
 ```
 
-**Basic usage:**
+**Placing in a `page_navbar()` header:**
+
+Wrap `input_dark_mode()` in `nav_item()` (which places arbitrary HTML in the navbar) and precede it with `nav_spacer()` (which pushes all following items to the far right):
+
 ```r
-# UI — place in navbar, sidebar, or anywhere
 page_navbar(
   title = "My App",
-  nav_spacer(),
-  nav_item(input_dark_mode(id = "color_mode")),
+  nav_panel("Dashboard", ...),
+  nav_panel("Analysis", ...),
+  nav_spacer(),                              # pushes everything after it to the right
+  nav_item(input_dark_mode(id = "color_mode"))  # toggle button, far-right of navbar
+)
+```
+
+`input_dark_mode()` can also be placed in a `sidebar()` or anywhere else in the UI without any wrapper.
+
+**Enabling dark mode without a visible toggle:**
+
+Pass `style = css(display = "none")` to activate Bootstrap's color mode system without rendering a button. The app follows the user's OS preference (`prefers-color-scheme`) by default and can still be driven from the server with `toggle_dark_mode()`:
+
+```r
+page_navbar(
+  title = "My App",
+  nav_item(input_dark_mode(id = "color_mode", style = css(display = "none"))),
   nav_panel("Dashboard", ...)
 )
+```
 
-# Server — read current mode
+Use this when you want OS-aware dark mode or server-controlled mode changes but don't want to expose a toggle in the UI. Include an `id` if the server needs to react to or control the mode; omit it if you only want passive OS-following behavior.
+
+**Reading the current mode in the server:**
+```r
 output$mode_text <- renderText({
   paste("Current mode:", input$color_mode)  # "light" or "dark"
 })

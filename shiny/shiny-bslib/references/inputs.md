@@ -31,6 +31,25 @@ input_dark_mode(id = "mode")                # Follow OS preference
 input_dark_mode(id = "mode", mode = "dark") # Start in dark mode
 ```
 
+**Placing in a navbar:** wrap in `nav_item()` and use `nav_spacer()` before it to push it to the right edge:
+
+```r
+page_navbar(
+  title = "My App",
+  nav_panel("Dashboard", ...),
+  nav_spacer(),
+  nav_item(input_dark_mode(id = "mode"))
+)
+```
+
+**Hidden mode (OS-aware without a toggle button):** use `style = css(display = "none")` to activate Bootstrap's color mode system without rendering a UI control. The app follows the user's OS `prefers-color-scheme` by default and can still be controlled from the server:
+
+```r
+nav_item(input_dark_mode(id = "mode", style = css(display = "none")))
+```
+
+Omit `id` if you don't need the server to read or change the mode.
+
 **Server access:** `input$mode` returns `"light"` or `"dark"`.
 
 **Programmatic toggle:** `toggle_dark_mode()`, `toggle_dark_mode("light")`, `toggle_dark_mode("dark")`.
