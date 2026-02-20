@@ -140,38 +140,70 @@ See [Expandable Sparklines](#expandable-sparklines) for advanced patterns.
 
 ## Theming
 
-The `theme` argument controls appearance. Built-in theme names:
+The `theme` argument accepts a string class name or `value_box_theme()` for custom colors.
 
-**Semantic themes:**
+**Background themes** set a solid colored background. Strings without a `bg-` or `text-` prefix get `bg-` prepended automatically, so `"success"` and `"bg-success"` are equivalent.
+
 ```r
-value_box(title = "Success Rate", value = "98%", theme = "success")
-value_box(title = "Error Rate", value = "2%", theme = "danger")
-value_box(title = "Warnings", value = "5", theme = "warning")
-value_box(title = "Info", value = "...", theme = "info")
+# Semantic
+theme = "success"    # green
+theme = "danger"     # red
+theme = "warning"    # yellow
+theme = "info"       # light blue
+theme = "primary"
+theme = "secondary"
+
+# Named colors (also valid as gradient from/to colors)
+theme = "blue"
+theme = "indigo"
+theme = "purple"
+theme = "pink"
+theme = "red"
+theme = "orange"
+theme = "yellow"
+theme = "green"
+theme = "teal"
+theme = "cyan"
 ```
 
-**Color themes:**
+**Foreground themes** (`text-*`) use a white/light background with colored text — less visually dominant than solid backgrounds:
+
 ```r
-value_box(title = "Primary", value = "...", theme = "primary")
-value_box(title = "Secondary", value = "...", theme = "secondary")
-value_box(title = "Purple", value = "...", theme = "purple")
-value_box(title = "Teal", value = "...", theme = "teal")
-value_box(title = "Pink", value = "...", theme = "pink")
+theme = "text-success"
+theme = "text-primary"
+theme = "text-purple"
+theme = "text-danger"
 ```
 
-**Custom theme:**
+**Gradient themes** use Bootstrap 5's 10 named colors: `blue`, `indigo`, `purple`, `pink`, `red`, `orange`, `yellow`, `green`, `teal`, `cyan`. Every non-identical pair is available as `bg-gradient-{from}-{to}` (90 combinations):
+
+```r
+theme = "bg-gradient-blue-purple"
+theme = "bg-gradient-orange-red"
+theme = "bg-gradient-teal-cyan"
+```
+
+The gradient runs at 140° by default; the end color appears subtly at the far edge (stop at 180%). Foreground color is auto-computed from a 60/40 blend of the two colors. Override the gradient geometry with inline styles:
+
 ```r
 value_box(
-  title = "Custom",
-  value = "123",
-  theme = value_box_theme(
-    bg = "#1f77b4",
-    fg = "#ffffff"
-  )
+  ...,
+  theme = "bg-gradient-orange-red",
+  style = "--bg-gradient-deg: 90deg; --bg-gradient-start: 20%; --bg-gradient-end: 100%;"
 )
 ```
 
-**Interactive theme builder:** Visit bslib.shinyapps.io/build-a-box to explore all theme options and copy the generated code.
+Gradient themes require Bootstrap 5 and are not available with Bootstrap 3/4 themes.
+
+**Custom theme** with `value_box_theme()`:
+
+```r
+theme = value_box_theme(bg = "#1f77b4", fg = "#ffffff")
+```
+
+Omit `fg` to auto-compute a contrasting foreground color.
+
+**Interactive builder:** Visit bslib.shinyapps.io/build-a-box to explore all theme options and copy generated code.
 
 ## Dashboard Layouts
 
