@@ -31,93 +31,7 @@ flowchart TD
 
 Direction options: `TB` (top-bottom), `TD` (top-down), `BT`, `RL`, `LR`.
 
-### Sequence Diagrams
-
-````markdown
-```{mermaid}
-sequenceDiagram
-    participant A as Alice
-    participant B as Bob
-    A->>B: Hello Bob
-    B-->>A: Hi Alice
-    A->>B: How are you?
-    B-->>A: Great!
-```
-````
-
-### Class Diagrams
-
-````markdown
-```{mermaid}
-classDiagram
-    Animal <|-- Duck
-    Animal <|-- Fish
-    Animal : +int age
-    Animal : +String gender
-    Animal: +isMammal()
-    Duck : +String beakColor
-    Duck : +swim()
-    Duck : +quack()
-```
-````
-
-### State Diagrams
-
-````markdown
-```{mermaid}
-stateDiagram-v2
-    [*] --> Still
-    Still --> [*]
-    Still --> Moving
-    Moving --> Still
-    Moving --> Crash
-    Crash --> [*]
-```
-````
-
-### Entity Relationship
-
-````markdown
-```{mermaid}
-erDiagram
-    CUSTOMER ||--o{ ORDER : places
-    ORDER ||--|{ LINE-ITEM : contains
-    CUSTOMER {
-        string name
-        string email
-    }
-    ORDER {
-        int orderNumber
-        date created
-    }
-```
-````
-
-### Gantt Charts
-
-````markdown
-```{mermaid}
-gantt
-    title Project Schedule
-    dateFormat  YYYY-MM-DD
-    section Phase 1
-    Task 1      :a1, 2024-01-01, 30d
-    Task 2      :after a1, 20d
-    section Phase 2
-    Task 3      :2024-02-15, 25d
-```
-````
-
-### Pie Charts
-
-````markdown
-```{mermaid}
-pie title Distribution
-    "Category A" : 40
-    "Category B" : 30
-    "Category C" : 30
-```
-````
+All standard Mermaid diagram types are supported: `sequenceDiagram`, `classDiagram`, `stateDiagram-v2`, `erDiagram`, `gantt`, `pie`, etc. Use standard Mermaid syntax inside `{mermaid}` code cells.
 
 ## Mermaid Cell Options
 
@@ -166,66 +80,7 @@ digraph G {
 ```
 ````
 
-### Directed Graph
-
-````markdown
-```{dot}
-digraph {
-  rankdir=LR;
-  node [shape=box];
-
-  Start -> Process1;
-  Start -> Process2;
-  Process1 -> End;
-  Process2 -> End;
-}
-```
-````
-
-### Undirected Graph
-
-````markdown
-```{dot}
-graph {
-  A -- B -- C;
-  B -- D;
-}
-```
-````
-
-### Styled Nodes
-
-````markdown
-```{dot}
-digraph {
-  node [shape=ellipse, style=filled, fillcolor=lightblue];
-
-  A [label="Start", shape=circle, fillcolor=green];
-  B [label="Process"];
-  C [label="End", shape=doublecircle, fillcolor=red];
-
-  A -> B -> C;
-}
-```
-````
-
-### Subgraphs
-
-````markdown
-```{dot}
-digraph {
-  subgraph cluster_0 {
-    label = "Cluster 1";
-    A -> B;
-  }
-  subgraph cluster_1 {
-    label = "Cluster 2";
-    C -> D;
-  }
-  B -> C;
-}
-```
-````
+Use `digraph` for directed graphs, `graph` for undirected. Standard DOT features (subgraphs, node styling, rank direction) all work.
 
 ## Graphviz Cell Options
 
@@ -268,30 +123,7 @@ See @fig-process for the workflow.
 
 ## Sizing
 
-### Fixed Size
-
-````markdown
-```{mermaid}
-%%| fig-width: 8
-%%| fig-height: 5
-
-flowchart LR
-  A --> B
-```
-````
-
-### Responsive (HTML)
-
-By default, diagrams are responsive in HTML. Disable with:
-
-````markdown
-```{mermaid}
-%%| fig-responsive: false
-
-flowchart LR
-  A --> B
-```
-````
+Use `%%| fig-width` and `%%| fig-height` cell options. Diagrams are responsive by default in HTML; disable with `%%| fig-responsive: false`.
 
 ## Theming
 
@@ -328,24 +160,6 @@ config:
 
 flowchart LR
   A --> B
-```
-````
-
-### With Title and Label
-
-````markdown
-```{mermaid}
-%%| label: fig-themed
-%%| fig-cap: "Themed diagram."
-
----
-title: My Diagram
-config:
-  theme: neutral
----
-
-flowchart TD
-  A --> B --> C
 ```
 ````
 
@@ -464,9 +278,3 @@ flowchart LR
 ```
 ````
 
-## Resources
-
-- [Quarto Diagrams](https://quarto.org/docs/authoring/diagrams.html)
-- [Mermaid Documentation](https://mermaid.js.org/)
-- [Graphviz Documentation](https://graphviz.org/documentation/)
-- [DOT Language](https://graphviz.org/doc/info/lang.html)

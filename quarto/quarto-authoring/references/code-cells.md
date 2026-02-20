@@ -236,43 +236,6 @@ plot(1:10)
 ```
 ````
 
-### Code Tools
-
-Enable the code tools dropdown menu:
-
-```yaml
-format:
-  html:
-    code-tools: true
-```
-
-This adds a menu to toggle all code visibility and view source.
-
-### Line Numbers
-
-````markdown
-```{r}
-#| code-line-numbers: true
-
-# Lines will be numbered
-x <- 1
-y <- 2
-z <- x + y
-```
-````
-
-Or highlight specific lines:
-
-````markdown
-```{r}
-#| code-line-numbers: "2-3"
-
-x <- 1
-y <- 2  # highlighted
-z <- 3  # highlighted
-```
-````
-
 ## Code Annotations
 
 Add annotations to explain code:
@@ -307,24 +270,7 @@ df = pd.read_csv("data.csv")
 ```
 ````
 
-## R Markdown to Quarto Migration
+## R Markdown Migration
 
-- `{r, echo=TRUE}` → `#| echo: true`
-- `{r, fig.cap="..."}` → `#| fig-cap: "..."`
-- `{r, fig.width=8}` → `#| fig-width: 8`
-- `{r, fig.height=6}` → `#| fig-height: 6`
-- `{r, fig.align="center"}` → `#| fig-align: center`
-- `{r, cache=TRUE}` → `#| cache: true`
-- `{r, message=FALSE}` → `#| message: false`
-- `{r, warning=FALSE}` → `#| warning: false`
-- `{r, results="asis"}` → `#| output: asis`
-- `{r, include=FALSE}` → `#| include: false`
-- `{r setup, include=FALSE}` with `knitr::opts_chunk$set(...)` → `execute:` in YAML
+R Markdown uses dots (`.`), Quarto uses dashes (`-`): `fig.cap` → `fig-cap`, `fig.width` → `fig-width`. Options move from chunk header to `#|` lines. `results="asis"` becomes `output: asis`. Setup chunks with `knitr::opts_chunk$set(...)` become `execute:` in YAML. See [conversion-rmarkdown.md](conversion-rmarkdown.md) for full details.
 
-**Key difference:** R Markdown uses dots (`.`), Quarto uses dashes (`-`).
-
-## Resources
-
-- [Quarto Code Cells](https://quarto.org/docs/computations/execution-options.html)
-- [Quarto Figures](https://quarto.org/docs/authoring/figures.html)
-- [Code Annotation](https://quarto.org/docs/authoring/code-annotation.html)

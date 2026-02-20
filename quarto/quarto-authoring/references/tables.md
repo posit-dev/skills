@@ -145,56 +145,6 @@ Table caption here.
 
 Set `header-rows=0` for tables without headers.
 
-### List Table Alignment
-
-````markdown
-::: {.list-table aligns=l,c,r}
-
-- - Left
-  - Center
-  - Right
-- - Left Content 1
-  - Center Content 1
-  - Right Content 1
-- - Left Content 2
-  - Center Content 2
-  - Right Content 2
-
-:::
-````
-
-Alignment options: `l` (left), `c` (center), `r` (right), `d` (default).
-
-### List Table Widths
-
-````markdown
-::: {.list-table widths="30,70"}
-
-- - Narrow
-  - Wide
-- - Narrow Content
-  - Wide Content
-
-:::
-````
-
-### Cell-Level Alignment
-
-Override column alignment for individual cells:
-
-````markdown
-::: {.list-table}
-
-- - Column 1
-  - Column 2
-- - []{align=r}Right-aligned cell
-  - Normal cell
-- - Normal cell
-  - []{align=c}Centered cell
-
-:::
-````
-
 ### Row and Column Spans
 
 Use empty spans with `colspan` or `rowspan`:
@@ -219,59 +169,7 @@ Use empty spans with `colspan` or `rowspan`:
 :::
 ````
 
-### Row Attributes
-
-Apply attributes to entire rows using an empty span:
-
-````markdown
-::: {.list-table}
-
-- - Column 1
-  - Column 2
-- - []{.highlight}This row has the highlight class
-  - Content
-- - Normal row
-  - Content
-
-:::
-````
-
-### Empty Cells
-
-Use a lone `-` for empty cells:
-
-````markdown
-::: {.list-table}
-
-- - Column A
-  - Column B
-- - Data
-  -
-- -
-  - Data
-
-:::
-````
-
-### Complex Cell Content
-
-List tables support any markdown content in cells:
-
-````markdown
-::: {.list-table}
-
-- - Column A
-  - Column B
-- - Simple text
-  - More text
-- - - Nested list item 1
-    - Nested list item 2
-  - ```python
-    code_block()
-    ```
-
-:::
-````
+List tables also support row/cell attributes (`[]{.highlight}`, `[]{align=r}`), empty cells (lone `-`), and any markdown content in cells.
 
 ## Computational Tables
 
@@ -417,79 +315,9 @@ Available classes:
 | `.sm`         | Smaller text           |
 | `.responsive` | Horizontal scroll      |
 
-### Combining Classes
+Combine multiple classes: `::: {#tbl-name .striped .hover .bordered}`. Use `classes: plain` in code cells to disable default striping.
 
-````markdown
-::: {#tbl-combined .striped .hover .bordered}
-
-| A   | B   |
-| --- | --- |
-| 1   | 2   |
-
-Table caption.
-:::
-````
-
-### Disable Striping for Code Tables
-
-````markdown
-```{r}
-#| label: tbl-plain
-#| tbl-cap: "Plain table."
-#| classes: plain
-
-knitr::kable(data)
-```
-````
-
-## HTML Tables
-
-Quarto can process HTML tables:
-
-```html
-<table>
-  <tr>
-    <th>Header 1</th>
-    <th>Header 2</th>
-  </tr>
-  <tr>
-    <td>Data 1</td>
-    <td>Data 2</td>
-  </tr>
-</table>
-```
-
-### Cell Spanning
-
-```html
-<table>
-  <tr>
-    <td colspan="2">Spanning cell</td>
-  </tr>
-  <tr>
-    <td>A</td>
-    <td>B</td>
-  </tr>
-</table>
-```
-
-### Markdown in HTML Tables
-
-Use `data-qmd` attribute:
-
-```html
-<table>
-  <tr>
-    <td data-qmd="**Bold** and *italic*">Fallback</td>
-  </tr>
-</table>
-```
-
-### Disable HTML Processing
-
-```yaml
-html-table-processing: none
-```
+Quarto also processes HTML tables with `data-qmd` attribute for markdown content. Disable with `html-table-processing: none`.
 
 ## Table Layouts
 
@@ -539,8 +367,3 @@ Summary.
 See @tbl-summary for details.
 ````
 
-## Resources
-
-- [Quarto Tables](https://quarto.org/docs/authoring/tables.html)
-- [Table Cross-References](https://quarto.org/docs/authoring/cross-references.html#tables)
-- [Pandoc List Tables](https://github.com/pandoc-ext/list-table)

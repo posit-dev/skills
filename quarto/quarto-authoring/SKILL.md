@@ -1,17 +1,15 @@
 ---
 name: quarto-authoring
 description: >
-  Comprehensive guidance for Quarto document authoring and R Markdown migration.
-  Use this skill when: (1) Writing new Quarto documents (.qmd) with best practices,
-  (2) Converting R Markdown (.Rmd) documents to Quarto, (3) Migrating bookdown,
-  blogdown, xaringan, or distill projects to Quarto, (4) Understanding Quarto's
-  code cell syntax with hashpipe (#|) options, (5) Setting up cross-references
-  for figures, tables, sections, and equations, (6) Using Quarto-specific markdown
-  features like callouts, divs, and spans, (7) Configuring YAML front matter for
-  documents and projects, (8) Finding and using Quarto extensions.
+  Writing and authoring Quarto documents (.qmd), including code cell options,
+  figure and table captions, cross-references, callout blocks (notes, warnings,
+  tips), citations and bibliography, page layout and columns, Mermaid diagrams,
+  YAML metadata configuration, and Quarto extensions. Also covers converting and
+  migrating R Markdown (.Rmd), bookdown, blogdown, xaringan, and distill projects
+  to Quarto, and creating Quarto websites, books, presentations, and reports.
 metadata:
   author: Mickaël Canouil (@mcanouil)
-  version: "1.0"
+  version: "1.1"
 license: MIT
 ---
 
@@ -135,8 +133,6 @@ Quarto uses the language's comment symbol + `|` for cell options. Options use **
 #| label: fig-example
 #| echo: false
 #| fig-cap: "A scatter plot example."
-#| fig-width: 8
-#| fig-height: 6
 
 plot(x, y)
 ```
@@ -172,18 +168,6 @@ Labels must start with a type prefix. Reference with `@`:
 - Section: `sec-` prefix, e.g., `{#sec-intro}` → `@sec-intro`
 - Equation: `eq-` prefix, e.g., `{#eq-model}` → `@eq-model`
 
-Example:
-
-```markdown
-::: {#fig-plot}
-A plot.
-
-A caption for the plot.
-:::
-
-See @fig-plot for the results.
-```
-
 ````markdown
 ```{r}
 #| label: fig-plot
@@ -218,8 +202,6 @@ Details: [references/callouts.md](references/callouts.md)
 
 ### Figures
 
-Basic figure with caption:
-
 ```markdown
 ![Caption text](image.png){#fig-name fig-alt="Alt text"}
 ```
@@ -240,8 +222,6 @@ Details: [references/figures.md](references/figures.md)
 
 ### Tables
 
-Pipe table with caption:
-
 ```markdown
 ::: {#tbl-example}
 
@@ -257,12 +237,9 @@ Details: [references/tables.md](references/tables.md)
 
 ### Citations
 
-Basic syntax:
-
 ```markdown
 According to @smith2020, the results show...
 Multiple citations [@smith2020; @jones2021].
-Parenthetical only [-@smith2020].
 ```
 
 Configure in YAML:
@@ -339,33 +316,6 @@ format:
 ```
 
 ## Resources
-
-### Reference Files
-
-- [references/code-cells.md](references/code-cells.md) - Hashpipe syntax, execution options, code display
-- [references/cross-references.md](references/cross-references.md) - Labels, prefixes, all reference types
-- [references/figures.md](references/figures.md) - Figures, subfigures, layouts, lightbox
-- [references/tables.md](references/tables.md) - Pipe tables, grid tables, styling
-- [references/citations.md](references/citations.md) - Bibliography, CSL, footnotes
-- [references/callouts.md](references/callouts.md) - Callout types, appearance, collapsible
-- [references/diagrams.md](references/diagrams.md) - Mermaid, Graphviz/DOT
-- [references/layout.md](references/layout.md) - Column classes, margin content
-- [references/shortcodes.md](references/shortcodes.md) - Built-in shortcodes
-- [references/conditional-content.md](references/conditional-content.md) - Format-specific content
-- [references/divs-and-spans.md](references/divs-and-spans.md) - Fenced divs, spans, raw blocks
-- [references/yaml-front-matter.md](references/yaml-front-matter.md) - Document and project YAML
-- [references/extensions.md](references/extensions.md) - Using and finding extensions
-- [references/markdown-linting.md](references/markdown-linting.md) - Markdown linting rules for Quarto
-
-### Conversion Guides
-
-- [references/conversion-rmarkdown.md](references/conversion-rmarkdown.md) - R Markdown to Quarto
-- [references/conversion-bookdown.md](references/conversion-bookdown.md) - bookdown to Quarto
-- [references/conversion-xaringan.md](references/conversion-xaringan.md) - xaringan to RevealJS
-- [references/conversion-distill.md](references/conversion-distill.md) - distill to Quarto
-- [references/conversion-blogdown.md](references/conversion-blogdown.md) - blogdown to Quarto website
-
-### External Resources
 
 - [Quarto Documentation](https://quarto.org/docs/)
 - [Quarto Guide](https://quarto.org/docs/guide/)

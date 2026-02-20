@@ -392,72 +392,6 @@ format:
     include-in-header: preamble.tex
 ```
 
-## Step-by-Step Conversion
-
-### 1. Create `_quarto.yml`
-
-```yaml
-project:
-  type: book
-
-book:
-  title: "Book Title"
-  author: "Author"
-  chapters:
-    - index.qmd
-    # List chapters
-```
-
-### 2. Rename Files
-
-```bash
-for f in *.Rmd; do mv "$f" "${f%.Rmd}.qmd"; done
-```
-
-### 3. Remove `_bookdown.yml`
-
-```bash
-rm _bookdown.yml
-```
-
-### 4. Update Cross-References
-
-Search and replace:
-
-| Find         | Replace  |
-| ------------ | -------- |
-| `\@ref(fig:` | `@fig-`  |
-| `\@ref(tab:` | `@tbl-`  |
-| `\@ref(eq:`  | `@eq-`   |
-| `\@ref(thm:` | `@thm-`  |
-| `)` at end   | (remove) |
-
-### 5. Update Chunk Labels
-
-```yaml
-# From
-{r myplot, fig.cap="..."}
-
-# To
-{r}
-#| label: fig-myplot
-#| fig-cap: "..."
-```
-
-### 6. Convert Theorem Blocks
-
-Replace ````{theorem}` with `::: {#thm-name}`.
-
-### 7. Update Custom Blocks
-
-Replace custom blocks with callouts.
-
-### 8. Test Render
-
-```bash
-quarto render
-```
-
 ## Common Issues
 
 ### Chapters Not Found
@@ -475,8 +409,3 @@ Ensure:
 
 Check theorem IDs are unique and properly formatted.
 
-## Resources
-
-- [Quarto Books](https://quarto.org/docs/books/)
-- [Cross-References](https://quarto.org/docs/authoring/cross-references.html)
-- [Theorems](https://quarto.org/docs/authoring/cross-references.html#theorems-and-proofs)

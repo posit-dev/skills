@@ -105,33 +105,6 @@ _site/
 
 ### Basic Site Config
 
-#### Blogdown (`config.toml`)
-
-```toml
-baseURL = "https://example.com/"
-title = "My Site"
-theme = "hugo-theme"
-
-[params]
-  description = "Site description"
-  author = "Author Name"
-
-[[menu.main]]
-  name = "Home"
-  url = "/"
-  weight = 1
-
-[[menu.main]]
-  name = "About"
-  url = "/about/"
-  weight = 2
-
-[[menu.main]]
-  name = "Blog"
-  url = "/post/"
-  weight = 3
-```
-
 #### Blogdown (`config.yaml`)
 
 ```yaml
@@ -151,9 +124,6 @@ menu:
     - name: "About"
       url: "/about/"
       weight: 2
-    - name: "Blog"
-      url: "/post/"
-      weight: 3
 ```
 
 #### Quarto (`_quarto.yml`)
@@ -183,45 +153,7 @@ format:
 author: "Author Name"
 ```
 
-### Navigation
-
-#### Blogdown (`config.toml`)
-
-```toml
-[[menu.main]]
-  name = "Blog"
-  url = "/post/"
-
-[[menu.main]]
-  name = "About"
-  url = "/about/"
-```
-
-#### Blogdown (`config.yaml`)
-
-```yaml
-menu:
-  main:
-    - name: "Blog"
-      url: "/post/"
-    - name: "About"
-      url: "/about/"
-```
-
-#### Quarto
-
-```yaml
-website:
-  navbar:
-    left:
-      - text: "Blog"
-        href: blog.qmd
-      - text: "About"
-        href: about.qmd
-    right:
-      - icon: github
-        href: https://github.com/username
-```
+The same mapping applies to `config.toml` — convert TOML keys to the equivalent Quarto YAML.
 
 ## Blog Setup
 
@@ -470,20 +402,6 @@ listing:
 
 ## Comments
 
-### blogdown (Disqus)
-
-In `config.toml`:
-
-```toml
-disqusShortname = "mysite"
-```
-
-Or in `config.yaml`:
-
-```yaml
-disqusShortname: "mysite"
-```
-
 ### Quarto
 
 In `_quarto.yml`:
@@ -553,47 +471,6 @@ website:
   drafts: true
 ```
 
-## Step-by-Step Conversion
-
-### 1. Create `_quarto.yml`
-
-Start with basic configuration.
-
-### 2. Convert Navigation
-
-Map Hugo menu to Quarto navbar.
-
-### 3. Create Listing Page
-
-Create `blog.qmd` with listing configuration.
-
-### 4. Migrate Posts
-
-For each post:
-
-1. Rename `.Rmd` to `.qmd`.
-2. Update front matter.
-3. Convert Hugo shortcodes.
-4. Update internal links.
-
-### 5. Migrate Static Files
-
-Move files from `static/` to project root.
-
-### 6. Update Styling
-
-Apply Quarto theme or convert custom CSS.
-
-### 7. Test Locally
-
-```bash
-quarto preview
-```
-
-### 8. Update Deployment
-
-Update build command from Hugo to Quarto.
-
 ## Deployment
 
 ### Netlify
@@ -646,8 +523,3 @@ Quarto themes differ from Hugo themes; expect visual changes.
 
 Check for Hugo-specific template syntax in content files.
 
-## Resources
-
-- [Quarto Websites](https://quarto.org/docs/websites/)
-- [Quarto Blogs](https://quarto.org/docs/websites/website-blog.html)
-- [Quarto Themes](https://quarto.org/docs/output-formats/html-themes.html)

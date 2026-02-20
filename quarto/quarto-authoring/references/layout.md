@@ -270,21 +270,7 @@ Right column content.
 :::
 ````
 
-### Unequal Columns
-
-````markdown
-::: {.columns}
-
-::: {.column width="30%"}
-Narrow column.
-:::
-
-::: {.column width="70%"}
-Wide column.
-:::
-
-:::
-````
+Adjust `width` percentages for unequal columns (e.g., `30%`/`70%`).
 
 ## Content Layout Divs
 
@@ -434,44 +420,4 @@ format:
 
 KOMA classes support margin content automatically.
 
-## Examples
 
-### Article with Margin Notes
-
-```yaml
-format:
-  html:
-    page-layout: article
-reference-location: margin
-citation-location: margin
-```
-
-### Wide Figures
-
-````markdown
-::: {.column-page}
-
-```{r}
-#| fig-width: 12
-#| fig-height: 6
-
-ggplot(data) + geom_point()
-```
-
-:::
-
-````
-
-### Dashboard-Style Layout
-
-```yaml
-format:
-  html:
-    page-layout: full
-```
-
-## Resources
-
-- [Quarto Article Layout](https://quarto.org/docs/authoring/article-layout.html)
-- [Page Layout](https://quarto.org/docs/output-formats/page-layout.html)
-- [Figures Layout](https://quarto.org/docs/authoring/figures.html#figure-panels)

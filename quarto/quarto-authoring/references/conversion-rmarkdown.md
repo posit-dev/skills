@@ -304,85 +304,9 @@ Note: Quarto uses `tbl-` prefix (not `tab-`).
 
 ## Package Dependencies
 
-### Required Packages
+Quarto doesn't require `rmarkdown` or `knitr`, but `knitr` remains useful for tables and chunk processing. Most R Markdown features (`knitr::kable()`, `knitr::include_graphics()`) work in Quarto without changes.
 
-R Markdown requires:
-
-- `rmarkdown`
-- `knitr`
-
-Quarto doesn't require these packages, but they're useful for:
-
-- `knitr` - Tables, chunk options
-- `rmarkdown` - Some helper functions
-
-### Checking Compatibility
-
-Most R Markdown features work in Quarto. Check:
-
-````markdown
-```{r}
-# Works in both
-knitr::kable()
-knitr::include_graphics()
-```
-````
-
-## Step-by-Step Conversion
-
-### 1. Rename File
-
-```bash
-mv document.Rmd document.qmd
-```
-
-### 2. Update YAML
-
-- Change `output:` to `format:`
-- Update format names
-- Convert underscores to dashes
-
-### 3. Convert Setup Chunk
-
-Move global options to YAML `execute:` block.
-
-### 4. Update Chunk Options
-
-For each chunk:
-
-1. Move options inside chunk with `#|`
-2. Change dots to dashes
-3. Add quotes around string values
-
-### 5. Update Cross-References
-
-If using bookdown:
-
-1. Change `\@ref(fig:name)` to `@fig-name`
-2. Change `\@ref(tab:name)` to `@tbl-name`
-3. Update labels to use prefixes
-
-### 6. Test Render
-
-```bash
-quarto render document.qmd
-```
-
-## Automation
-
-### Using Editor
-
-RStudio and VS Code can assist with conversion.
-
-### Command Line
-
-Quarto can render .Rmd files directly:
-
-```bash
-quarto render document.Rmd
-```
-
-This uses R Markdown compatibility mode.
+Note: Quarto can render `.Rmd` files directly (`quarto render document.Rmd`) using R Markdown compatibility mode, which allows incremental migration.
 
 ## Common Issues
 
@@ -406,7 +330,3 @@ Use `tbl-` prefix (not `tab-`).
 
 Verify `#|` syntax and dashes (not dots).
 
-## Resources
-
-- [Quarto for R Markdown Users](https://quarto.org/docs/faq/rmarkdown.html)
-- [Quarto vs R Markdown](https://quarto.org/docs/faq/rmarkdown.html#quarto-vs.-r-markdown)

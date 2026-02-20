@@ -361,33 +361,6 @@ book:
     - appendix.qmd
 ```
 
-## Website Configuration
-
-```yaml
-website:
-  title: "My Website"
-  description: "Site description"
-  site-url: https://example.com
-
-  navbar:
-    background: primary
-    left:
-      - text: "Home"
-        href: index.qmd
-      - text: "Blog"
-        href: blog/index.qmd
-
-  sidebar:
-    contents:
-      - section: "Getting Started"
-        contents:
-          - start.qmd
-          - install.qmd
-
-  page-footer:
-    center: "Copyright 2024"
-```
-
 ## Parameters
 
 ```yaml
@@ -438,8 +411,3 @@ format:
     theme: cosmo
 ```
 
-## Resources
-
-- [Quarto Document Options](https://quarto.org/docs/reference/formats/html.html)
-- [PDF Options](https://quarto.org/docs/reference/formats/pdf.html)
-- [Project Configuration](https://quarto.org/docs/projects/quarto-projects.html)
