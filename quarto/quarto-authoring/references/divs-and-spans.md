@@ -180,7 +180,7 @@ Raw LaTeX content.
 
 ### Inline Raw Content
 
-`arkdown
+````markdown
 Text with `<br>`{=html} line break.
 ````
 

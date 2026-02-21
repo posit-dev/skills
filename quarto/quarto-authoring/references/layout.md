@@ -144,7 +144,7 @@ Margin note explaining the main content.
 :::
 
 More main text.
-```
+````
 
 ## Code Cell Layout Options
 
