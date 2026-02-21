@@ -43,7 +43,8 @@ Skills for Shiny app development in both R and Python.
 Skills for Quarto document creation and publishing.
 
 - **[brand-yml](./brand-yml/)** - Create and apply brand.yml files for consistent styling across Quarto projects, supporting HTML documents, dashboards, RevealJS presentations, Typst PDFs, and websites with automatic brand discovery and theme layering
-- **[authoring](quarto/README.md#quarto-authoring-skill)** - Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions
+- **[authoring](quarto/README.md#quarto-authoring-skill)** - Comprehensive guidance for Quarto document authoring. Write new Quarto documents with best practices and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions.
+- **[quarto-migration](quarto/README.md#quarto-migration-skill)** - Guidance for migrating R Markdown ecosystem projects to Quarto. Convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects.
 
 ## Installation
 

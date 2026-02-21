@@ -4,9 +4,8 @@ description: >
   Writing and authoring Quarto documents (.qmd), including code cell options,
   figure and table captions, cross-references, callout blocks (notes, warnings,
   tips), citations and bibliography, page layout and columns, Mermaid diagrams,
-  YAML metadata configuration, and Quarto extensions. Also covers converting and
-  migrating R Markdown (.Rmd), bookdown, blogdown, xaringan, and distill projects
-  to Quarto, and creating Quarto websites, books, presentations, and reports.
+  YAML metadata configuration, and Quarto extensions. Also covers creating
+  Quarto websites, books, presentations, and reports.
 metadata:
   author: Mickaël Canouil (@mcanouil)
   version: "1.1"
@@ -19,23 +18,10 @@ license: MIT
 
 ## When to Use What
 
+> **Migrating from R Markdown?** Use the `quarto-migration` skill for converting R Markdown, bookdown, blogdown, xaringan, or distill projects to Quarto.
+
 Task: Write a new Quarto document
 Use: Follow "QMD Essentials" below, then see specific reference files
-
-Task: Convert R Markdown to Quarto
-Use: [references/conversion-rmarkdown.md](references/conversion-rmarkdown.md)
-
-Task: Migrate bookdown project
-Use: [references/conversion-bookdown.md](references/conversion-bookdown.md)
-
-Task: Migrate xaringan slides
-Use: [references/conversion-xaringan.md](references/conversion-xaringan.md)
-
-Task: Migrate distill article
-Use: [references/conversion-distill.md](references/conversion-distill.md)
-
-Task: Migrate blogdown site
-Use: [references/conversion-blogdown.md](references/conversion-blogdown.md)
 
 Task: Add cross-references
 Use: [references/cross-references.md](references/cross-references.md)
