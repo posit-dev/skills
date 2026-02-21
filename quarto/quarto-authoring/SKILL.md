@@ -18,6 +18,8 @@ license: MIT
 
 ## When to Use What
 
+> **Migrating from R Markdown?** Use the `quarto-migration` skill for converting R Markdown, bookdown, blogdown, xaringan, or distill projects to Quarto.  
+
 Task: Write a new Quarto document
 Use: Follow "QMD Essentials" below, then see specific reference files
 
