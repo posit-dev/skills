@@ -305,7 +305,7 @@ crossref:
   tbl-title: "Tabelle"
 ```
 
-For bookdown migration details, see [conversion-bookdown.md](conversion-bookdown.md).
+For bookdown migration details, use the `quarto-migration` skill.
 
 ## Resources
 

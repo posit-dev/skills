@@ -272,7 +272,7 @@ df = pd.read_csv("data.csv")
 
 ## R Markdown Migration
 
-R Markdown uses dots (`.`), Quarto uses dashes (`-`): `fig.cap` → `fig-cap`, `fig.width` → `fig-width`. Options move from chunk header to `#|` lines. `results="asis"` becomes `output: asis`. Setup chunks with `knitr::opts_chunk$set(...)` become `execute:` in YAML. See [conversion-rmarkdown.md](conversion-rmarkdown.md) for full details.
+R Markdown uses dots (`.`), Quarto uses dashes (`-`): `fig.cap` → `fig-cap`, `fig.width` → `fig-width`. Options move from chunk header to `#|` lines. `results="asis"` becomes `output: asis`. Setup chunks with `knitr::opts_chunk$set(...)` become `execute:` in YAML. For full details, use the `quarto-migration` skill.
 
 ## Resources
 
