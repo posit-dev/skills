@@ -24,7 +24,7 @@ mv document.Rmd document.qmd
 
 ```yaml
 output: html_document
-````
+```
 
 #### Quarto
 

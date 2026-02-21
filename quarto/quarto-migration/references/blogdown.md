@@ -235,7 +235,7 @@ Install extension: `quarto add sellorm/quarto-social-embeds`
 
 ````markdown
 {{</* youtube VIDEO_ID */>}}
-```
+````
 
 #### Quarto
 
@@ -259,7 +259,7 @@ Install extension: `quarto add sellorm/quarto-social-embeds`
 {{</* highlight r */>}}
 code here
 {{</* /highlight */>}}
-```
+````
 
 #### Quarto
 

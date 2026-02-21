@@ -374,7 +374,7 @@ Content fades in
 ::: {.fragment .fade-in}
 Content fades in
 :::
-```
+````
 
 Fragment types:
 
