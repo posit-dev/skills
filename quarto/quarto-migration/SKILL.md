@@ -1,13 +1,15 @@
 ---
 name: quarto-migration
 description: >
-  Guidance for migrating R Markdown ecosystem projects to Quarto.
-  Use this skill when:
-  (1) Converting R Markdown (.Rmd) documents to Quarto (.qmd),
-  (2) Migrating bookdown projects to Quarto book format,
-  (3) Migrating blogdown sites to Quarto websites,
-  (4) Converting xaringan slides to Quarto RevealJS,
-  (5) Migrating distill articles or blogs to Quarto.
+  Migrating R Markdown ecosystem projects to Quarto, including R Markdown (.Rmd)
+  documents, bookdown books, blogdown websites, xaringan presentations, and
+  distill articles. Covers common migration patterns such as option naming
+  (dots to dashes), YAML structure changes, cross-reference syntax, and
+  chunk option conversion to hashpipe (#|) syntax.
+metadata:
+  author: Mickaël Canouil (@mcanouil)
+  version: "1.0"
+license: MIT
 ---
 
 # Quarto Migration
