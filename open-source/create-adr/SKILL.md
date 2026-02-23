@@ -47,8 +47,8 @@ Create an Architecture Decision Record from a plan provided by the user.
 
    If yes:
    - Create the directory
-   - Copy README from skill's `references/README-example.md` (customize with project name)
-   - Copy template from skill's `references/_template.md`
+   - Create `{location}/README.md` using the structure from skill's `references/README-example.md`
+   - Create `{location}/_template.md` copying content from skill's `references/_template.md`
 
 3. **Get the plan from the user**
 
@@ -86,12 +86,13 @@ Create an Architecture Decision Record from a plan provided by the user.
    | Drawbacks/risks | → | Negative Consequences |
    | Related issues/PRs | → | Technical Story + Links section |
 
-7. **Validate and fill in any gaps**
+7. **Validate title and fill in any gaps**
 
-   Validate the title:
-   - Check it's in kebab-case format
+   Before proceeding, validate the proposed title:
+   - Check it's in kebab-case format (e.g., "use-typescript" not "Use TypeScript")
    - Check it's under 50 characters
-   - Check the filename `NNNN-{title}.md` doesn't already exist
+   - Check the filename `NNNN-{title}.md` doesn't already exist in `{adr_location}`
+   - If validation fails, ask user to provide a corrected title
 
    If the user's plan is missing information, ask clarifying questions:
    - "Who are the deciders for this decision?"
@@ -102,21 +103,33 @@ Create an Architecture Decision Record from a plan provided by the user.
 
    Create the ADR file at `{adr_location}/NNNN-<kebab-case-title>.md` using the template.
 
+   **Template placeholder replacement:**
+   - Replace `[short title of solved problem and solution]` with the actual title
+   - Replace `[proposed | rejected | ...]` with "proposed" (unless user indicates "accepted")
+   - Replace `[list everyone involved in the decision]` with decider names
+   - Replace `[YYYY-MM-DD when the decision was last updated]` with today's date
+   - Replace `[description | ticket/issue URL]` with technical story or issue link
+   - Replace all section placeholders with actual content gathered from user
+   - Remove HTML comments like `<!-- optional -->` from the final ADR
+   - Remove bracketed placeholders that aren't applicable
+
    Set the status to "proposed" unless the user indicates it's already accepted.
 
 9. **Update the index**
 
    - Read `{adr_location}/README.md`
-   - If README doesn't exist, create one using `references/README-example.md` as template
+   - If README doesn't exist, create one using the structure from `references/README-example.md`
    - Find the "## Index" section
-   - If Index section doesn't exist, add it at the end
-   - Add entry: `- [ADR-NNNN: Title](NNNN-title.md) - Brief description`
+   - If Index section doesn't exist, add it at the end of the README
+   - Add entry format: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
+     - The "Title" is the ADR title
+     - The "One-line summary" after the dash is a brief description of what was decided
    - Check for duplicate entries before adding
    - Write the updated README
 
 10. **Present the result**
 
-    Show the user the full created ADR file content and ask if any changes are needed.
+    Use the Read tool to show the user the full created ADR file content and ask if any changes are needed.
 
 ### Example Interaction
 
@@ -197,9 +210,13 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
 
    **Key transformation principle**: Plans describe "how to implement", ADRs describe "what we decided and why".
 
-7. **Validate and fill gaps with the user**
+7. **Validate title and fill gaps with the user**
 
-   Validate the title (kebab-case, under 50 chars, no duplicate filename).
+   Before proceeding, validate the proposed title:
+   - Check it's in kebab-case format
+   - Check it's under 50 characters
+   - Check the filename `NNNN-{title}.md` doesn't already exist in `{adr_location}`
+   - If validation fails, ask user to provide a corrected title
 
    Plans often lack some ADR elements. Ask the user:
    - "What alternatives did you consider before this plan?"
@@ -215,13 +232,17 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
 
    Create `{adr_location}/NNNN-<title>.md` based on the transformed plan.
 
+   Replace template placeholders with actual content (see `/adr-create` step 8 for details on placeholder replacement).
+
 9. **Update the index**
 
-   Update `{adr_location}/README.md` with the new ADR entry (create README if needed).
+   Update `{adr_location}/README.md` with the new ADR entry (create README using `references/README-example.md` structure if needed).
+
+   Add entry at the end: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
 
 10. **Present the result**
 
-    Show the user the full created ADR file content.
+    Use the Read tool to show the user the full created ADR file content.
 
 11. **Handle the plan file**
 
@@ -299,9 +320,15 @@ For each option mentioned, **immediately** ask:
 - "What were the cons or concerns about [option]?"
 - *Summarize*: "So [option] was good for [pros] but had issues with [cons]. Is that right?"
 
+**Note:** Store each option with its associated pros/cons. In Phase 6, these will map to individual option blocks in the "## Pros and Cons of the Options" section. Each option gets its own subsection with its specific good/bad points.
+
 Then move to the next option.
 
 If they only mention one option: "Was there ever any discussion of doing it differently? Even approaches that were quickly dismissed?"
+
+**Handling many options:** If user lists 5+ options, continue through all of them systematically.
+**Handling unclear memory:** If user can't remember details for some options, note what they do know and move on.
+**Handling informal evaluation:** If options weren't formally evaluated, ask for their thoughts anyway and capture what they recall.
 
 #### Phase 4: Understand the Decision Outcome
 
@@ -337,25 +364,40 @@ Now that we've covered the options, their pros/cons, and the expected outcome, c
 
 4. **Synthesize interview answers into ADR format**
    - Validate title (kebab-case, under 50 chars, no duplicate)
-   - Map interview responses to MADR sections
+   - Map interview responses to MADR sections:
+     - Questions 1,4 → Context and Problem Statement
+     - Question 2 → Date
+     - Question 3 → Deciders
+     - Question 5 (options list) → Considered Options
+     - Question 5 (pros/cons for each option) → Pros and Cons of the Options (create subsection for each option with its specific good/bad points)
+     - Questions 6,7,8 → Decision Outcome
+     - Question 9 → Positive Consequences
+     - Questions 10,11 → Negative Consequences
+   - Replace all template placeholders with actual content
+   - Remove HTML comments and unused optional sections
 
-5. **Create the file at `{adr_location}/NNNN-<title>.md`**
+5. **Create and save the initial ADR file at `{adr_location}/NNNN-<title>.md`**
 
 6. **Update index**
-   - Update or create `{adr_location}/README.md` with new entry
+   - Update or create `{adr_location}/README.md` with new entry at the end
+   - Entry format: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
 
 **Present the draft**: "Here's the ADR I've created based on our conversation. Please review it:"
 
-*Show the full ADR file content*
+*Use the Read tool to show the full ADR file content*
 
 **Ask**: "Would you like me to make any changes before we finalize it?"
 
 #### Phase 7: Finalize
 
-After any revisions:
-- Save the final ADR
-- Set status to "accepted" (since this is a past decision already in effect)
-- Confirm: "ADR created at `adr/NNNN-title.md`. The decision has been documented!"
+If user requests changes:
+- Make the requested edits to the ADR file
+- Save the updated version
+- Show the updated content again if changes were substantial
+
+After any revisions (or if no changes requested):
+- Ensure status is set to "accepted" (since this is a past decision already in effect)
+- Confirm: "ADR created at `{adr_location}/NNNN-title.md`. The decision has been documented!"
 
 ### Interview Tips
 
@@ -376,10 +418,10 @@ After any revisions:
 
 ### File Structure
 
-ADRs should be stored in an `adr/` directory at the project root with this structure:
+ADRs are typically stored in a dedicated directory at the project root (commonly `adr/` but can be customized) with this structure:
 
 ```
-adr/
+{adr_location}/
 ├── README.md          # Index and documentation
 ├── _template.md       # Template for new ADRs
 ├── 0001-title.md     # Individual ADRs
@@ -437,7 +479,7 @@ You probably don't need an ADR for:
 
 ### Index Management
 
-Always update `adr/README.md` when creating a new ADR. Add an entry under the Index section:
+Always update `{adr_location}/README.md` when creating a new ADR. Add an entry under the Index section:
 
 ```markdown
 ## Index
@@ -446,36 +488,39 @@ Always update `adr/README.md` when creating a new ADR. Add an entry under the In
 - [ADR-0002: Adopt Express Mode](0002-adopt-express-mode.md) - Simplify single-file Shiny apps
 ```
 
+The format is: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
+
 ## Important Rules
 
-1. **ALWAYS read the project's ADR template** (`adr/_template.md`) if it exists before creating new ADRs
-2. **ALWAYS update the index** in `adr/README.md` when creating new ADRs
+1. **ALWAYS read the project's ADR template** (`{adr_location}/_template.md`) if it exists before creating new ADRs
+2. **ALWAYS update the index** in `{adr_location}/README.md` when creating new ADRs
 3. **ALWAYS use kebab-case** for ADR filenames
 4. **ALWAYS set today's date** in YYYY-MM-DD format
-5. **NEVER skip the template structure** - all sections should be present even if brief
-6. **ALWAYS link related issues/PRs** if they exist
-7. **ALWAYS ask clarifying questions** if information is missing rather than guessing
-8. **ALWAYS show the user the draft** before finalizing
+5. **ALWAYS replace template placeholders** with actual content (including removing brackets and HTML comments)
+6. **NEVER skip the template structure** - all sections should be present even if brief
+7. **ALWAYS link related issues/PRs** if they exist
+8. **ALWAYS ask clarifying questions** if information is missing rather than guessing
+9. **ALWAYS show the user the file content** using the Read tool before considering the ADR finalized
 
 ## Error Handling and Edge Cases
 
-**No `adr/` directory exists or is empty:**
+**No ADR directory exists or is empty:**
 1. Ask user: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
-2. If user provides different location, use that location for all operations
+2. If user provides different location, use that location (`{adr_location}`) for all subsequent operations
 3. If user wants initialization, request consent: "I'll create the directory, README.md, and _template.md. Proceed?"
 4. If yes, create:
    - Directory at specified location
-   - README.md using `references/README-example.md` as template
-   - _template.md copying from `references/_template.md`
+   - README.md using the structure from `references/README-example.md`
+   - _template.md copying content from `references/_template.md`
 
 **No template found at `{adr_location}/_template.md`:**
 Use the MADR template from skill's `references/_template.md` as fallback.
 
 **README.md doesn't exist:**
-Create one using `references/README-example.md`, customizing the project name if detectable.
+Create one using the structure from `references/README-example.md`.
 
 **README.md exists but no Index section:**
-Add "## Index" section at the end with the new ADR entry.
+Add "## Index" section at the end of the file with the new ADR entry.
 
 **Duplicate ADR number:**
 Check if `NNNN-*.md` already exists. If yes, increment to next available number.
@@ -494,6 +539,6 @@ Don't guess - always ask the user for clarification. It's better to have an inco
 ## Reference Files
 
 The skill includes reference files in the `references/` directory:
-- `_template.md` - Official MADR template (fallback if project has none)
-- `README-example.md` - Template for creating new ADR directories
-- `example-adr.md` - Fully worked example showing proper ADR structure
+- `_template.md` - Official MADR template from joelparkerhenderson/architecture-decision-record (fallback if project has none)
+- `README-example.md` - Example README structure for initializing new ADR directories
+- `example-adr.md` - Fully worked example ADR showing proper MADR structure and content
