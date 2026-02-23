@@ -39,20 +39,26 @@ Create an Architecture Decision Record from a plan provided by the user.
 2. **Initialize ADR system if needed**
 
    If the user wants to initialize in a new location, ask for consent: "I'll initialize the ADR system by creating:
-   - `{location}/` directory
-   - `{location}/README.md` with documentation
-   - `{location}/_template.md` with the MADR template
+   - `{adr_location}/` directory
+   - `{adr_location}/README.md` with documentation
+   - `{adr_location}/_template.md` with the MADR template
 
    Should I proceed?"
 
    If yes:
    - Create the directory
-   - Create `{location}/README.md` using the structure from skill's `references/README-example.md`
-   - Create `{location}/_template.md` copying content from skill's `references/_template.md`
+   - Create `{adr_location}/README.md` using the structure from skill's `references/README-example.md`
+   - Create `{adr_location}/_template.md` copying content from skill's `references/_template.md`
 
 3. **Get the plan from the user**
 
-   Ask the user: "Please describe the decision or plan you want to document as an ADR. Include:
+   Ask the user: "Do you have a plan document or file I should read, or would you prefer to describe the decision directly?"
+
+   If user provides a filename:
+   - Read the file
+   - Extract as much information as possible from the file content
+
+   If no file or if file doesn't contain complete information, ask: "Please describe the decision or plan you want to document as an ADR. Include:
    - What problem are you solving?
    - What options did you consider?
    - What did you decide and why?"
@@ -65,8 +71,7 @@ Create an Architecture Decision Record from a plan provided by the user.
 5. **Determine the next ADR number**
 
    - List existing ADRs in the confirmed location
-   - Find files matching pattern `NNNN-*.md`
-   - Check that the next number doesn't already exist (validation)
+   - Find files matching pattern `[0-9][0-9][0-9][0-9]-*.md` (excludes _template.md, README.md)
    - If no ADRs exist, use `0001`
    - Otherwise, increment from the highest existing number
 
@@ -91,39 +96,38 @@ Create an Architecture Decision Record from a plan provided by the user.
    Before proceeding, validate the proposed title:
    - Check it's in kebab-case format (e.g., "use-typescript" not "Use TypeScript")
    - Check it's under 50 characters
-   - Check the filename `NNNN-{title}.md` doesn't already exist in `{adr_location}`
+   - Check if a title similar to this already exists (check existing ADR titles to prevent duplicates)
    - If validation fails, ask user to provide a corrected title
 
    If the user's plan is missing information, ask clarifying questions:
-   - "Who are the deciders for this decision?"
-   - "What alternatives did you consider besides [chosen option]?"
+   - "Who are the deciders for this decision?" (for comma-separated list)
+   - If alternatives were mentioned but pros/cons not provided: "For each option you considered, can you tell me the pros and cons?"
+     - For each alternative: "What were the pros of [option]?" then "What were the cons of [option]?"
+   - If no alternatives mentioned: "What alternatives did you consider besides [chosen option]? And what were their pros and cons?"
    - "What are the potential downsides of this approach?"
 
 8. **Generate the ADR**
 
    Create the ADR file at `{adr_location}/NNNN-<kebab-case-title>.md` using the template.
 
-   **Template placeholder replacement:**
-   - Replace `[short title of solved problem and solution]` with the actual title
-   - Replace `[proposed | rejected | ...]` with "proposed" (unless user indicates "accepted")
-   - Replace `[list everyone involved in the decision]` with decider names
-   - Replace `[YYYY-MM-DD when the decision was last updated]` with today's date
-   - Replace `[description | ticket/issue URL]` with technical story or issue link
-   - Replace all section placeholders with actual content gathered from user
-   - Remove HTML comments like `<!-- optional -->` from the final ADR
-   - Remove bracketed placeholders that aren't applicable
+   Replace ALL template placeholders with actual content (see "Template Placeholder Replacement" section above).
 
-   Set the status to "proposed" unless the user indicates it's already accepted.
+   Specific notes:
+   - Set status to "proposed" unless user indicates "accepted"
+   - Use comma-separated decider names as provided by user
+   - Technical story/issue links can appear in both Technical Story field and Links section
+   - Ensure "## Pros and Cons of the Options" section has subsections for each option with their specific pros/cons gathered in step 7
 
 9. **Update the index**
 
    - Read `{adr_location}/README.md`
    - If README doesn't exist, create one using the structure from `references/README-example.md`
    - Find the "## Index" section
-   - If Index section doesn't exist, add it at the end of the README
+   - If Index section doesn't exist, add it at the end of the README (before any "Contributing" or "License" sections if they exist)
+   - Generate one-line summary from the Decision Outcome section (e.g., "Adopt MADR format for documenting decisions")
    - Add entry format: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
      - The "Title" is the ADR title
-     - The "One-line summary" after the dash is a brief description of what was decided
+     - The "One-line summary" is Claude-generated based on what was decided
    - Check for duplicate entries before adding
    - Write the updated README
 
@@ -135,14 +139,36 @@ Create an Architecture Decision Record from a plan provided by the user.
 
 **User**: I want to document our decision to use MADR format for ADRs.
 
-**Claude**: I'll create an ADR for that. Let me gather some details:
+**Claude**: I'll create an ADR for that. Do you have a plan document or file I should read, or would you prefer to describe the decision directly?
+
+**User**: Describe it directly.
+
+**Claude**: Please describe the decision or plan you want to document as an ADR. Include:
+- What problem are you solving?
+- What options did you consider?
+- What did you decide and why?
+
+**User**: We needed a way to document architectural decisions. We considered Y-statements, plain markdown, and MADR. We chose MADR for its comprehensive structure.
+
+**Claude**: Let me gather some more details:
 - Who should be listed as deciders?
-- What other formats did you consider (e.g., Y-statements, Nygard format)?
-- What drove the decision to choose MADR?
+- For each option you considered, can you tell me the pros and cons?
 
-**User**: The team decided. We considered plain markdown and Y-statements. MADR was chosen for its comprehensive structure and wide adoption.
+**User**: The core team decided. Y-statements were concise but lacked detail. Plain markdown was flexible but inconsistent. MADR was comprehensive and well-documented.
 
-**Claude**: *Creates `adr/0001-use-madr-format-for-adrs.md`*
+**Claude**: *Creates `adr/0001-use-madr-format-for-adrs.md` and updates README*
+
+*Uses Read tool to show:*
+```markdown
+# Use MADR Format for ADRs
+
+* Status: proposed
+* Deciders: Core team
+* Date: 2026-02-23
+...
+```
+
+Would you like me to make any changes to this ADR?
 
 ### Notes
 
@@ -232,7 +258,7 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
 
    Create `{adr_location}/NNNN-<title>.md` based on the transformed plan.
 
-   Replace template placeholders with actual content (see `/adr-create` step 8 for details on placeholder replacement).
+   Replace template placeholders with actual content (see "Template Placeholder Replacement" section above for complete details).
 
 9. **Update the index**
 
@@ -365,16 +391,17 @@ Now that we've covered the options, their pros/cons, and the expected outcome, c
 4. **Synthesize interview answers into ADR format**
    - Validate title (kebab-case, under 50 chars, no duplicate)
    - Map interview responses to MADR sections:
-     - Questions 1,4 → Context and Problem Statement
-     - Question 2 → Date
-     - Question 3 → Deciders
-     - Question 5 (options list) → Considered Options
-     - Question 5 (pros/cons for each option) → Pros and Cons of the Options (create subsection for each option with its specific good/bad points)
-     - Questions 6,7,8 → Decision Outcome
-     - Question 9 → Positive Consequences
-     - Questions 10,11 → Negative Consequences
+     - Phase 1 (decision title) + Phase 2 (problem context) → Context and Problem Statement
+     - Phase 2 (when decided) → Date
+     - Phase 2 (who decided) → Deciders (comma-separated)
+     - Phase 3 (options list) → Considered Options
+     - Phase 3 (pros/cons for each option) → Pros and Cons of the Options (create subsection for each option with its specific good/bad points)
+     - Phase 4 (chosen option, reasons, expected outcome) → Decision Outcome
+     - Phase 5 (positive outcomes observed) → Positive Consequences
+     - Phase 5 (negative outcomes, unexpected surprises) → Negative Consequences
    - Replace all template placeholders with actual content
-   - Remove HTML comments and unused optional sections
+   - For optional sections with no content: use "N/A" or remove if truly not applicable
+   - Remove HTML comments
 
 5. **Create and save the initial ADR file at `{adr_location}/NNNN-<title>.md`**
 
@@ -409,8 +436,8 @@ After any revisions (or if no changes requested):
 
 ### Notes
 
-- Past decisions should typically have status "accepted"
-- If a decision has since been reversed, note it as "superseded" or "deprecated"
+- Past decisions (documented via interview) should have status "accepted" since they're already in effect
+- If a decision has since been reversed, set status to "superseded" or "deprecated" instead
 - Link to any related PRs or issues if the user can recall them
 - It's okay to have some sections less detailed for older decisions
 
@@ -490,6 +517,32 @@ Always update `{adr_location}/README.md` when creating a new ADR. Add an entry u
 
 The format is: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
 
+## Template Placeholder Replacement
+
+When generating any ADR, replace ALL bracketed placeholders in the MADR template with actual content:
+
+**Header section:**
+- `[short title of solved problem and solution]` → Actual ADR title
+- `[proposed | rejected | ...]` → Actual status (proposed, accepted, rejected, deprecated, superseded)
+- `[list everyone involved in the decision]` → Comma-separated list of decider names
+- `[YYYY-MM-DD when the decision was last updated]` → Today's date or decision date
+- `[description | ticket/issue URL]` → Technical story text or issue link
+
+**Body sections:**
+- `[Describe the context...]` → Actual context description
+- `[driver 1, e.g., a force, facing concern, …]` → Actual decision drivers
+- `[option 1]`, `[option 2]`, etc. → Actual option names
+- `[justification...]` → Actual justification for chosen option
+- `[e.g., improvement of quality attribute...]` → Actual consequences
+- `[example | description | pointer to more information | …]` → Actual option description
+- `[argument a]`, `[argument b]`, etc. → Actual pros/cons
+
+**General rules:**
+- Remove ALL square brackets
+- Remove HTML comments like `<!-- optional -->`
+- For optional sections with no content: use "N/A" or remove the section entirely
+- Ensure the "## Pros and Cons of the Options" section has a `### [Option Name]` subsection for each alternative with its specific pros/cons listed as bullet points
+
 ## Important Rules
 
 1. **ALWAYS read the project's ADR template** (`{adr_location}/_template.md`) if it exists before creating new ADRs
@@ -520,10 +573,10 @@ Use the MADR template from skill's `references/_template.md` as fallback.
 Create one using the structure from `references/README-example.md`.
 
 **README.md exists but no Index section:**
-Add "## Index" section at the end of the file with the new ADR entry.
+Add "## Index" section at the end of the file (before any "Contributing" or "License" sections if they exist) with the new ADR entry.
 
 **Duplicate ADR number:**
-Check if `NNNN-*.md` already exists. If yes, increment to next available number.
+Check if `NNNN-*.md` already exists. If yes, increment to next available number. Use glob pattern `[0-9][0-9][0-9][0-9]-*.md` to match only 4-digit numbered ADRs.
 
 **Title validation failures:**
 - Not kebab-case: Suggest converting (e.g., "Use TypeScript" → "use-typescript")
