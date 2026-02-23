@@ -303,23 +303,25 @@ Then move to the next option.
 
 If they only mention one option: "Was there ever any discussion of doing it differently? Even approaches that were quickly dismissed?"
 
-#### Phase 4: Understand the Decision
+#### Phase 4: Understand the Decision Outcome
 
 **Question 6**: "Which option did you ultimately choose?"
 
 **Question 7**: "What were the main reasons for choosing this approach over the others?"
 
+**Question 8**: "What was the expected outcome or goal when you made this decision? What were you hoping to achieve?"
+
 #### Phase 5: Capture Real-World Consequences
 
-Now that we've covered the theoretical pros/cons of each option, capture the actual outcomes:
+Now that we've covered the options, their pros/cons, and the expected outcome, capture what actually happened:
 
-**Question 8**: "Now that this decision has been in place, what positive outcomes have you observed? How has it helped?"
+**Question 9**: "Now that this decision has been in place, what positive outcomes have you observed? How has it helped?"
 
-**Question 9**: "Have there been any negative consequences or challenges that resulted from this choice?"
+**Question 10**: "Have there been any negative consequences or challenges that resulted from this choice?"
 
-**Question 10**: "Were there any unexpected trade-offs or surprises - things you didn't anticipate when making the decision?"
+**Question 11**: "Were there any unexpected trade-offs or surprises - things you didn't anticipate when making the decision?"
 
-**Question 11**: "If you were making this decision again today, would you decide differently? Why or why not?"
+**Question 12**: "If you were making this decision again today, would you decide differently? Why or why not?"
 
 #### Phase 6: Generate the ADR
 
