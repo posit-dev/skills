@@ -42,7 +42,8 @@ Create an Architecture Decision Record from a plan provided by the user.
 3. **Determine the next ADR number**
 
    List existing ADRs in `adr/` and find the next sequence number:
-   - If no ADRs exist, use `0001`
+   - If the `adr/` directory doesn't exist or is empty, ask the user: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
+   - If no ADRs exist in the confirmed location, use `0001`
    - Otherwise, increment from the highest existing number
 
 4. **Extract information from the plan**
@@ -124,6 +125,9 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
 3. **Determine the next ADR number**
 
    List existing ADRs in `adr/` and find the next sequence number.
+   - If the `adr/` directory doesn't exist or is empty, ask the user: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
+   - If no ADRs exist in the confirmed location, use `0001`
+   - Otherwise, increment from the highest existing number
 
 4. **Analyze the plan**
 
@@ -270,6 +274,9 @@ If they only mention one option: "Was there ever any discussion of doing it diff
 
 1. Read `adr/_template.md`
 2. Determine the next ADR number from `adr/`
+   - If the `adr/` directory doesn't exist or is empty, ask the user: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
+   - If no ADRs exist in the confirmed location, use `0001`
+   - Otherwise, increment from the highest existing number
 3. Synthesize interview answers into ADR format
 4. Create the file at `adr/NNNN-<title>.md`
 5. Update `adr/README.md` index
