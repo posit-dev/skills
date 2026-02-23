@@ -28,25 +28,49 @@ Create an Architecture Decision Record from a plan provided by the user.
 
 ### Workflow
 
-1. **Get the plan from the user**
+1. **Determine repository root and ADR location**
+
+   - Find the git repository root using `git rev-parse --show-toplevel`
+   - If not a git repo, use the current working directory
+   - Check if `adr/` directory exists at this location
+   - If `adr/` doesn't exist or is empty, ask: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
+   - Store the confirmed ADR location for use in subsequent steps
+
+2. **Initialize ADR system if needed**
+
+   If the user wants to initialize in a new location, ask for consent: "I'll initialize the ADR system by creating:
+   - `{location}/` directory
+   - `{location}/README.md` with documentation
+   - `{location}/_template.md` with the MADR template
+
+   Should I proceed?"
+
+   If yes:
+   - Create the directory
+   - Copy README from skill's `references/README-example.md` (customize with project name)
+   - Copy template from skill's `references/_template.md`
+
+3. **Get the plan from the user**
 
    Ask the user: "Please describe the decision or plan you want to document as an ADR. Include:
    - What problem are you solving?
    - What options did you consider?
    - What did you decide and why?"
 
-2. **Read the template**
+4. **Read the template**
 
-   Read `adr/_template.md` to understand the expected format.
+   Read `{adr_location}/_template.md` to understand the expected format.
+   If not found, use the template from skill's `references/_template.md`.
 
-3. **Determine the next ADR number**
+5. **Determine the next ADR number**
 
-   List existing ADRs in `adr/` and find the next sequence number:
-   - If the `adr/` directory doesn't exist or is empty, ask the user: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
-   - If no ADRs exist in the confirmed location, use `0001`
+   - List existing ADRs in the confirmed location
+   - Find files matching pattern `NNNN-*.md`
+   - Check that the next number doesn't already exist (validation)
+   - If no ADRs exist, use `0001`
    - Otherwise, increment from the highest existing number
 
-4. **Extract information from the plan**
+6. **Extract information from the plan**
 
    From the user's input, identify and map to ADR sections:
 
@@ -62,26 +86,37 @@ Create an Architecture Decision Record from a plan provided by the user.
    | Drawbacks/risks | → | Negative Consequences |
    | Related issues/PRs | → | Technical Story + Links section |
 
-5. **Fill in any gaps**
+7. **Validate and fill in any gaps**
+
+   Validate the title:
+   - Check it's in kebab-case format
+   - Check it's under 50 characters
+   - Check the filename `NNNN-{title}.md` doesn't already exist
 
    If the user's plan is missing information, ask clarifying questions:
    - "Who are the deciders for this decision?"
    - "What alternatives did you consider besides [chosen option]?"
    - "What are the potential downsides of this approach?"
 
-6. **Generate the ADR**
+8. **Generate the ADR**
 
-   Create the ADR file at `adr/NNNN-<kebab-case-title>.md` using the template.
+   Create the ADR file at `{adr_location}/NNNN-<kebab-case-title>.md` using the template.
 
    Set the status to "proposed" unless the user indicates it's already accepted.
 
-7. **Update the index**
+9. **Update the index**
 
-   Add a link to the new ADR in `adr/README.md` under the Index section.
+   - Read `{adr_location}/README.md`
+   - If README doesn't exist, create one using `references/README-example.md` as template
+   - Find the "## Index" section
+   - If Index section doesn't exist, add it at the end
+   - Add entry: `- [ADR-NNNN: Title](NNNN-title.md) - Brief description`
+   - Check for duplicate entries before adding
+   - Write the updated README
 
-8. **Present the result**
+10. **Present the result**
 
-   Show the user the created ADR and ask if any changes are needed.
+    Show the user the full created ADR file content and ask if any changes are needed.
 
 ### Example Interaction
 
@@ -109,7 +144,15 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
 
 ### Workflow
 
-1. **Locate the current plan**
+1. **Determine repository root and ADR location**
+
+   - Find the git repository root using `git rev-parse --show-toplevel`
+   - If not a git repo, use the current working directory
+   - Check if `adr/` directory exists at this location
+   - If `adr/` doesn't exist or is empty, ask about location (same as `/adr-create`)
+   - Initialize if needed (with user consent)
+
+2. **Locate the current plan**
 
    Check for an active plan in these locations (in order):
    - `PLAN.md` in the repository root
@@ -118,18 +161,18 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
 
    If no plan is found, inform the user and suggest using `/adr-create` or `/adr-interview` instead.
 
-2. **Read the template**
+3. **Read the template**
 
-   Read `adr/_template.md` to understand the expected format.
+   Read `{adr_location}/_template.md` to understand the expected format.
+   If not found, use the template from skill's `references/_template.md`.
 
-3. **Determine the next ADR number**
+4. **Determine the next ADR number**
 
-   List existing ADRs in `adr/` and find the next sequence number.
-   - If the `adr/` directory doesn't exist or is empty, ask the user: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
-   - If no ADRs exist in the confirmed location, use `0001`
-   - Otherwise, increment from the highest existing number
+   - List existing ADRs in the confirmed location
+   - Validate the next number doesn't already exist
+   - Use `0001` if no ADRs exist, otherwise increment from highest
 
-4. **Analyze the plan**
+5. **Analyze the plan**
 
    Extract from the current plan:
    - **Problem Statement**: What issue is the plan addressing?
@@ -137,7 +180,7 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
    - **Implementation Steps**: These often reveal decision drivers
    - **Alternatives**: Any options mentioned or implied
 
-5. **Transform into ADR format**
+6. **Transform into ADR format**
 
    Map plan elements to ADR sections:
 
@@ -154,7 +197,9 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
 
    **Key transformation principle**: Plans describe "how to implement", ADRs describe "what we decided and why".
 
-6. **Fill gaps with the user**
+7. **Validate and fill gaps with the user**
+
+   Validate the title (kebab-case, under 50 chars, no duplicate filename).
 
    Plans often lack some ADR elements. Ask the user:
    - "What alternatives did you consider before this plan?"
@@ -166,20 +211,24 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
    - If the plan is awaiting approval → status is "proposed"
    - If unclear, ask: "Is this decision already approved, or awaiting review?"
 
-7. **Generate the ADR**
+8. **Generate the ADR**
 
-   Create `adr/NNNN-<title>.md` based on the transformed plan.
-
-8. **Handle the plan file**
-
-   Ask the user: "The plan has been converted to ADR. Would you like me to:
-   - Keep PLAN.md as-is (for continued implementation tracking)
-   - Delete PLAN.md (if implementation is complete)
-   - Archive PLAN.md somewhere else"
+   Create `{adr_location}/NNNN-<title>.md` based on the transformed plan.
 
 9. **Update the index**
 
-   Add a link to the new ADR in `adr/README.md`.
+   Update `{adr_location}/README.md` with the new ADR entry (create README if needed).
+
+10. **Present the result**
+
+    Show the user the full created ADR file content.
+
+11. **Handle the plan file**
+
+    Ask the user: "The plan has been converted to ADR. Would you like me to:
+    - Keep PLAN.md as-is (for continued implementation tracking)
+    - Delete PLAN.md (if implementation is complete)
+    - Archive PLAN.md somewhere else"
 
 ### Example
 
@@ -272,18 +321,28 @@ If they only mention one option: "Was there ever any discussion of doing it diff
 
 #### Phase 6: Generate the ADR
 
-1. Read `adr/_template.md`
-2. Determine the next ADR number from `adr/`
-   - If the `adr/` directory doesn't exist or is empty, ask the user: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
-   - If no ADRs exist in the confirmed location, use `0001`
-   - Otherwise, increment from the highest existing number
-3. Synthesize interview answers into ADR format
-4. Create the file at `adr/NNNN-<title>.md`
-5. Update `adr/README.md` index
+1. **Determine repository root and ADR location**
+   - Find git repo root or use working directory
+   - Check for ADR location, initialize if needed (with consent)
+
+2. **Read template**
+   - Read `{adr_location}/_template.md` or use `references/_template.md`
+
+3. **Determine and validate ADR number**
+   - List existing ADRs, validate next number, use `0001` if none exist
+
+4. **Synthesize interview answers into ADR format**
+   - Validate title (kebab-case, under 50 chars, no duplicate)
+   - Map interview responses to MADR sections
+
+5. **Create the file at `{adr_location}/NNNN-<title>.md`**
+
+6. **Update index**
+   - Update or create `{adr_location}/README.md` with new entry
 
 **Present the draft**: "Here's the ADR I've created based on our conversation. Please review it:"
 
-*Show the full ADR content*
+*Show the full ADR file content*
 
 **Ask**: "Would you like me to make any changes before we finalize it?"
 
@@ -394,24 +453,43 @@ Always update `adr/README.md` when creating a new ADR. Add an entry under the In
 7. **ALWAYS ask clarifying questions** if information is missing rather than guessing
 8. **ALWAYS show the user the draft** before finalizing
 
-## Error Handling
+## Error Handling and Edge Cases
 
-**No `adr/` directory exists:**
-Inform the user and ask if they want to initialize an ADR system:
-- Create `adr/` directory
-- Create `adr/README.md` with documentation
-- Create `adr/_template.md` with the MADR template
-- Then proceed with ADR creation
+**No `adr/` directory exists or is empty:**
+1. Ask user: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
+2. If user provides different location, use that location for all operations
+3. If user wants initialization, request consent: "I'll create the directory, README.md, and _template.md. Proceed?"
+4. If yes, create:
+   - Directory at specified location
+   - README.md using `references/README-example.md` as template
+   - _template.md copying from `references/_template.md`
 
-**No template found:**
-Use a standard MADR template as a fallback.
+**No template found at `{adr_location}/_template.md`:**
+Use the MADR template from skill's `references/_template.md` as fallback.
 
-**Unclear information:**
+**README.md doesn't exist:**
+Create one using `references/README-example.md`, customizing the project name if detectable.
+
+**README.md exists but no Index section:**
+Add "## Index" section at the end with the new ADR entry.
+
+**Duplicate ADR number:**
+Check if `NNNN-*.md` already exists. If yes, increment to next available number.
+
+**Title validation failures:**
+- Not kebab-case: Suggest converting (e.g., "Use TypeScript" → "use-typescript")
+- Too long (>50 chars): Ask user to shorten
+- Already exists: Suggest alternative title
+
+**Not a git repository:**
+Use current working directory as the base path for ADR location.
+
+**Unclear or missing information:**
 Don't guess - always ask the user for clarification. It's better to have an incomplete ADR that's accurate than a complete one with assumptions.
 
 ## Reference Files
 
-The skill includes reference files in the `resources/` directory with detailed workflows for each command:
-- `adr-create.md` - Creating ADRs from user plans
-- `adr-from-current.md` - Converting active plans to ADRs
-- `adr-interview.md` - Interactive interview for past decisions
+The skill includes reference files in the `references/` directory:
+- `_template.md` - Official MADR template (fallback if project has none)
+- `README-example.md` - Template for creating new ADR directories
+- `example-adr.md` - Fully worked example showing proper ADR structure
