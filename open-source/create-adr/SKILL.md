@@ -288,7 +288,7 @@ Start with: "I'll help you document a past architectural decision as an ADR. Let
 
 *Summarize back*: "So if I understand correctly, [summary of context]. Is that right?"
 
-#### Phase 3: Explore Alternatives
+#### Phase 3: Explore Alternatives and Their Trade-offs
 
 **Question 5**: "What options did you consider? Even briefly considered or rejected ideas count."
 
@@ -307,15 +307,17 @@ If they only mention one option: "Was there ever any discussion of doing it diff
 
 **Question 6**: "Which option did you ultimately choose?"
 
-**Question 7**: "What were the main reasons for choosing this approach?"
+**Question 7**: "What were the main reasons for choosing this approach over the others?"
 
-**Question 8**: "Were there any trade-offs you accepted? Things you gave up or risks you took on?"
+#### Phase 5: Capture Real-World Consequences
 
-#### Phase 5: Capture Consequences
+Now that we've covered the theoretical pros/cons of each option, capture the actual outcomes:
 
-**Question 9**: "Looking back, what were the positive outcomes of this decision?"
+**Question 8**: "Now that this decision has been in place, what positive outcomes have you observed? How has it helped?"
 
-**Question 10**: "Were there any negative consequences or challenges that resulted?"
+**Question 9**: "Have there been any negative consequences or challenges that resulted from this choice?"
+
+**Question 10**: "Were there any unexpected trade-offs or surprises - things you didn't anticipate when making the decision?"
 
 **Question 11**: "If you were making this decision again today, would you decide differently? Why or why not?"
 
