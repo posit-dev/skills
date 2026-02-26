@@ -18,6 +18,7 @@ General-purpose developer skills useful across any language, project type, or co
 
 Skills for open-source R and Python package developers, streamlining common workflows like releases, changelogs, and contributor acknowledgments.
 
+- **[create-adr](./open-source/create-adr/)** - Architecture Decision Records (ADR) management using the MADR format. Create ADRs from plans, convert active plans to ADRs, or interview to document past decisions
 - **[create-release-checklist](./open-source/create-release-checklist/)** - Create a release checklist and GitHub issue for an R package, with automatic version calculation and customizable checklist generation
 - **[release-post](./open-source/release-post/)** - Create professional package release blog posts following Tidyverse or Shiny blog conventions, with support for both R and Python packages
 

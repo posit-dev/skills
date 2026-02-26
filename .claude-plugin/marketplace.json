@@ -25,6 +25,7 @@
       "source": "./",
       "strict": false,
       "skills": [
+        "./open-source/create-adr",
         "./open-source/release-post",
         "./open-source/create-release-checklist"
       ]
