@@ -1,6 +1,6 @@
 ---
-name: create-adr
-description: Architecture Decision Records (ADR) management. Creates, documents, and manages ADRs using the MADR format. Use when the user says "create adr", "document decision", "make an adr", or wants to formally capture architectural decisions. Supports three modes - creating from a plan, converting an active plan, or interviewing for past decisions.
+name: adr
+description: Architecture Decision Records (ADR) management. Creates, documents, and manages ADRs using the MADR format. Use when the user says "create adr", "document decision", "make an adr", or wants to formally capture architectural decisions. Intelligently routes between three workflows - converting an active plan, creating from a user-provided plan or description, or conducting an interview for past decisions.
 compatibility: Designed for Claude Code
 metadata:
   author: Posit
@@ -12,128 +12,91 @@ license: MIT
 
 This skill helps create and manage Architecture Decision Records (ADRs) using the MADR (Markdown Any Decision Record) format. ADRs document important architectural decisions with their context, alternatives considered, and consequences.
 
-## Available Commands
+## Command: /adr
 
-This skill provides three slash commands for different ADR creation scenarios:
+This skill provides a single `/adr` command that intelligently routes to the appropriate workflow based on the situation.
 
-| Command | When to Use | Description |
-|---------|-------------|-------------|
-| `/adr-create` | You have a plan to document | Create an ADR from a plan provided by the user |
-| `/adr-from-current` | Claude has an active plan | Convert Claude's current working plan into an ADR |
-| `/adr-interview` | Documenting a past decision | Interactive interview to capture a decision already made |
+### Initial Routing Logic
 
-## Command: /adr-create
+When `/adr` is invoked:
 
-Create an Architecture Decision Record from a plan provided by the user.
+1. **Check for active plan**: Look for Claude's current working plan (PLAN.md, active todo list, or recent planning discussion in conversation)
 
-### Workflow
+2. **Determine the scenario** and route accordingly:
 
-1. **Determine repository root and ADR location**
+   **Scenario A - Active Plan Exists**: If an active plan is detected → **Route to "Convert Current Plan" flow**
 
-   - Find the git repository root using `git rev-parse --show-toplevel`
-   - If not a git repo, use the current working directory
-   - Check if `adr/` directory exists at this location
-   - If `adr/` doesn't exist or is empty, ask: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
-   - Store the confirmed ADR location for use in subsequent steps
+   **Scenario B - User Provides Context**: If no active plan but user mentions a decision/plan → **Route to "Create from Plan" flow**
 
-2. **Initialize ADR system if needed**
+   **Scenario C - Need More Information**: If neither applies → **Ask routing question**
 
-   If the user wants to initialize in a new location, ask for consent: "I'll initialize the ADR system by creating:
-   - `{adr_location}/` directory
-   - `{adr_location}/README.md` with documentation
-   - `{adr_location}/_template.md` with the MADR template
+3. **Routing Question** (when needed):
 
-   Should I proceed?"
+   "I'll help you create an ADR. Which scenario best describes what you need?
 
-   If yes:
-   - Create the directory
-   - Create `{adr_location}/README.md` using the structure from skill's `references/README-example.md`
-   - Create `{adr_location}/_template.md` copying content from skill's `references/_template.md`
+   1. **Document a plan or decision** - You have details about a decision to document
+   2. **Interview me about a past decision** - Walk me through questions to capture a decision that was already made
 
-3. **Get the plan from the user**
+   Which would you prefer?"
 
-   Ask the user: "Do you have a plan document or file I should read, or would you prefer to describe the decision directly?"
+   - If user chooses option 1 → Route to "Create from Plan" flow
+   - If user chooses option 2 → Route to "Interview" flow
 
-   If user provides a filename:
-   - Read the file
-   - Extract as much information as possible from the file content
+### Flow A: Convert Current Plan
 
-   If no file or if file doesn't contain complete information, ask: "Please describe the decision or plan you want to document as an ADR. Include:
-   - What problem are you solving?
-   - What options did you consider?
-   - What did you decide and why?"
+Convert Claude's currently active plan (PLAN.md or todo list) into an Architecture Decision Record.
 
-4. **Read the template**
+**When to use**: Detected active plan in the conversation or project files.
 
-   Read `{adr_location}/_template.md` to understand the expected format.
-   If not found, use the template from skill's `references/_template.md`.
+#### Workflow
 
-5. **Determine the next ADR number**
+1. **Setup ADR System** (see "Common Setup Steps" section below)
+   - Determine repository root and ADR location
+   - Initialize if needed (with user consent)
 
-   - List existing ADRs in the confirmed location
-   - Find files matching pattern `[0-9][0-9][0-9][0-9]-*.md` (excludes _template.md, README.md)
-   - If no ADRs exist, use `0001`
-   - Otherwise, increment from the highest existing number
+2. **Locate the current plan**
 
-6. **Extract information from the plan**
+   Check for an active plan in these locations (in order):
+   - `PLAN.md` in the repository root
+   - Active todo list from the current session
+   - Recent planning discussion in the conversation
 
-   From the user's input, identify and map to ADR sections:
+   If no plan is found, inform the user: "I don't see an active plan in this conversation. Would you like to:
+   1. Provide a plan or describe a decision (I'll use the 'Create from Plan' flow)
+   2. Walk through an interview about a past decision?"
 
-   | User's Plan Info | → | ADR Section |
-   |------------------|---|-------------|
-   | Decision name | → | Title (concise, use kebab-case for filename) |
-   | Situation/problem | → | Context and Problem Statement |
-   | Requirements/constraints | → | Decision Drivers |
-   | Alternatives considered | → | Considered Options |
-   | Chosen approach | → | Decision Outcome |
-   | Why this was chosen | → | Decision Outcome justification |
-   | Benefits | → | Positive Consequences |
-   | Drawbacks/risks | → | Negative Consequences |
-   | Related issues/PRs | → | Technical Story + Links section |
+   Route to the appropriate flow based on their choice.
 
-7. **Validate title and fill in any gaps**
+3. **Read template and determine ADR number** (see "Common Setup Steps")
 
-   Before proceeding, validate the proposed title:
-   - Check it's in kebab-case format (e.g., "use-typescript" not "Use TypeScript")
-   - Check it's under 50 characters
-   - Check if a title similar to this already exists (check existing ADR titles to prevent duplicates)
-   - If validation fails, ask user to provide a corrected title
+4. **Analyze the plan**
 
-   If the user's plan is missing information, ask clarifying questions:
-   - "Who are the deciders for this decision?" (for comma-separated list)
-   - If alternatives were mentioned but pros/cons not provided: "For each option you considered, can you tell me the pros and cons?"
-     - For each alternative: "What were the pros of [option]?" then "What were the cons of [option]?"
-   - If no alternatives mentioned: "What alternatives did you consider besides [chosen option]? And what were their pros and cons?"
+   Extract from the current plan:
+   - **Problem Statement**: What issue is the plan addressing?
+   - **Proposed Solution**: What approach does the plan take?
+   - **Implementation Steps**: These often reveal decision drivers
+   - **Alternatives**: Any options mentioned or implied
+
+5. **Transform plan into ADR format**
+
+   Plans often lack some ADR elements. Ask the user:
+   - "What alternatives did you consider before this plan?"
+   - "Who should be listed as deciders?"
    - "What are the potential downsides of this approach?"
 
-8. **Generate the ADR**
+   **Status determination**:
+   - If the plan is actively being implemented → status is "accepted"
+   - If the plan is awaiting approval → status is "proposed"
+   - If unclear, ask: "Is this decision already approved, or awaiting review?"
 
-   Create the ADR file at `{adr_location}/NNNN-<kebab-case-title>.md` using the template.
+7. **Generate and present the ADR** (see "Common Generation Steps")
 
-   Replace ALL template placeholders with actual content (see "Template Placeholder Replacement" section above).
+8. **Handle the plan file**
 
-   Specific notes:
-   - Set status to "proposed" unless user indicates "accepted"
-   - Use comma-separated decider names as provided by user
-   - Technical story/issue links can appear in both Technical Story field and Links section
-   - Ensure "## Pros and Cons of the Options" section has subsections for each option with their specific pros/cons gathered in step 7
-
-9. **Update the index**
-
-   - Read `{adr_location}/README.md`
-   - If README doesn't exist, create one using the structure from `references/README-example.md`
-   - Find the "## Index" section
-   - If Index section doesn't exist, add it at the end of the README (before any "Contributing" or "License" sections if they exist)
-   - Generate one-line summary from the Decision Outcome section (e.g., "Adopt MADR format for documenting decisions")
-   - Add entry format: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
-     - The "Title" is the ADR title
-     - The "One-line summary" is Claude-generated based on what was decided
-   - Check for duplicate entries before adding
-   - Write the updated README
-
-10. **Present the result**
-
-    Use the Read tool to show the user the full created ADR file content and ask if any changes are needed.
+    Ask the user: "The plan has been converted to ADR. Would you like me to:
+    - Keep PLAN.md as-is (for continued implementation tracking)
+    - Delete PLAN.md (if implementation is complete)
+    - Archive PLAN.md somewhere else"
 
 ### Example Interaction
 
@@ -177,84 +140,55 @@ Would you like me to make any changes to this ADR?
 - Link to relevant GitHub issues if mentioned
 - Keep the title concise (under 50 characters ideally)
 
-## Command: /adr-from-current
+### Flow B: Create from Plan
 
-Convert Claude's currently active plan (PLAN.md or todo list) into an Architecture Decision Record.
+Create an Architecture Decision Record from a plan or decision description provided by the user.
 
-### Workflow
+**When to use**: User has a plan document or wants to describe a decision directly.
 
-1. **Determine repository root and ADR location**
+#### Workflow
 
-   - Find the git repository root using `git rev-parse --show-toplevel`
-   - If not a git repo, use the current working directory
-   - Check if `adr/` directory exists at this location
-   - If `adr/` doesn't exist or is empty, ask about location (same as `/adr-create`)
-   - Initialize if needed (with user consent)
+1. **Setup ADR System** (see "Common Setup Steps" section below)
 
-2. **Locate the current plan**
+2. **Get the plan from the user**
 
-   Check for an active plan in these locations (in order):
-   - `PLAN.md` in the repository root
-   - Active todo list from the current session
-   - Recent planning discussion in the conversation
+   Ask: "Do you have a plan document or file I should read, or would you prefer to describe the decision directly?"
 
-   If no plan is found, inform the user and suggest using `/adr-create` or `/adr-interview` instead.
+   If user provides a filename:
+   - Read the file
+   - Extract as much information as possible from the file content
 
-3. **Read the template**
+   If no file or if file doesn't contain complete information, ask: "Please describe the decision or plan you want to document as an ADR. Include:
+   - What problem are you solving?
+   - What options did you consider?
+   - What did you decide and why?"
 
-   Read `{adr_location}/_template.md` to understand the expected format.
-   If not found, use the template from skill's `references/_template.md`.
+3. **Read template and determine ADR number** (see "Common Setup Steps")
 
-4. **Determine the next ADR number**
+4. **Extract information from the plan**
 
-   - List existing ADRs in the confirmed location
-   - Validate the next number doesn't already exist
-   - Use `0001` if no ADRs exist, otherwise increment from highest
+   Map user's information to ADR sections:
 
-5. **Analyze the plan**
-
-   Extract from the current plan:
-   - **Problem Statement**: What issue is the plan addressing?
-   - **Proposed Solution**: What approach does the plan take?
-   - **Implementation Steps**: These often reveal decision drivers
-   - **Alternatives**: Any options mentioned or implied
-
-6. **Transform into ADR format**
-
-   Map plan elements to ADR sections:
-
-   | Plan Element | → | ADR Section |
-   |--------------|---|-------------|
-   | Plan title | → | Title (concise, use kebab-case for filename) |
-   | Overview/why this is needed | → | Context and Problem Statement |
-   | Goals/requirements mentioned | → | Decision Drivers |
-   | Implementation approach | → | Decision Outcome (the "what", not the "how") |
-   | Alternative approaches mentioned | → | Considered Options |
-   | Benefits/rationale | → | Positive Consequences |
-   | Trade-offs/concerns | → | Negative Consequences |
+   | User's Plan Info | → | ADR Section |
+   |------------------|---|-------------|
+   | Decision name | → | Title (concise, use kebab-case for filename) |
+   | Situation/problem | → | Context and Problem Statement |
+   | Requirements/constraints | → | Decision Drivers |
+   | Alternatives considered | → | Considered Options |
+   | Chosen approach | → | Decision Outcome |
+   | Why this was chosen | → | Decision Outcome justification |
+   | Benefits | → | Positive Consequences |
+   | Drawbacks/risks | → | Negative Consequences |
    | Related issues/PRs | → | Technical Story + Links section |
 
-   **Key transformation principle**: Plans describe "how to implement", ADRs describe "what we decided and why".
+5. **Validate and fill gaps** (see "Common Validation Steps")
 
-7. **Validate title and fill gaps with the user**
-
-   Before proceeding, validate the proposed title:
-   - Check it's in kebab-case format
-   - Check it's under 50 characters
-   - Check the filename `NNNN-{title}.md` doesn't already exist in `{adr_location}`
-   - If validation fails, ask user to provide a corrected title
-
-   Plans often lack some ADR elements. Ask the user:
-   - "What alternatives did you consider before this plan?"
-   - "Who should be listed as deciders?"
+   Ask clarifying questions if needed:
+   - "Who are the deciders for this decision?"
+   - "For each option, what were the pros and cons?"
    - "What are the potential downsides of this approach?"
 
-   **Status determination**:
-   - If the plan is actively being implemented → status is "accepted"
-   - If the plan is awaiting approval → status is "proposed"
-   - If unclear, ask: "Is this decision already approved, or awaiting review?"
-
-8. **Generate the ADR**
+6. **Generate and present the ADR** (see "Common Generation Steps")
 
    Create `{adr_location}/NNNN-<title>.md` based on the transformed plan.
 
@@ -307,13 +241,13 @@ Claude would:
 - ADRs are about decisions, plans are about execution
 - Keep the ADR focused on the architectural choice, not implementation steps
 
-## Command: /adr-interview
+### Flow C: Interview for Past Decision
 
 Guide the user through an interactive interview to document a past architectural decision.
 
-### Purpose
+**When to use**: User wants to document a decision that was already made in the past.
 
-Sometimes decisions were made in the past without formal documentation. This command helps retroactively capture those decisions through a structured conversation.
+**Purpose**: Sometimes decisions were made in the past without formal documentation. This flow helps retroactively capture those decisions through a structured conversation.
 
 ### Interview Flow
 
@@ -440,6 +374,69 @@ After any revisions (or if no changes requested):
 - If a decision has since been reversed, set status to "superseded" or "deprecated" instead
 - Link to any related PRs or issues if the user can recall them
 - It's okay to have some sections less detailed for older decisions
+
+## Common Steps (Shared Across All Flows)
+
+### Common Setup Steps
+
+**Determine repository root and ADR location:**
+1. Find the git repository root using `git rev-parse --show-toplevel`
+2. If not a git repo, use the current working directory
+3. Check if `adr/` directory exists at this location
+4. If `adr/` doesn't exist or is empty, ask: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
+5. Store the confirmed ADR location as `{adr_location}` for use in subsequent steps
+
+**Initialize ADR system if needed:**
+If the user wants to initialize in a new location, ask for consent: "I'll initialize the ADR system by creating:
+- `{adr_location}/` directory
+- `{adr_location}/README.md` with documentation
+- `{adr_location}/_template.md` with the MADR template
+
+Should I proceed?"
+
+If yes:
+- Create the directory
+- Create `{adr_location}/README.md` using the structure from skill's `references/README-example.md`
+- Create `{adr_location}/_template.md` copying content from skill's `references/_template.md`
+
+**Read the template:**
+Read `{adr_location}/_template.md` to understand the expected format. If not found, use the template from skill's `references/_template.md`.
+
+**Determine the next ADR number:**
+- List existing ADRs in the confirmed location
+- Find files matching pattern `[0-9][0-9][0-9][0-9]-*.md` (excludes _template.md, README.md)
+- If no ADRs exist, use `0001`
+- Otherwise, increment from the highest existing number
+
+### Common Validation Steps
+
+**Validate title:**
+- Check it's in kebab-case format (e.g., "use-typescript" not "Use TypeScript")
+- Check it's under 50 characters
+- Check if filename `NNNN-{title}.md` already exists in `{adr_location}` (prevent duplicates)
+- If validation fails, ask user to provide a corrected title
+
+### Common Generation Steps
+
+**Generate the ADR file:**
+1. Create the ADR file at `{adr_location}/NNNN-<kebab-case-title>.md` using the template
+2. Replace ALL template placeholders with actual content (see "Template Placeholder Replacement" section)
+3. Set today's date in YYYY-MM-DD format
+4. Use comma-separated decider names as provided by user
+5. Ensure "## Pros and Cons of the Options" section has subsections for each option with their specific pros/cons
+
+**Update the index:**
+1. Read `{adr_location}/README.md`
+2. If README doesn't exist, create one using the structure from `references/README-example.md`
+3. Find the "## Index" section
+4. If Index section doesn't exist, add it at the end of the README (before any "Contributing" or "License" sections if they exist)
+5. Generate one-line summary from the Decision Outcome section
+6. Add entry format: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
+7. Check for duplicate entries before adding
+8. Write the updated README
+
+**Present the result:**
+Use the Read tool to show the user the full created ADR file content and ask if any changes are needed.
 
 ## General ADR Guidelines
 
