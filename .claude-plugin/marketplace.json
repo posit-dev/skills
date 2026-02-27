@@ -17,7 +17,8 @@
       "skills": [
         "./posit-dev/adr",
         "./posit-dev/critical-code-reviewer",
-        "./posit-dev/describe-design"
+        "./posit-dev/describe-design",
+        "./posit-dev/pr-create"
       ]
     },
     {
