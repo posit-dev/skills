@@ -10,6 +10,7 @@ Claude Skills extend Claude's capabilities with specialized knowledge and workfl
 
 General-purpose developer skills useful across any language, project type, or context.
 
+- **[adr](./posit-dev/adr/)** - Architecture Decision Records (ADR) management using the MADR format. Create ADRs from plans, convert active plans to ADRs, or interview to document past decisions
 - **[critical-code-reviewer](./posit-dev/critical-code-reviewer/)** - Conduct rigorous, adversarial code reviews identifying security holes, lazy patterns, edge case failures, and bad practices across Python, R, JavaScript/TypeScript, SQL, and front-end code
 - **[describe-design](./posit-dev/describe-design/)** - Research a codebase and create architectural documentation describing how features or systems work, with Mermaid diagrams and stable code references suitable for humans and AI agents
 - **[pr-create](./posit-dev/pr-create/)** - Creates a pull request from current changes, monitors GitHub CI, and debugs any failures until CI passes
@@ -18,7 +19,6 @@ General-purpose developer skills useful across any language, project type, or co
 
 Skills for open-source R and Python package developers, streamlining common workflows like releases, changelogs, and contributor acknowledgments.
 
-- **[create-adr](./open-source/create-adr/)** - Architecture Decision Records (ADR) management using the MADR format. Create ADRs from plans, convert active plans to ADRs, or interview to document past decisions
 - **[create-release-checklist](./open-source/create-release-checklist/)** - Create a release checklist and GitHub issue for an R package, with automatic version calculation and customizable checklist generation
 - **[release-post](./open-source/release-post/)** - Create professional package release blog posts following Tidyverse or Shiny blog conventions, with support for both R and Python packages
 
