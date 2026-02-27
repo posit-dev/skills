@@ -98,48 +98,6 @@ Convert Claude's currently active plan (PLAN.md or todo list) into an Architectu
     - Delete PLAN.md (if implementation is complete)
     - Archive PLAN.md somewhere else"
 
-### Example Interaction
-
-**User**: I want to document our decision to use MADR format for ADRs.
-
-**Claude**: I'll create an ADR for that. Do you have a plan document or file I should read, or would you prefer to describe the decision directly?
-
-**User**: Describe it directly.
-
-**Claude**: Please describe the decision or plan you want to document as an ADR. Include:
-- What problem are you solving?
-- What options did you consider?
-- What did you decide and why?
-
-**User**: We needed a way to document architectural decisions. We considered Y-statements, plain markdown, and MADR. We chose MADR for its comprehensive structure.
-
-**Claude**: Let me gather some more details:
-- Who should be listed as deciders?
-- For each option you considered, can you tell me the pros and cons?
-
-**User**: The core team decided. Y-statements were concise but lacked detail. Plain markdown was flexible but inconsistent. MADR was comprehensive and well-documented.
-
-**Claude**: *Creates `adr/0001-use-madr-format-for-adrs.md` and updates README*
-
-*Uses Read tool to show:*
-```markdown
-# Use MADR Format for ADRs
-
-* Status: proposed
-* Deciders: Core team
-* Date: 2026-02-23
-...
-```
-
-Would you like me to make any changes to this ADR?
-
-### Notes
-
-- Always use kebab-case for the filename
-- Set today's date in YYYY-MM-DD format
-- Link to relevant GitHub issues if mentioned
-- Keep the title concise (under 50 characters ideally)
-
 ### Flow B: Create from Plan
 
 Create an Architecture Decision Record from a plan or decision description provided by the user.
@@ -190,57 +148,6 @@ Create an Architecture Decision Record from a plan or decision description provi
 
 6. **Generate and present the ADR** (see "Common Generation Steps")
 
-   Create `{adr_location}/NNNN-<title>.md` based on the transformed plan.
-
-   Replace template placeholders with actual content (see "Template Placeholder Replacement" section above for complete details).
-
-9. **Update the index**
-
-   Update `{adr_location}/README.md` with the new ADR entry (create README using `references/README-example.md` structure if needed).
-
-   Add entry at the end: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
-
-10. **Present the result**
-
-    Use the Read tool to show the user the full created ADR file content.
-
-11. **Handle the plan file**
-
-    Ask the user: "The plan has been converted to ADR. Would you like me to:
-    - Keep PLAN.md as-is (for continued implementation tracking)
-    - Delete PLAN.md (if implementation is complete)
-    - Archive PLAN.md somewhere else"
-
-### Example
-
-Given a `PLAN.md` like:
-
-```markdown
-# Add Reactive Polling to File Watcher
-
-## Overview
-Implement reactive polling for file system changes in Shiny apps.
-
-## Implementation
-1. Add watchdog dependency for file system events
-2. Create reactive poll wrapper
-3. Integrate with reactive graph
-4. Add examples showing auto-reload patterns
-```
-
-Claude would:
-1. Identify the problem: need reactive file system monitoring
-2. Identify the decision: use watchdog library with reactive polling
-3. Ask about alternatives considered (OS-native watchers, manual polling, etc.)
-4. Generate an ADR capturing the file watching decision
-
-### Notes
-
-- The plan likely contains implementation details not needed in the ADR
-- Focus on extracting the "why" and "what" rather than "how"
-- ADRs are about decisions, plans are about execution
-- Keep the ADR focused on the architectural choice, not implementation steps
-
 ### Flow C: Interview for Past Decision
 
 Guide the user through an interactive interview to document a past architectural decision.
@@ -266,66 +173,10 @@ Guide the user through an interactive interview to document a past architectural
 
 ## Common Steps (Shared Across All Flows)
 
-### Common Setup Steps
-
-**Determine repository root and ADR location:**
-1. Find the git repository root using `git rev-parse --show-toplevel`
-2. If not a git repo, use the current working directory
-3. Check if `adr/` directory exists at this location
-4. If `adr/` doesn't exist or is empty, ask: "I don't see any existing ADRs in `adr/`. Is there a different location where ADRs are stored in this project, or should I initialize the ADR system in `adr/`?"
-5. Store the confirmed ADR location as `{adr_location}` for use in subsequent steps
-
-**Initialize ADR system if needed:**
-If the user wants to initialize in a new location, ask for consent: "I'll initialize the ADR system by creating:
-- `{adr_location}/` directory
-- `{adr_location}/README.md` with documentation
-- `{adr_location}/_template.md` with the MADR template
-
-Should I proceed?"
-
-If yes:
-- Create the directory
-- Create `{adr_location}/README.md` using the structure from skill's `references/README-example.md`
-- Create `{adr_location}/_template.md` copying content from skill's `references/_template.md`
-
-**Read the template:**
-Read `{adr_location}/_template.md` to understand the expected format. If not found, use the template from skill's `references/_template.md`.
-
-**Determine the next ADR number:**
-- List existing ADRs in the confirmed location
-- Find files matching pattern `[0-9][0-9][0-9][0-9]-*.md` (excludes _template.md, README.md)
-- If no ADRs exist, use `0001`
-- Otherwise, increment from the highest existing number
-
-### Common Validation Steps
-
-**Validate title:**
-- Check it's in kebab-case format (e.g., "use-typescript" not "Use TypeScript")
-- Check it's under 50 characters
-- Check if filename `NNNN-{title}.md` already exists in `{adr_location}` (prevent duplicates)
-- If validation fails, ask user to provide a corrected title
-
-### Common Generation Steps
-
-**Generate the ADR file:**
-1. Create the ADR file at `{adr_location}/NNNN-<kebab-case-title>.md` using the template
-2. Replace ALL template placeholders with actual content (see "Template Placeholder Replacement" section)
-3. Set today's date in YYYY-MM-DD format
-4. Use comma-separated decider names as provided by user
-5. Ensure "## Pros and Cons of the Options" section has subsections for each option with their specific pros/cons
-
-**Update the index:**
-1. Read `{adr_location}/README.md`
-2. If README doesn't exist, create one using the structure from `references/README-example.md`
-3. Find the "## Index" section
-4. If Index section doesn't exist, add it at the end of the README (before any "Contributing" or "License" sections if they exist)
-5. Generate one-line summary from the Decision Outcome section
-6. Add entry format: `- [ADR-NNNN: Title](NNNN-title.md) - One-line summary`
-7. Check for duplicate entries before adding
-8. Write the updated README
-
-**Present the result:**
-Use the Read tool to show the user the full created ADR file content and ask if any changes are needed.
+All three workflows share standard procedures for setup, validation, and generation. See `references/common-steps.md` for complete details on:
+- **Setup**: Determining ADR location, initializing system, reading template, numbering
+- **Validation**: Title format, length, and duplicate checking
+- **Generation**: Creating ADR file, updating index, presenting results
 
 ## Guidelines and Best Practices
 
@@ -351,5 +202,6 @@ The skill includes reference files in the `references/` directory:
 - `_template.md` - Official MADR template (fallback if project has none)
 - `README-example.md` - Example README structure for initializing new ADR directories
 - `example-adr.md` - Fully worked example ADR showing proper MADR structure and content
+- `common-steps.md` - Standard setup, validation, and generation procedures used across all workflows
 - `guidelines.md` - Complete ADR guidelines, naming conventions, template placeholders, and error handling
 - `interview-flow.md` - Detailed interview script with all phases and questions for Flow C
