@@ -21,9 +21,9 @@ license: MIT
 1. Fetch and display all unresolved PR review threads
 2. Analyze each thread to understand the requested changes
 3. For each thread:
-  1. Make the necessary code modifications
-  2. (When possible) Add unit tests to verify the change
-  3. Commit the changes with descriptive commit messages using conventional commit specification
+   1. Make the necessary code modifications
+   2. (When possible) Add unit tests to verify the change
+   3. Commit the changes with descriptive commit messages using conventional commit specification
 4. Report back with a summary of addressed threads
 5. Ask if the user wants to resolve the threads. If so, reply to each thread indicating what was done and then resolve the thread.
 
