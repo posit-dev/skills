@@ -12,7 +12,14 @@ General-purpose developer skills useful across any language, project type, or co
 
 - **[critical-code-reviewer](./posit-dev/critical-code-reviewer/)** - Conduct rigorous, adversarial code reviews identifying security holes, lazy patterns, edge case failures, and bad practices across Python, R, JavaScript/TypeScript, SQL, and front-end code
 - **[describe-design](./posit-dev/describe-design/)** - Research a codebase and create architectural documentation describing how features or systems work, with Mermaid diagrams and stable code references suitable for humans and AI agents
-- **[pr-create](./posit-dev/pr-create/)** - Creates a pull request from current changes, monitors GitHub CI, and debugs any failures until CI passes
+
+### GitHub
+
+Skills for GitHub pull request workflows — creating PRs, addressing review feedback, and resolving threads.
+
+- **[pr-create](./github/pr-create/)** - Creates a pull request from current changes, monitors GitHub CI, and debugs any failures until CI passes
+- **[pr-threads-address](./github/pr-threads-address/)** - Review all unresolved PR review threads, address them by making necessary code changes, and commit the changes appropriately
+- **[pr-threads-resolve](./github/pr-threads-resolve/)** - Bulk resolve unresolved PR review threads
 
 ### Open Source
 
@@ -144,6 +151,7 @@ This repository organizes skills into categories to make it easier to find and i
 | Category        | Description                                                 |
 | --------------- | ----------------------------------------------------------- |
 | **posit-dev**   | General-purpose developer skills (code review, architecture docs) |
+| **github**    | GitHub PR workflows (create PRs, address review threads, resolve threads) |
 | **open-source** | Open-source R/Python package workflows (releases, changelogs)     |
 | **r-lib**       | R package development with the r-lib ecosystem              |
 | **shiny**       | Shiny app development and deployment (R and Python)         |
