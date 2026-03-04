@@ -110,7 +110,7 @@ EOF
 ### Resolve a Thread
 
 ```bash
-gh pr-review threads resolve --thread-id <PRRT_...> --repo <owner/repo>
+gh pr-review threads resolve --thread-id <PRRT_...> --pr <number> --repo <owner/repo>
 ```
 
 ### Start a Pending Review

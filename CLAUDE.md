@@ -65,6 +65,8 @@ After creating the skill directory, add it to the appropriate plugin in `.claude
 
 If a skill spans multiple categories (like `brand-yml` for both Shiny and Quarto), add its path to multiple plugin `skills` arrays. The `source` field is always `"./"` (repo root).
 
+When adding a new plugin to `marketplace.json`, also update the root `README.md` "Method 2: Direct Installation" section so it lists the `/plugin install` command for every plugin. All plugins in `marketplace.json` must have a corresponding install line in the README.
+
 ## Skill Categories
 
 | Category | Purpose |

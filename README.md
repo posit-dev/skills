@@ -90,6 +90,7 @@ Install specific skill categories directly:
 
 ```
 /plugin install posit-dev@posit-dev-skills
+/plugin install github@posit-dev-skills
 /plugin install open-source@posit-dev-skills
 /plugin install r-lib@posit-dev-skills
 /plugin install shiny@posit-dev-skills

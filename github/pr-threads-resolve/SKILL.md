@@ -87,10 +87,10 @@ Toggle thread resolution status:
 
 ```bash
 # Resolve a thread
-gh pr-review threads resolve --thread-id <PRRT_...> --repo <owner/repo>
+gh pr-review threads resolve --thread-id <PRRT_...> --pr <number> --repo <owner/repo>
 
 # Unresolve a thread
-gh pr-review threads unresolve --thread-id <PRRT_...> --repo <owner/repo>
+gh pr-review threads unresolve --thread-id <PRRT_...> --pr <number> --repo <owner/repo>
 ```
 
 ### Bulk Resolve Example
@@ -99,7 +99,7 @@ gh pr-review threads unresolve --thread-id <PRRT_...> --repo <owner/repo>
 # Get all unresolved thread IDs and resolve them
 gh pr-review threads list --pr 42 --unresolved --repo owner/repo | \
   jq -r '.threads[].id' | \
-  xargs -I {} gh pr-review threads resolve --thread-id {} --repo owner/repo
+  xargs -I {} gh pr-review threads resolve --thread-id {} --pr 42 --repo owner/repo
 ```
 
 ## Usage Notes
