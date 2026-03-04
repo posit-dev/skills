@@ -20,6 +20,17 @@
       ]
     },
     {
+      "name": "github",
+      "description": "Skills for GitHub pull request workflows — creating PRs, addressing review feedback, and resolving threads",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./github/pr-create",
+        "./github/pr-threads-address",
+        "./github/pr-threads-resolve"
+      ]
+    },
+    {
       "name": "open-source",
       "description": "Collection of skills for open-source R and Python package developers",
       "source": "./",
