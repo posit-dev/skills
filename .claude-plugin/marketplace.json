@@ -49,7 +49,8 @@
         "./r-lib/testing-r-packages",
         "./r-lib/cli",
         "./r-lib/cran-extrachecks",
-        "./r-lib/lifecycle"
+        "./r-lib/lifecycle",
+        "./r-lib/r-package-development"
       ]
     },
     {
