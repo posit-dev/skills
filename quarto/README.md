@@ -24,6 +24,10 @@ Create and use `_brand.yml` files for consistent branding across Quarto document
 
 **Note**: This skill is also registered in the shiny category since brand.yml works across both Shiny and Quarto projects.
 
+### `quarto-alt-text`
+
+Generate accessible alt text for data visualizations in Quarto documents. Use when adding, improving, or reviewing `fig-alt` for figures in `.qmd` files, or when making documents more accessible for screen readers.
+
 **Resources**:
 - [brand.yml project](https://posit-dev.github.io/brand-yml/)
 - [Quarto brand.yml docs](https://quarto.org/docs/authoring/brand.html)
@@ -123,3 +127,22 @@ This skill provides best practices for writing Quarto documents (.qmd) and conve
 #### Authors
 
 - [Mickaël CANOUIL](https://github.com/mcanouil)
+
+---
+
+### Quarto Alt Text Skill
+
+Generate accessible alt text for data visualizations in Quarto documents.
+
+This skill analyzes the code that generates each figure — including plotting code, data transformations, and surrounding prose — to produce precise, structured alt text following Amy Cesal's three-part formula (chart type → data description → key insight).
+
+#### When to Use This Skill
+
+- Adding `fig-alt` to figures in `.qmd` files.
+- Improving or reviewing existing alt text for accessibility.
+- Making Quarto documents compliant with screen reader and accessibility standards.
+- Bulk-processing all figures in a project.
+
+#### Authors
+
+- [Emil Hvitfeldt](https://github.com/emilhvitfeldt)
