@@ -36,6 +36,7 @@ R package development skills for working with the r-lib ecosystem and modern R p
 - **[cli](./r-lib/cli/)** - Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication with inline markup, progress indicators, and theming
 - **[cran-extrachecks](./r-lib/cran-extrachecks/)** - Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`, including documentation standards, DESCRIPTION field formatting, and URL validation
 - **[lifecycle](./r-lib/lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
+- **[r-package-development](./r-lib/r-package-development/)** - R package development with devtools, testthat, and roxygen2, covering key commands, coding conventions, testing, documentation, and NEWS.md practices
 
 ### Shiny
 
