@@ -1,14 +1,13 @@
 ---
 name: mirai
 description: >
-  Help users write correct mirai code for async, parallel, and distributed
-  computing in R. Use when users need to: (1) Write mirai code with correct
-  .args and ... usage, (2) Set up daemons for local or remote parallel
-  execution, (3) Convert code from the future or parallel package to mirai,
-  (4) Use mirai_map for parallel mapping, (5) Integrate mirai with Shiny
-  ExtendedTask or promises, (6) Set up remote/cluster computing with SSH
-  or HPC schedulers. Fixes common mistakes like missing explicit dependency
-  passing, incorrect .args vs ... scoping, and wrong daemon configuration.
+  Write correct mirai code for async, parallel, and distributed computing
+  in R. Use when: writing mirai code with correct .args and ... usage,
+  setting up daemons for local or remote parallel execution, converting
+  from future or parallel to mirai, using mirai_map for parallel mapping,
+  integrating mirai with Shiny ExtendedTask or promises, or configuring
+  remote/cluster computing with SSH or HPC schedulers. Fixes missing
+  dependency passing, .args vs ... scoping, and daemon configuration.
 metadata:
   author: Charlie Gao (@shikokuchuo)
   version: "1.0"
