@@ -52,6 +52,16 @@ Guidance for managing R package lifecycle according to tidyverse principles usin
 - lifecycle vignettes: "Stages", "Communicate", and "Manage"
 - [R Packages: Lifecycle](https://r-pkgs.org/lifecycle.html)
 
+### `mirai`
+
+Comprehensive guidance for async, parallel, and distributed computing in R using the mirai package. Use when running R code asynchronously or in parallel, fixing dependency-passing mistakes, setting up local or remote daemon pools, converting code from future or parallel, using `mirai_map()` for parallel mapping, integrating async tasks with Shiny via `ExtendedTask`, or configuring cluster/HPC computing.
+
+**Organization**: Single comprehensive SKILL.md file covering all major topics — explicit dependency passing (`.args` vs `...`), daemon setup and compute profiles, `mirai_map`, `everywhere`, error handling, Shiny/promises integration, remote/HPC launchers, RNG, debugging, and nested parallelism.
+
+**Resources**: This skill synthesizes guidance from:
+- [mirai package documentation](https://mirai.r-lib.org/)
+- [mirai GitHub repository](https://github.com/r-lib/mirai)
+
 ## Potential Skills
 
 This category could include skills for:
