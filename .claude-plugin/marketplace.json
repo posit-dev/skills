@@ -50,7 +50,8 @@
         "./r-lib/cli",
         "./r-lib/cran-extrachecks",
         "./r-lib/lifecycle",
-        "./r-lib/r-package-development"
+        "./r-lib/r-package-development",
+        "./r-lib/r-cli-app"
       ]
     },
     {
