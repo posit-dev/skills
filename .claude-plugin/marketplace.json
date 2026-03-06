@@ -71,7 +71,8 @@
       "strict": false,
       "skills": [
         "./brand-yml",
-        "./quarto/quarto-authoring"
+        "./quarto/quarto-authoring",
+        "./quarto/quarto-alt-text"
       ]
     }
   ]
