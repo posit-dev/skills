@@ -25,21 +25,21 @@ When invoked, analyze the figure(s) and generate alt text following these guidel
 
 ### Key Advantage: Source Code Access
 
-Unlike typical alt text scenarios where you only see an image, **we have access to the R code that generates each chart**. Use this to extract precise details:
+Unlike typical alt text scenarios where you only see an image, **we have access to the code that generates each chart**. Use this to extract precise details:
 
-**From `ggplot2` code:**
-- `aes(x, y)` → exact variable names for axes
-- `aes(color = ...)` / `aes(fill = ...)` → what color encodes
-- `geom_point()` → scatter, `geom_histogram()` → histogram, `geom_line()` → line chart
-- `geom_smooth()` / `geom_abline()` → overlaid fitted lines
-- `facet_wrap(~var)` → number of panels and what varies
-- `scale_color_gradient()` → color encoding scheme
-- `labs(x = ..., y = ...)` → axis labels if customized
+**From plotting code:**
+- Variable mappings → exact variable names for axes
+- Color/fill mappings → what color encodes
+- Plot type functions → scatter, histogram, line chart, etc.
+- Trend lines or fitted curves → overlaid statistical fits
+- Faceting/subplots → number of panels and what varies
+- Color scales → encoding scheme (sequential, diverging, categorical)
+- Axis labels and titles → customized labels
 
 **From data generation code:**
-- `rbeta()`, `rnorm()`, `runif()` → expected distribution shape
-- `mutate()` transformations → what was done to data
-- Recipe steps → feature engineering applied
+- Random distributions → expected distribution shape
+- Transformations → what was done to data
+- Feature engineering → preprocessing applied
 - Filtering/subsetting → what subset is shown
 
 **From surrounding prose:**
