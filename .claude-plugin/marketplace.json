@@ -76,6 +76,15 @@
         "./quarto/quarto-authoring",
         "./quarto/quarto-alt-text"
       ]
+    },
+    {
+      "name": "tidyverse",
+      "description": "Collection of skills for tidyverse-style R development",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./tidyverse/tidy-r"
+      ]
     }
   ]
 }

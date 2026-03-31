@@ -1,6 +1,10 @@
 # Tidyverse Skills
 
-Skills specific to using tidyverse packages and tidyverse-specific package development patterns.
+Skills for tidyverse-style R development, covering modern patterns, style guidelines, and best practices.
+
+## Skills
+
+- **[tidy-r](./tidy-r/)** - Modern tidyverse patterns, style guide, and migration guidance for R development. Covers native pipe usage, join_by() syntax, .by grouping, pick/across/reframe operations, filter_out/when_any/when_all, recode_values/replace_values/replace_when, tidy selection, stringr patterns, naming conventions, and migration from base R or older tidyverse APIs.
 
 ## Potential Skills
 
