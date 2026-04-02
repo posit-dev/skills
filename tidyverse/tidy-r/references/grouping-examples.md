@@ -70,6 +70,81 @@ data |>
   ungroup()
 ```
 
+### Avoid - redundant ungroup() around .by
+
+`.by` always returns ungrouped data, so `ungroup()` before or after is a no-op. Remove it.
+
+```r
+# Avoid - ungroup() is redundant
+data |>
+  ungroup() |>
+  mutate(
+    centered = x - mean(x),
+    .by = group
+  )
+
+# Good
+data |>
+  mutate(
+    centered = x - mean(x),
+    .by = group
+  )
+```
+
+### Consolidating mutate() calls
+
+When multiple columns share the same `.by`, combine them in a single `mutate()`.
+
+```r
+# Avoid - repeating .by = year across separate mutate() calls
+data |>
+  mutate(
+    above_med_a = a > median(a),
+    .by = year
+  ) |>
+  mutate(
+    above_med_b = b > median(b),
+    .by = year
+  )
+
+# Good - one mutate(), one .by
+data |>
+  mutate(
+    above_med_a = a > median(a),
+    above_med_b = b > median(b),
+    .by = year
+  )
+```
+
+**When to keep separate `mutate()` calls:**
+
+- **Different `.by` variables** between the calls
+- **Sequential dependency**: a later column uses a column created in an earlier `mutate()` within the same grouped context (the new column must exist before the group-level aggregate can reference it)
+
+```r
+# Separate calls needed: different .by variables
+data |>
+  mutate(
+    x_lag = dplyr::lag(x),
+    .by = id
+  ) |>
+  mutate(
+    above_med = x_lag > median(x_lag),
+    .by = year
+  )
+
+# Separate calls needed: b_rank depends on b_centered
+data |>
+  mutate(
+    b_centered = b - mean(b),
+    .by = group
+  ) |>
+  mutate(
+    b_rank = row_number(desc(b_centered)),
+    .by = group
+  )
+```
+
 ## pick() for column selection
 
 Use `pick()` inside data-masking functions to select columns by name or tidyselect helpers:

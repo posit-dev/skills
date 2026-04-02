@@ -97,6 +97,8 @@ Use newspaper style: high-level logic first, helpers below. Don't define functio
 ### Grouping
 
 - Use `.by` for per-operation grouping, never `group_by() |> ... |> ungroup()`
+- Never add `ungroup()` before or after `.by` — it always returns ungrouped data
+- Consolidate multiple `mutate(.by = x)` calls into one when they share the same `.by`; keep separate only when `.by` differs or a later column depends on an earlier one
 - Place `.by` on its own line for readability
 
 ### Joins
@@ -138,6 +140,8 @@ Use `cli::cli_abort()` with problem statement + bullets, never `stop()`.
 | `multiple = "error"` in joins | `relationship = "many-to-one"` (or `"one-to-one"`) |
 | `sapply()` | `map_*()` (type-stable) |
 | `group_by() \|> ... \|> ungroup()` | `.by` argument |
+| `ungroup() \|> mutate(..., .by = x)` | `mutate(..., .by = x)` (`.by` ignores existing groups) |
+| Repeated `mutate(.by = x)` with same `.by` | Single `mutate()` with all columns and one `.by` |
 | `cat()` for messages | `message()` or `cli::cli_inform()` |
 | `stop()` for errors | `cli::cli_abort()` |
 | `distinct(id)` | `distinct(id, .keep_all = TRUE)` |
