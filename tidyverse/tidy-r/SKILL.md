@@ -86,48 +86,34 @@ Use `cli::cli_abort()` with problem statement + bullets, never `stop()`.
 ```r
 library(tidyverse)
 
-# Read and clean data
-sales <- read_csv("data/sales.csv") |>
-  rename(
-    region = Region,
-    product = Product,
-    revenue = Revenue,
-    date = Date
-  ) |>
-  mutate(
-    quarter = quarter(date),
-    product = product |>
-      replace_values(
-        c("Widget A", "WidgetA") ~ "Widget A",
-        c("Widget B", "WidgetB") ~ "Widget B"
-      )
-  ) |>
-  filter_out(is.na(revenue))
+penguins <- penguins |>
+  filter_out(is.na(sex)) |>
+  mutate(size = case_when(
+    body_mass > 4500 ~ "large",
+    body_mass > 3500 ~ "medium",
+    .default = "small"
+  ))
 
-# Enrich with lookup table
-sales_enriched <- sales |>
-  left_join(
-    regions,
-    by = join_by(region == region_code),
-    unmatched = "error"
-  )
+# Coordinates for spatial join below
+island_coords <- tribble(
+  ~island,      ~latitude,
+  "Biscoe",     -65.5,
+  "Dream",      -64.7,
+  "Torgersen",  -64.8
+)
 
-# Summarise by group
-quarterly <- sales_enriched |>
+island_summary <- penguins |>
   summarise(
-    total_revenue = sum(revenue),
-    avg_revenue = mean(revenue),
-    n_transactions = n(),
-    .by = c(region_name, quarter)
+    mean_flipper = mean(flipper_len),
+    mean_mass = mean(body_mass),
+    n = n(),
+    .by = c(species, island)
   ) |>
-  mutate(
-    performance = total_revenue |>
-      recode_values(
-        \(x) x > 100000 ~ "high",
-        \(x) x > 50000 ~ "medium",
-        .default = "low"
-      )
+  left_join(
+    island_coords,
+    by = join_by(island),
+    unmatched = "error"
   ) |>
-  arrange(region_name, quarter)
+  arrange(species, island)
 ```
 
