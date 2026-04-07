@@ -8,7 +8,7 @@
 subset(data, condition)          # -> filter(data, condition)
 data[order(data$x), ]            # -> arrange(data, x)
 aggregate(x ~ y, data, mean)     # -> summarise(data, mean(x), .by = y)
-merge(x, y, by = "id")           # -> left_join(x, y, by = join_by(id))
+merge(x, y, by = "id")           # -> inner_join(x, y, by = join_by(id))
 ```
 
 ### Functional programming

@@ -2,7 +2,7 @@
 
 ## Per-operation grouping with .by
 
-The `.by` argument replaces the old `group_by() |> ... |> ungroup()` pattern. Results are always ungrouped.
+The `.by` argument is preferred for per-operation grouping. Use `group_by()` when grouping must persist across multiple operations. `.by` results are always ungrouped.
 
 ### Basic usage
 
@@ -60,7 +60,7 @@ data |>
   summarise(mean_value = mean(value), .by = category)
 ```
 
-### Avoid - old persistent grouping pattern
+### Avoid for single operations - use .by instead
 
 ```r
 # Avoid

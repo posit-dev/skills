@@ -46,7 +46,7 @@ Use newspaper style: high-level logic first, helpers below. Don't define functio
 
 ### Grouping
 
-- Use `.by` for per-operation grouping, never `group_by() |> ... |> ungroup()`
+- Prefer `.by` for per-operation grouping; use `group_by()` when grouping must persist across multiple operations
 - Never add `ungroup()` before or after `.by` -- it always returns ungrouped data
 - Consolidate multiple `mutate(.by = x)` calls into one when they share the same `.by`; keep separate only when `.by` differs or a later column depends on an earlier one
 - Place `.by` on its own line for readability
@@ -88,12 +88,11 @@ Use `cli::cli_abort()` with problem statement + bullets, never `stop()`.
 | `by = c("a" = "b")` | `by = join_by(a == b)` |
 | `multiple = "error"` in joins | `relationship = "many-to-one"` (or `"one-to-one"`) |
 | `sapply()` | `map_*()` (type-stable) |
-| `group_by() \|> ... \|> ungroup()` | `.by` argument |
+| `group_by() \|> ... \|> ungroup()` for single operations | `.by` argument |
 | `ungroup() \|> mutate(..., .by = x)` | `mutate(..., .by = x)` (`.by` ignores existing groups) |
 | Repeated `mutate(.by = x)` with same `.by` | Single `mutate()` with all columns and one `.by` |
 | `cat()` for messages | `message()` or `cli::cli_inform()` |
 | `stop()` for errors | `cli::cli_abort()` |
-| `distinct(id)` | `distinct(id, .keep_all = TRUE)` |
 | `mean(x, na.rm = TRUE)` | `mean(x)` with tidyna loaded |
 | `case_match(x, ...)` | `recode_values(x, ...)` |
 | `recode(x, ...)` | `recode_values(x, ...)` or `replace_values(x, ...)` |
@@ -141,10 +140,11 @@ quarterly <- sales_enriched |>
     .by = c(region_name, quarter)
   ) |>
   mutate(
-    performance = revenue |>
-      replace_when(
-        total_revenue > 100000 ~ "high",
-        total_revenue > 50000 ~ "medium"
+    performance = total_revenue |>
+      recode_values(
+        \(x) x > 100000 ~ "high",
+        \(x) x > 50000 ~ "medium",
+        .default = "low"
       )
   ) |>
   arrange(region_name, quarter)
