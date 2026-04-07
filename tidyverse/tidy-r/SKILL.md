@@ -1,12 +1,7 @@
 ---
 name: tidy-r
 description: >
-  Modern tidyverse patterns, style guide, and migration guidance for R development.
-  Use this skill when writing R code, reviewing tidyverse code, updating legacy R
-  code to modern patterns, or enforcing consistent style. Covers native pipe usage,
-  join_by() syntax, .by grouping, pick/across/reframe, filter_out/when_any/when_all,
-  recode_values/replace_values/replace_when, tidy selection, stringr, naming
-  conventions, and migration from base R or older tidyverse APIs.
+  Modern tidyverse patterns, style guide, and migration guidance for R development. Use this skill when writing R code, reviewing tidyverse code, updating legacy R code to modern patterns, or enforcing consistent style. Covers native pipe usage, join_by() syntax, .by grouping, pick/across/reframe, filter_out/when_any/when_all, recode_values/replace_values/replace_when, tidy selection, stringr, naming conventions, and migration from base R or older tidyverse APIs.
 metadata:
   r_version: ">=4.5.0"
   tidyverse_version: ">=2.0.0"
@@ -61,7 +56,7 @@ Use newspaper style: high-level logic first, helpers below. Don't define functio
 - Use `join_by()`, never `c("a" = "b")`
 - Use `relationship`, `unmatched`, `na_matches` for quality control
 
-### Recoding and replacing (dplyr 1.2+)
+### Recoding and replacing (dplyr >=1.2.0)
 
 | Task | Function |
 |------|----------|
@@ -160,7 +155,7 @@ quarterly <- sales_enriched |>
 1. **Use `.unmatched = "error"`** in `case_when()` and `recode_values()` for defensive programming
 2. **Place `.by` on its own line** for readability
 3. **Prefer `filter_out()` over negated `filter()`** for NA-safe row removal
-4. **Use `recode_values()` over `case_match()`** (dplyr 1.2+ preferred API)
+4. **Use `recode_values()` over `case_match()`** (dplyr >=1.2.0 preferred API)
 5. **Use `replace_when()` over `case_when()` with `.default`** when updating a column in place
 6. **Name variables as nouns, functions as verbs** in snake_case
 7. **Explain "why" in comments**, not "what"
