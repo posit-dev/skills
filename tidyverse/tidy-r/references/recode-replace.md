@@ -1,4 +1,4 @@
-# Recoding, Replacing, and Filtering (dplyr 1.2+)
+# Recoding, Replacing, and Filtering (dplyr >=1.2.0)
 
 dplyr 1.2 introduced a family of functions for recoding and replacing values, and for NA-safe filtering. These replace older patterns (`case_match`, `recode`, `coalesce`, `na_if`, negated filters).
 

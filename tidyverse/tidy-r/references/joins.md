@@ -1,4 +1,4 @@
-# Modern Join Syntax (dplyr 1.1+)
+# Modern Join Syntax (dplyr >=1.2.0)
 
 ## Use join_by() instead of character vectors
 
