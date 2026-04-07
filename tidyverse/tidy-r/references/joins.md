@@ -88,36 +88,3 @@ sales |>
   )
 ```
 
-## Logging joins with tidylog
-
-Use `tidylog::` prefix for joins to verify expected behavior. Call directly without loading the package.
-
-```r
-result <- transactions |>
-  tidylog::left_join(companies, by = join_by(company == id))
-
-# tidylog output:
-# left_join: added 2 columns (name, region)
-#            > rows only in x      12
-#            > rows only in y     (3)
-#            > matched rows       988
-#            > rows total        1000
-```
-
-### Interpreting join output
-
-| Output | Meaning |
-|--------|---------|
-| `rows only in x` | Rows in left table with no match (kept as NA in left joins) |
-| `rows only in y` | Rows in right table with no match (in parentheses, dropped in left joins) |
-| `matched rows` | Rows that matched between tables |
-| `rows total` | Final row count after join |
-
-### When to use tidylog
-
-- **Always for joins** to see how many rows matched, duplicated, or were dropped
-- **Critical filters** with `tidylog::filter()` to verify expected row counts
-- **Critical mutates** with `tidylog::mutate()` to verify expected changes
-- **Any operation where silent data loss is a risk**
-
-Don't use tidylog in production code, inside functions, or loops where output would be too verbose. It's for interactive verification only.

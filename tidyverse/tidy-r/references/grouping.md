@@ -145,6 +145,22 @@ data |>
   )
 ```
 
+## .by with tidyr::fill()
+
+tidyr supports `.by` in `fill()`, matching the dplyr pattern:
+
+```r
+# Good - per-operation grouping
+data |>
+  tidyr::fill(value, .by = group, .direction = "down")
+
+# Avoid - group_by/ungroup wrapper
+data |>
+  group_by(group) |>
+  tidyr::fill(value, .direction = "down") |>
+  ungroup()
+```
+
 ## pick() for column selection
 
 Use `pick()` inside data-masking functions to select columns by name or tidyselect helpers:
@@ -232,12 +248,42 @@ my_summary <- function(data, summary_var) {
 }
 ```
 
-### Character vectors use .data[[]]
+### Character vectors in data-masked contexts use .data[[]]
 
 ```r
 for (var in names(mtcars)) {
   mtcars |> count(.data[[var]]) |> print()
 }
+```
+
+### Character vectors in tidy-select contexts use all_of()/any_of()
+
+The `across(all_of())` bridge is the canonical pattern for passing character vectors into tidy-select:
+
+```r
+vars <- c("mpg", "wt", "hp")
+
+# Good - across(all_of()) for character vectors
+mtcars |>
+  summarise(across(all_of(vars), mean))
+
+# Good - any_of() when some columns may not exist
+mtcars |>
+  select(any_of(vars))
+
+# Avoid - .data[[]] inside tidy-select (deprecated)
+mtcars |>
+  select(.data[["mpg"]], .data[["wt"]])
+```
+
+### Access calling-environment variables with .env
+
+Use `.env$var` to disambiguate when a local variable shares a name with a column:
+
+```r
+threshold <- 10
+data |>
+  filter(value > .env$threshold)
 ```
 
 ### Multiple columns use across()

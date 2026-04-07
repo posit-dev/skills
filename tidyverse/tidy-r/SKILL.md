@@ -1,7 +1,7 @@
 ---
 name: tidy-r
 description: >
-  Modern tidyverse patterns, style guide, and migration guidance for R development. Use this skill when writing R code, reviewing tidyverse code, updating legacy R code to modern patterns, or enforcing consistent style. Covers native pipe usage, join_by() syntax, .by grouping, pick/across/reframe, filter_out/when_any/when_all, recode_values/replace_values/replace_when, tidy selection, stringr, naming conventions, and migration from base R or older tidyverse APIs.
+  Modern tidyverse patterns, style guide, and migration guidance for R development. Use this skill when writing R code, reviewing tidyverse code, updating legacy R code, or enforcing consistent style. Covers native pipe usage, join_by() syntax, .by grouping, pick/across/reframe, filter_out/when_any/when_all, recode_values/replace_values/replace_when, tidyselect helpers, .data/.env pronouns, stringr, naming conventions, and readr.
 metadata:
   r_version: ">=4.5.0"
   tidyverse_version: ">=2.0.0"
@@ -22,6 +22,7 @@ Consult the appropriate reference file for detailed patterns and examples:
 | **Grouping & columns** | [grouping.md](references/grouping.md) | `.by`, `group_by`, `across`, `pick`, `reframe`, column operations |
 | **Recoding & replacing** | [recode-replace.md](references/recode-replace.md) | `recode_values`, `replace_values`, `replace_when`, `filter_out`, `when_any`, `when_all` |
 | **Strings** | [stringr.md](references/stringr.md) | String manipulation, regex, `str_*` functions, text processing |
+| **Tidy selection** | [tidyselect.md](references/tidyselect.md) | Column selection helpers, `where()`, `all_of()`, `any_of()`, boolean ops, `.data`/`.env` pronouns |
 | **Style** | [tidyverse-style.md](references/tidyverse-style.md) | Naming, formatting, spacing, error messages, `cli::cli_abort` |
 | **Migration** | [migration.md](references/migration.md) | Updating old code, base R conversion, deprecated functions |
 
@@ -38,6 +39,7 @@ For requests that span multiple topics (e.g., "rewrite this old code" touches mi
 ### Pipe and lambda
 
 - Always `|>`, never `%>%`
+- Use `_` placeholder for non-first arguments: `x |> f(1, y = _)`. The placeholder must be named and used exactly once.
 - Always `\(x)`, never `function(x)` or `~` in map/keep/etc.
 
 ### Code organization
@@ -78,27 +80,6 @@ Use `cli::cli_abort()` with problem statement + bullets, never `stop()`.
 - `message()` for info, never `cat()`
 - `map_*()` over `sapply()` for type stability
 - `set.seed()` with date-time, never 42
-
-## Anti-patterns
-
-| Avoid | Use instead |
-|-------|-------------|
-| `%>%` | `|>` |
-| `function(x)` or `~` | `\(x)` |
-| `by = c("a" = "b")` | `by = join_by(a == b)` |
-| `multiple = "error"` in joins | `relationship = "many-to-one"` (or `"one-to-one"`) |
-| `sapply()` | `map_*()` (type-stable) |
-| `group_by() \|> ... \|> ungroup()` for single operations | `.by` argument |
-| `ungroup() \|> mutate(..., .by = x)` | `mutate(..., .by = x)` (`.by` ignores existing groups) |
-| Repeated `mutate(.by = x)` with same `.by` | Single `mutate()` with all columns and one `.by` |
-| `cat()` for messages | `message()` or `cli::cli_inform()` |
-| `stop()` for errors | `cli::cli_abort()` |
-| `mean(x, na.rm = TRUE)` | `mean(x)` with tidyna loaded |
-| `case_match(x, ...)` | `recode_values(x, ...)` |
-| `recode(x, ...)` | `recode_values(x, ...)` or `replace_values(x, ...)` |
-| `filter(x != val \| is.na(x))` | `filter_out(x == val)` |
-| `coalesce(x, default)` | `replace_values(x, NA ~ default)` |
-| `na_if(x, val)` | `replace_values(x, val ~ NA)` |
 
 ## Example
 
@@ -150,12 +131,3 @@ quarterly <- sales_enriched |>
   arrange(region_name, quarter)
 ```
 
-## Best practices
-
-1. **Use `.unmatched = "error"`** in `case_when()` and `recode_values()` for defensive programming
-2. **Place `.by` on its own line** for readability
-3. **Prefer `filter_out()` over negated `filter()`** for NA-safe row removal
-4. **Use `recode_values()` over `case_match()`** (dplyr >=1.2.0 preferred API)
-5. **Use `replace_when()` over `case_when()` with `.default`** when updating a column in place
-6. **Name variables as nouns, functions as verbs** in snake_case
-7. **Explain "why" in comments**, not "what"

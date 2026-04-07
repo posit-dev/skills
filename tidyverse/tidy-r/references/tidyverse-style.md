@@ -140,8 +140,8 @@ check_input <- function(x) {
 
 ```r
 long_function_name <- function(
-    a = "argument",
-    b = "argument"
+  a = "argument",
+  b = "argument"
 ) {
   # body
 }
@@ -184,6 +184,7 @@ data <- data |> filter(!is.na(value))
 - Use `&&` and `||` in conditions (not `&` and `|`)
 - Use `TRUE`/`FALSE` (not `T`/`F`)
 - Never use semicolons
+- With `tidyna` loaded, `na.rm = TRUE` is the default for common aggregation functions -- write `mean(x)` instead of `mean(x, na.rm = TRUE)`
 
 ## Error Messages
 

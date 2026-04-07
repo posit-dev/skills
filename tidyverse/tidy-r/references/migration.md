@@ -131,6 +131,16 @@ filter(cond1 | cond2 | cond3)    # -> filter(when_any(cond1, cond2, cond3))
 filter(cond1 & cond2 & cond3)    # -> filter(when_all(cond1, cond2, cond3))
 ```
 
+### Reading data
+
+```r
+read.csv("file.csv")                 # -> read_csv("file.csv")  # tibble, faster, better type detection
+read.csv("file.csv", sep = "\t")     # -> read_tsv("file.csv")
+read.csv2("file.csv")                # -> read_csv2("file.csv")  # semicolon-delimited
+```
+
+For large files (>100 MB), `vroom::vroom()` is faster than `read_csv()`. For small files the difference is negligible.
+
 ### Serialization
 
 ```r
