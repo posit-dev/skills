@@ -27,6 +27,7 @@ Skills for open-source R and Python package developers, streamlining common work
 
 - **[create-release-checklist](./open-source/create-release-checklist/)** - Create a release checklist and GitHub issue for an R package, with automatic version calculation and customizable checklist generation
 - **[release-post](./open-source/release-post/)** - Create professional package release blog posts following Tidyverse or Shiny blog conventions, with support for both R and Python packages
+- **[llms-info-from-quartodoc](./open-source/llms-info-from-quartodoc/)** - Generate `llms-full.txt` for Python package documentation sites built with Quarto and quartodoc, making docs fully consumable by LLMs and coding assistants
 
 ### R Package Development
 

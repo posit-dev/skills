@@ -37,7 +37,8 @@
       "strict": false,
       "skills": [
         "./open-source/release-post",
-        "./open-source/create-release-checklist"
+        "./open-source/create-release-checklist",
+        "./open-source/llms-info-from-quartodoc"
       ]
     },
     {
