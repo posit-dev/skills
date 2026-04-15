@@ -56,6 +56,15 @@
       ]
     },
     {
+      "name": "ggsql",
+      "description": "Skills for writing ggsql queries — a grammar of graphics for SQL",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./ggsql/ggsql"
+      ]
+    },
+    {
       "name": "shiny",
       "description": "Collection of skills for Shiny app development",
       "source": "./",
