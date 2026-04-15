@@ -53,7 +53,7 @@
         "./r-lib/r-package-development",
         "./r-lib/r-cli-app",
         "./r-lib/mirai",
-        "./r-lib/pkgdown-alt-text"
+        "./alt-text"
       ]
     },
     {
@@ -75,7 +75,7 @@
       "skills": [
         "./brand-yml",
         "./quarto/quarto-authoring",
-        "./quarto/quarto-alt-text"
+        "./alt-text"
       ]
     }
   ]
