@@ -20,13 +20,34 @@ A ggsql query has two parts:
 1. **SQL part** (optional): Standard SQL executed on the backend. Any tables, CTEs, or SELECT results are available to the visualization.
 2. **VISUALISE part** (required): Begins with `VISUALISE` (or `VISUALIZE`). Everything after this is the visualization query.
 
-```
-[SQL query]
-VISUALISE [global mappings] [FROM data-source]
+There are two patterns for combining SQL with VISUALISE:
+
+### Pattern A: SELECT → VISUALISE
+
+The last SQL statement is a SELECT. Data flows from its result set into VISUALISE, which has no `FROM` clause.
+
+```ggsql
+SELECT name, score_a, score_b FROM 'dataset.csv' WHERE value > 50
+VISUALISE score_a AS x, score_b AS y
 [DRAW / PLACE / SCALE / FACET / PROJECT / LABEL clauses]
 ```
 
-The SQL part is optional. If data is already in a table you can use `VISUALISE ... FROM table_name` directly.
+Works with any SQL that ends in a SELECT: bare SELECT, WITH...SELECT, UNION/INTERSECT/EXCEPT.
+
+### Pattern B: VISUALISE FROM
+
+VISUALISE provides its own data source via `FROM`. Use when referencing a table, file, CTE, or built-in dataset directly without a trailing SELECT.
+
+```ggsql
+VISUALISE score_a AS x, score_b AS y FROM 'dataset.csv'
+DRAW point
+```
+
+```ggsql
+WITH summary AS (SELECT category, COUNT(*) AS n FROM 'dataset.csv' GROUP BY category)
+VISUALISE category AS x, n AS y FROM summary
+DRAW bar
+```
 
 ## Data sources
 
