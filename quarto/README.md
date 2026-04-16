@@ -2,68 +2,13 @@
 
 Skills for Quarto document creation and publishing.
 
-## Overview
-
-This category contains skills that help with creating, styling, and publishing Quarto documents, presentations, websites, and PDFs. Skills support all major Quarto output formats.
-
-## Available Skills
+## Skills
 
 ### `authoring`
 
-Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions. See [detailed documentation below](#quarto-authoring-skill).
+Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions.
 
-### `brand-yml`
-
-Create and use `_brand.yml` files for consistent branding across Quarto documents and Shiny applications. Use when working with brand styling, corporate identity, colors, fonts, or logos in Quarto projects.
-
-**Organization**: Main skill file includes workflows and decision tree. Reference files provide framework-specific integration guides:
-- `brand-yml-spec.md` - Complete brand.yml specification
-- `shiny-r.md` - Shiny for R integration with bslib
-- `shiny-python.md` - Shiny for Python integration with ui.Theme
-- `quarto.md` - Quarto integration for all formats (HTML, dashboards, RevealJS presentations, Typst PDFs, websites)
-
-**Note**: This skill is also registered in the shiny category since brand.yml works across both Shiny and Quarto projects.
-
-**Resources**:
-- [brand.yml project](https://posit-dev.github.io/brand-yml/)
-- [Quarto brand.yml docs](https://quarto.org/docs/authoring/brand.html)
-- [Shiny for R brand.yml guide](https://rstudio.github.io/bslib/articles/brand-yml/)
-- [Shiny for Python brand.yml docs](https://shiny.posit.co/py/api/core/ui.Theme.html#shiny.ui.Theme.from_brand)
-
-## Potential Skills
-
-This category could include skills for:
-
-- Publishing workflows
-- Extension development
-- Template creation
-- Multi-format output
-- Parameterized reports
-- Website and book publishing
-- Presentation design
-
-## Contributing
-
-See the main [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines on adding new skills to this category. We encourage you to use [Anthropic's skill-creator](https://github.com/anthropics/skills) when building new skills.
-
-## Resources
-
-- [Quarto](https://quarto.org/)
-- [Quarto brand.yml docs](https://quarto.org/docs/authoring/brand.html)
-- [brand.yml project](https://posit-dev.github.io/brand-yml/)
-- [Quarto extensions](https://quarto.org/docs/extensions/)
-
----
-
-## Skills
-
-### Quarto Authoring Skill
-
-Comprehensive guidance for Quarto document authoring and R Markdown migration.
-
-This skill provides best practices for writing Quarto documents (.qmd) and converting existing R Markdown projects to Quarto. It covers the full range of Quarto authoring features including code cells, cross-references, figures, tables, citations, callouts, diagrams, and more.
-
-#### When to Use This Skill
+#### When to Use
 
 - Writing new Quarto documents with best practices.
 - Converting R Markdown (.Rmd) files to Quarto (.qmd).
@@ -82,7 +27,7 @@ This skill provides best practices for writing Quarto documents (.qmd) and conve
 - Update examples to reflect current best practices.
 - Remove deprecated syntax or features.
 
-#### Skills Reference Documentation
+#### Reference Documentation
 
 ##### Quarto Features
 
@@ -112,7 +57,7 @@ This skill provides best practices for writing Quarto documents (.qmd) and conve
 | [conversion-distill.md](authoring/references/conversion-distill.md)     | distill to Quarto          |
 | [conversion-blogdown.md](authoring/references/conversion-blogdown.md)   | blogdown to Quarto website |
 
-#### External Resources
+#### Resources
 
 - [Quarto Documentation](https://quarto.org/docs/)
 - [Quarto Guide](https://quarto.org/docs/guide/)
@@ -123,3 +68,52 @@ This skill provides best practices for writing Quarto documents (.qmd) and conve
 #### Authors
 
 - [Mickaël CANOUIL](https://github.com/mcanouil)
+
+---
+
+### `brand-yml`
+
+Create and use `_brand.yml` files for consistent branding across Quarto documents and Shiny applications. Use when working with brand styling, corporate identity, colors, fonts, or logos in Quarto projects.
+
+**Organization**: Main skill file includes workflows and decision tree. Reference files provide framework-specific integration guides:
+- `brand-yml-spec.md` - Complete brand.yml specification
+- `shiny-r.md` - Shiny for R integration with bslib
+- `shiny-python.md` - Shiny for Python integration with ui.Theme
+- `quarto.md` - Quarto integration for all formats (HTML, dashboards, RevealJS presentations, Typst PDFs, websites)
+
+**Note**: This skill is also registered in the shiny category since brand.yml works across both Shiny and Quarto projects.
+
+#### Resources
+
+- [brand.yml project](https://posit-dev.github.io/brand-yml/)
+- [Quarto brand.yml docs](https://quarto.org/docs/authoring/brand.html)
+- [Shiny for R brand.yml guide](https://rstudio.github.io/bslib/articles/brand-yml/)
+- [Shiny for Python brand.yml docs](https://shiny.posit.co/py/api/core/ui.Theme.html#shiny.ui.Theme.from_brand)
+
+---
+
+### `quarto-alt-text`
+
+Generate accessible alt text for data visualizations in Quarto documents. Use when adding, improving, or reviewing `fig-alt` for figures in `.qmd` files, or when making documents more accessible for screen readers.
+
+#### Authors
+
+- [Emil Hvitfeldt](https://github.com/emilhvitfeldt)
+
+---
+
+## Potential Skills
+
+This category could include skills for:
+
+- Publishing workflows
+- Extension development
+- Template creation
+- Multi-format output
+- Parameterized reports
+- Website and book publishing
+- Presentation design
+
+## Contributing
+
+See the main [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines on adding new skills to this category. We encourage you to use [Anthropic's skill-creator](https://github.com/anthropics/skills) when building new skills.

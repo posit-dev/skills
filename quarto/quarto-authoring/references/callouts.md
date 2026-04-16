@@ -108,10 +108,10 @@ See @nte-important for details.
 
 ## Nested Callouts
 
-Use more colons for outer divs when nesting:
+Nest callouts inside each other:
 
 ````markdown
-:::: {.callout-note}
+::: {.callout-note}
 
 ## Outer Callout
 
@@ -119,7 +119,7 @@ Use more colons for outer divs when nesting:
 Nested callout.
 :::
 
-::::
+:::
 ````
 
 ## Format-Specific Options

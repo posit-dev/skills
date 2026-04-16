@@ -277,6 +277,14 @@ Before submitting:
 
 4. **Check formatting**: Ensure YAML frontmatter is valid and markdown is well-formatted
 
+5. **Check token counts**: Run the token counter and review the output for warnings:
+   ```bash
+   ./count-skill-tokens.py category-name/your-skill-name
+   # or
+   uv run count-skill-tokens.py category-name/your-skill-name
+   ```
+   The script warns if `SKILL.md` exceeds **5,000 tokens / 500 lines**, or if the `description` frontmatter exceeds **100 tokens**. Address any warnings before submitting. Save the output — you'll include it in your PR.
+
 ### 7. Submit a Pull Request
 
 Open a Pull Request on GitHub with:
@@ -297,6 +305,7 @@ Your PR description should include:
 - **Testing**: How did you test it? What scenarios did you try?
 - **Dependencies**: Does it require any specific tools, packages, or configurations?
 - **Documentation**: Is the skill well-documented for both Claude and users?
+- **Token count**: Paste the full output of `count-skill-tokens.py` for your skill. This confirms the skill is within size limits and helps reviewers assess its footprint.
 
 
 ## Code of Conduct

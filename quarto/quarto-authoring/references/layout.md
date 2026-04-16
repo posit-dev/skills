@@ -425,5 +425,3 @@ KOMA classes support margin content automatically.
 - [Quarto Article Layout](https://quarto.org/docs/authoring/article-layout.html)
 - [Page Layout](https://quarto.org/docs/output-formats/page-layout.html)
 - [Figures Layout](https://quarto.org/docs/authoring/figures.html#figure-panels)
-
-
