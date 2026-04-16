@@ -1,225 +1,195 @@
-# Reactivity and Rendering
+# Reactivity and Rendering in Shiny for Python
 
-## Contents
+This reference covers the reactive graph and output rendering patterns that make a Shiny for Python dashboard predictable and maintainable.
 
-- `@reactive.calc` — the primary primitive
-- `@reactive.effect` and `@reactive.event`
-- `req()` — guarding against empty inputs
-- Rendering Plotly charts
-- Rendering Matplotlib/Seaborn plots
-- Rendering data tables
-- Rendering value box content
-- Interactive Plotly click events
+## Reactive Graph Design
 
----
+### `@reactive.calc`
 
-## `@reactive.calc` — The primary primitive
-
-Use for all filtered/derived data. Chain calcs for multi-step transformations:
+Use `@reactive.calc` for filtered data, derived metrics, and reusable intermediate objects.
 
 ```python
 @reactive.calc
-def get_ticker():
-    return yf.Ticker(input.ticker())
+def filtered_data():
+    frame = df.copy()
+    if input.region():
+        frame = frame[frame["region"].isin(input.region())]
+    return frame
+
 
 @reactive.calc
-def get_data():
-    return get_ticker().history(start=input.dates()[0], end=input.dates()[1])
-
-@reactive.calc
-def get_change():
-    close = get_data()["Close"]
-    if len(close) < 2:
-        return 0.0
-    return close.iloc[-1] - close.iloc[-2]
+def metric_series():
+    return pd.to_numeric(filtered_data()[input.metric()], errors="coerce").dropna()
 ```
 
-Filtering pattern with Polars:
+Chain reactive calcs instead of repeating the same filtering logic in every output.
+
+### `req()`
+
+Use `req()` to stop the reactive pipeline when an input or intermediate result is empty.
 
 ```python
+from shiny import req
+
+
 @reactive.calc
-def tips_data():
-    bill = input.total_bill()
-    return tips.filter(
-        pl.col("total_bill").is_between(bill[0], bill[1]),
-        pl.col("time").is_in(input.time()),
-    )
+def selected_players():
+    players = req(input.players())
+    return careers()[careers()["person_id"].isin(players)]
 ```
 
-Filtering pattern with Pandas:
+This keeps render functions simple and avoids error-prone empty-state code in every output.
 
-```python
-@reactive.calc
-def careers():
-    games = input.games()
-    idx = (careers_df["GP"] >= games[0]) & (careers_df["GP"] <= games[1])
-    return careers_df[idx]
-```
+### `@reactive.effect` and `@reactive.event`
 
-### Core rule: No global state mutation
-
-All reactivity flows one direction through `@reactive.calc` chains. Never mutate
-module-level variables inside reactive functions.
-
----
-
-## `@reactive.effect` and `@reactive.event`
-
-### Reset buttons
-
-Use `@reactive.effect` + `@reactive.event(input.reset)` to reset inputs to defaults:
+Use `@reactive.effect` for imperative updates such as resetting inputs or synchronizing dependent controls. Add `@reactive.event(...)` when the effect should only run in response to a specific trigger.
 
 ```python
 @reactive.effect
 @reactive.event(input.reset)
 def _():
-    ui.update_slider("total_bill", value=bill_rng)
-    ui.update_checkbox_group("time", selected=["Lunch", "Dinner"])
+    ui.update_slider("amount", value=[10, 90])
+    ui.update_checkbox_group("service", selected=["Lunch", "Dinner"])
 ```
 
-### Cascading UI updates
+Without `@reactive.event`, the effect will rerun whenever one of its reactive dependencies changes.
 
-Use `@reactive.effect` (without `@reactive.event`) to update dependent inputs
-when upstream data changes:
+### No global mutation
+
+Do not mutate module-level globals inside reactive functions. Compute new values and return them through the reactive graph instead.
+
+## Rendering Patterns
+
+### Matplotlib and Seaborn with `@render.plot`
+
+Import `matplotlib.pyplot` inside the render function.
 
 ```python
-@reactive.effect
-def _():
-    players = dict(zip(careers()["person_id"], careers()["player_name"]))
-    ui.update_selectize("players", choices=players, selected=input.players())
+@render.plot
+def histogram():
+    import matplotlib.pyplot as plt
+
+    series = req(metric_series())
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.hist(series, bins=20, color="#0d6efd", edgecolor="white")
+    ax.set_xlabel(input.metric())
+    ax.set_ylabel("Count")
+    fig.tight_layout()
+    return fig
 ```
 
-This re-runs whenever `careers()` changes, keeping the selectize choices in sync.
+Rules:
 
----
+- use `figsize=(8, 4)` as a strong default
+- label axes
+- call `fig.tight_layout()` before returning
+- drop missing values before plotting
 
-## `req()` — Guarding against empty inputs
+### Plotly with `shinywidgets`
 
-```python
-from shiny import req
-
-@reactive.calc
-def player_stats():
-    players = req(input.players())  # stops execution if None/empty
-    return careers()[careers()["person_id"].isin(players)]
-```
-
-`req()` silently stops reactive execution when the value is falsy, preventing
-downstream errors from empty selections.
-
----
-
-## Rendering Plotly charts
-
-Use `@render_plotly` from `shinywidgets`. Always set explicit `height` on the figure:
+Use `output_widget()` in Core apps and `@render_plotly` in the server or Express block.
 
 ```python
 from shinywidgets import output_widget, render_plotly
 
-# Core — requires output_widget("scatterplot") in UI tree
+app_ui = ui.card(
+    ui.card_header("Scatterplot"),
+    output_widget("scatterplot"),
+    full_screen=True,
+)
+
+
 @render_plotly
 def scatterplot():
-    color = input.scatter_color()
-    fig = px.scatter(tips_data(), x="total_bill", y="tip",
-        color=None if color == "none" else color, trendline="lowess")
-    fig.update_layout(height=400, margin=dict(l=40, r=20, t=40, b=40))
-    return fig
+    return px.scatter(filtered_data(), x="total_bill", y="tip", color=input.color())
 ```
+
+Avoid duplicate keys when you merge Plotly layout dictionaries:
 
 ```python
-# Express — place inline inside card
-with ui.card(full_screen=True):
-    ui.card_header("Scatter Plot")
-    @render_plotly
-    def scatterplot(): ...
+axis_style = {"gridcolor": "#d0d7de", "showline": False}
+fig.update_layout(yaxis={**axis_style, "tickfont": {"size": 11}})
 ```
 
-In Core, always pair `@render_plotly` with `output_widget("id")` in the UI tree.
-In Express, place the decorator inline inside `with ui.card():`.
+Do not write `dict(**axis_style, tickfont=...)` if `axis_style` already contains `tickfont`.
 
----
+### Tables with `@render.data_frame`
 
-## Rendering Matplotlib/Seaborn plots
-
-Use `@render.plot` — returns a matplotlib figure or axes.
-Always set `figsize` explicitly to prevent tiny charts:
-
-```python
-@render.plot
-def hist():
-    import matplotlib.pyplot as plt
-    fig, ax = plt.subplots(figsize=(8, 4))
-    ax.hist(df[input.var()].dropna(), bins=20,
-        color="#0d6efd", edgecolor="white")
-    ax.set_xlabel(input.var())
-    ax.set_ylabel("Count")
-    return fig
-```
-
-Combine `sns.kdeplot` + `sns.rugplot` for density with rug marks:
-
-```python
-@render.plot
-def density():
-    hue = "species" if input.species() else None
-    sns.kdeplot(df, x=input.var(), hue=hue)
-    if input.show_rug():
-        sns.rugplot(df, x=input.var(), hue=hue, color="black", alpha=0.25)
-```
-
-In Core, use `ui.output_plot("id")` in the UI tree.
-
----
-
-## Rendering data tables
+Use `render.DataGrid(...)` for sortable, filterable tables.
 
 ```python
 @render.data_frame
-def table():
-    return render.DataGrid(tips_data())
+def summary_table():
+    return render.DataGrid(filtered_data(), filters=True)
 ```
 
-Add `filters=True` for column-level filtering: `render.DataGrid(df, filters=True)`.
+Treat the data table as the detailed layer beneath charts and KPIs.
 
-In Core, use `ui.output_data_frame("table")` in the UI tree.
+### Dynamic UI with `@render.ui`
 
----
-
-## Rendering value box content
+Use `@render.ui` for small dynamic fragments such as icons, badges, or conditional helper text.
 
 ```python
-# Core — @render.ui returning a formatted string
 @render.ui
-def average_tip():
-    d = tips_data().select((pl.col("tip") / pl.col("total_bill")).mean()).item()
-    return f"{d:.1%}" if d else "N/A"
+def growth_note():
+    if get_change() >= 0:
+        return ui.span("Up vs prior period", class_="text-success")
+    return ui.span("Down vs prior period", class_="text-danger")
 ```
+
+Do not build major page sections with `@render.ui` if a regular static layout plus reactive outputs would be simpler.
+
+## Core and Express Equivalents
+
+Core API keeps outputs explicit in the UI tree:
 
 ```python
-# Express — @render.express (prints value, no return needed)
-@render.express
-def average_tip():
-    d = tips_data().select((pl.col("tip") / pl.col("total_bill")).mean()).item()
-    f"{d:.1%}" if d else "N/A"
+ui.card(ui.card_header("Data"), ui.output_data_frame("table"), full_screen=True)
+
+
+@render.data_frame
+def table():
+    return render.DataGrid(filtered_data())
 ```
 
----
-
-## Interactive Plotly click events
-
-Convert a plotly Figure to `go.FigureWidget` and attach `.on_click()`:
+Express colocates the UI block and renderer:
 
 ```python
-import plotly.graph_objects as go
+with ui.card(full_screen=True):
+    ui.card_header("Data")
 
-fig = go.FigureWidget(fig.data, fig.layout)
-fig.data[1].on_click(on_rug_click)
-return fig
-
-def on_rug_click(trace, points, state):
-    player_id = trace.customdata[points.point_inds[0]]
-    selected = list(input.players()) + [player_id]
-    ui.update_selectize("players", selected=selected)
+    @render.data_frame
+    def table():
+        return render.DataGrid(filtered_data())
 ```
 
-This enables click-to-select interactions on plotly rug plots or scatter traces.
+Both are valid. Choose the style that fits the codebase and keep it consistent.
+
+## Common Patterns
+
+### Reset buttons
+
+Use `@reactive.effect` with `@reactive.event` and the appropriate `ui.update_*()` helpers.
+
+### Cascading inputs
+
+Use a plain `@reactive.effect` when one input's choices depend on the current filtered data.
+
+```python
+@reactive.effect
+def _():
+    choices = dict(zip(filtered_data()["id"], filtered_data()["label"]))
+    ui.update_selectize("item", choices=choices)
+```
+
+### Derived KPI values
+
+Create one calc per reusable business metric instead of recalculating inside each value box renderer.
+
+## Common Errors
+
+1. Repeating filtering logic in every render function instead of centralizing it in `@reactive.calc`.
+2. Forgetting `req()` before indexing into empty selections.
+3. Importing `matplotlib.pyplot` at module scope.
+4. Building large layouts with `@render.ui` instead of static UI plus small reactive outputs.
+5. Duplicating Plotly layout keys during dict unpacking.

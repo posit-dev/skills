@@ -1,192 +1,126 @@
-# Core vs Express — Full Comparison
+# Core vs Express in Shiny for Python
 
-## Contents
+Both Core and Express are first-class APIs in Shiny for Python. This reference helps you choose between them and translate patterns cleanly from one style to the other.
 
-- Side-by-side quick reference
-- Import differences
-- Page setup
-- UI construction
-- Server function vs module-level
-- Output placement
-- Value box rendering
-- Forward references
+## High-Level Difference
 
----
+- Core separates UI declaration from server outputs.
+- Express colocates layout blocks and render functions.
 
-## Side-by-side quick reference
+Neither is more "correct" for dashboards. Pick the style that matches the app's size, expected complexity, and the team's preference for explicit structure versus local readability.
 
-| Aspect | Core | Express |
-| --- | --- | --- |
-| **Imports** | `from shiny import App, reactive, render, ui` | `from shiny.express import input, render, ui` |
-| **Page setup** | `app_ui = ui.page_sidebar(title=...)` | `ui.page_opts(title=..., fillable=True)` |
-| **Sidebar** | `ui.sidebar(...)` as arg | `with ui.sidebar():` |
-| **Layout** | Nested function calls | `with` context managers |
-| **Server** | `def server(input, output, session):` | Module-level decorators |
-| **Output placement** | `output_widget("id")` / `ui.output_*("id")` | Decorator inline in `with` block |
-| **Value boxes** | `@render.ui` + `return` | `@render.express` (no `return`) |
-| **Forward refs** | N/A | `with ui.hold():` |
-| **App creation** | `app = App(app_ui, server)` | Not needed |
-| **Nav panels** | `ui.nav_panel("Name", content)` as arg | `with ui.nav_panel("Name"):` |
+## When to Choose Core
 
----
+Choose Core when:
 
-## Import differences
+- the app is large or likely to grow
+- you want a clearly separated `app_ui` and `server`
+- outputs need to be referenced across modules or helper functions
+- you want the UI tree to be easy to inspect at a glance
 
-```python
-# Core
-from shiny import App, reactive, render, req, ui
-from shinywidgets import output_widget, render_plotly
+Core is often the safer default for production dashboards with several sections.
 
-# Express
-from shiny import reactive, req
-from shiny.express import input, render, ui
-from shinywidgets import render_plotly
-```
+## When to Choose Express
 
-In Express, `input` is imported from `shiny.express`, not `shiny`.
-`output_widget` is not needed in Express — `@render_plotly` is placed inline.
+Choose Express when:
 
----
+- the app is small to medium sized
+- the main advantage is colocating a card and its renderer
+- the team prefers a more linear, notebook-like authoring style
+- rapid iteration matters more than strict separation
 
-## Page setup
+Express works well for focused dashboards where the layout is easy to read top to bottom.
+
+## Equivalent Patterns
+
+| Pattern | Core | Express |
+|---|---|---|
+| Page title and fill | `ui.page_sidebar(..., title="App", fillable=True)` | `ui.page_opts(title="App", fillable=True)` |
+| Sidebar | `ui.sidebar(...)` inside page layout | `with ui.sidebar(...):` |
+| Card output | `ui.card(ui.card_header("Plot"), ui.output_plot("plot"), full_screen=True)` | `with ui.card(full_screen=True): ui.card_header("Plot")` plus `@render.plot` |
+| Data table | `ui.output_data_frame("table")` plus `@render.data_frame` | `@render.data_frame` inside the card block |
+| Value box | `ui.value_box("Title", ui.output_ui("value"), ...)` | `with ui.value_box(...): "Title"` plus `@render.express` |
+| Section tabs | `ui.navset_card_underline(...)` assigned to a variable or inserted directly | `with ui.navset_card_underline(...):` |
+
+## Skeletons
+
+### Core skeleton
 
 ```python
-# Core — declarative, assigned to a variable
+from shiny import App, reactive, render, ui
+
 app_ui = ui.page_sidebar(
-    ui.sidebar(...),
-    # ... layout content ...
+    ui.sidebar(ui.input_select("metric", "Metric", choices=metrics), open="desktop"),
+    ui.card(ui.card_header("Plot"), ui.output_plot("plot"), full_screen=True),
     title="Dashboard",
     fillable=True,
 )
-```
 
-```python
-# Express — imperative, called at module level
-ui.page_opts(title="Dashboard", fillable=True)
-with ui.sidebar():
-    ...
-```
 
----
-
-## UI construction
-
-Core builds the entire UI tree as nested function calls:
-
-```python
-# Core
-ui.layout_columns(
-    ui.card(ui.card_header("Plot"), output_widget("plot"), full_screen=True),
-    ui.card(ui.card_header("Table"), ui.output_data_frame("table")),
-    col_widths=[8, 4],
-)
-```
-
-Express uses `with` context managers:
-
-```python
-# Express
-with ui.layout_columns(col_widths=[8, 4]):
-    with ui.card(full_screen=True):
-        ui.card_header("Plot")
-        @render_plotly
-        def plot(): ...
-    with ui.card():
-        ui.card_header("Table")
-        @render.data_frame
-        def table(): ...
-```
-
----
-
-## Server function vs module-level
-
-Core wraps all reactive logic in an explicit server function:
-
-```python
-# Core
 def server(input, output, session):
     @reactive.calc
-    def filtered(): ...
+    def filtered():
+        return df
 
     @render.plot
-    def plot(): ...
+    def plot():
+        ...
+
 
 app = App(app_ui, server)
 ```
 
-Express places reactive logic at module level — no `server` function, no `App()`:
+### Express skeleton
 
 ```python
-# Express
+from shiny import reactive
+from shiny.express import input, render, ui
+
+ui.page_opts(title="Dashboard", fillable=True)
+
+with ui.sidebar(open="desktop"):
+    ui.input_select("metric", "Metric", choices=metrics)
+
+
 @reactive.calc
-def filtered(): ...
+def filtered():
+    return df
 
-# Render decorators placed inline within with-blocks (see UI construction above)
+
+with ui.card(full_screen=True):
+    ui.card_header("Plot")
+
+    @render.plot
+    def plot():
+        ...
 ```
 
----
+## Important Express Detail
 
-## Output placement
-
-In Core, outputs must be placed in the UI tree using explicit placeholder functions:
-
-- `output_widget("id")` for Plotly charts (from `shinywidgets`)
-- `ui.output_ui("id")` for dynamic UI / value box content
-- `ui.output_plot("id")` for matplotlib/seaborn
-- `ui.output_data_frame("id")` for data tables
-
-In Express, render decorators are placed inline where the output should appear:
+`ui.hold()` exists in the Express namespace and is useful when an output is referenced before it is defined.
 
 ```python
-with ui.card():
-    @render_plotly
-    def chart(): ...  # output appears here in the card
-```
+from shiny.express import render, ui
 
----
+with ui.value_box(showcase=ui.output_ui("trend_icon")):
+    "Trend"
 
-## Value box rendering
-
-```python
-# Core — @render.ui with explicit return
-@render.ui
-def average_tip():
-    d = tips_data().select((pl.col("tip") / pl.col("total_bill")).mean()).item()
-    return f"{d:.1%}" if d else "N/A"
-```
-
-```python
-# Express — @render.express, value printed implicitly (no return)
-with ui.value_box(showcase=icon_svg("wallet")):
-    "Average tip"
-    @render.express
-    def average_tip():
-        d = tips_data().select((pl.col("tip") / pl.col("total_bill")).mean()).item()
-        f"{d:.1%}" if d else "N/A"
-```
-
----
-
-## Forward references
-
-Core has no forward-reference issue — the UI tree and server are separate.
-
-In Express, if an output is used as a parameter (e.g., `showcase=output_ui("icon")`)
-before the render function is defined, wrap the definition in `with ui.hold()`:
-
-```python
-# The value_box references "change_icon" before it exists
-with ui.value_box(showcase=output_ui("change_icon")):
-    "Change"
-    @render.ui
-    def change(): return f"${get_change():.2f}"
-
-# Define the forward-referenced output later
 with ui.hold():
     @render.ui
-    def change_icon():
-        icon = icon_svg("arrow-up" if get_change() >= 0 else "arrow-down")
-        icon.add_class(f"text-{'success' if get_change() >= 0 else 'danger'}")
-        return icon
+    def trend_icon():
+        return icon_svg("arrow-up")
 ```
+
+## Rules for Mixing Styles
+
+- Do not casually mix Core and Express in the same file.
+- If you need to translate one style into the other, translate the full local pattern: layout block, reactive helpers, and render functions.
+- Keep helper modules, data loading, and formatting utilities reusable regardless of API choice.
+
+## Best Practices
+
+1. Pick one API per app file and stay consistent.
+2. Use Core when structure and maintainability matter most.
+3. Use Express when localized readability matters most.
+4. Translate patterns between APIs mechanically rather than inventing a third style.
+5. Treat both APIs as equally valid for production dashboards.
