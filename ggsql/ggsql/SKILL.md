@@ -1,8 +1,12 @@
 ---
 name: ggsql
 description: Write ggsql queries — a grammar of graphics for SQL. Use when the user wants to create, modify, or understand a ggsql visualization query.
-allowed-tools: Bash Read Edit Write Grep Glob Agent AskUserQuestion
+allowed-tools: Bash(ggsql:*)
 argument-hint: "[description of desired visualization]"
+metadata:
+  author: George Stagg (@georgestagg)
+  version: "1.0"
+license: MIT
 ---
 
 # ggsql Query Writer
@@ -10,8 +14,6 @@ argument-hint: "[description of desired visualization]"
 ggsql is a SQL extension for declarative data visualization based on Grammar of Graphics principles. It lets users combine SQL data queries with visualization specifications in a single, composable syntax.
 
 When the user describes a visualization they want, write a valid ggsql query. Use ONLY syntax documented below. NEVER invent clauses, settings, aesthetics, or layer types.
-
-If `$ARGUMENTS` is provided, write a ggsql query matching that description. If empty, ask the user what they want to visualize.
 
 ## Query structure
 
@@ -472,6 +474,12 @@ ggsql validate "VISUALISE x, y FROM data DRAW point"
 ggsql exec "VISUALISE bill_len AS x, bill_dep AS y FROM ggsql:penguins DRAW point" -v
 ggsql run query.sql --output chart.vl.json
 ```
+
+---
+
+## Additional References
+
+* https://ggsql.org/syntax/index.llms.md — Online documentation with the latest syntax
 
 ---
 
