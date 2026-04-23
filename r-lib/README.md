@@ -62,14 +62,13 @@ Comprehensive guidance for async, parallel, and distributed computing in R using
 - [mirai package documentation](https://mirai.r-lib.org/)
 - [mirai GitHub repository](https://github.com/r-lib/mirai)
 
-### `pkgdown-alt-text`
+### `alt-text`
 
-Add accessible alt text to all images and plots in a pkgdown site. Use when auditing or improving accessibility across vignettes, articles, and README files in an R package. Covers finding missing alt text (using pkgdown's built-in warnings), writing effective descriptions using the three-part formula, adding `fig.alt` to Rmd/Qmd chunks (including multi-plot chunks), and adding alt text to static markdown images.
+Generate and improve accessible alt text for data visualizations and images in R packages and Quarto documents. Use when adding, improving, or auditing alt text for figures in a pkgdown site or `.qmd` files.
 
-**Organization**: Single SKILL.md with a step-by-step workflow: find → generate → add → verify. References the `quarto-alt-text` skill for alt text writing guidelines and chart-type templates (same principles apply).
+**Organization**: Uses progressive disclosure with reference files. The main skill detects the project type (pkgdown vs. Quarto) and loads the relevant reference. References cover pkgdown-specific workflows and Quarto-specific workflows separately.
 
-**Resources**: This skill synthesizes guidance from:
-- [pkgdown: Accessibility](https://pkgdown.r-lib.org/articles/accessibility.html)
+**Note**: This skill is also registered in the quarto category since it covers both pkgdown sites and Quarto documents.
 
 ## Potential Skills
 
