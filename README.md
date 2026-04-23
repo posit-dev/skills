@@ -13,6 +13,7 @@ General-purpose developer skills useful across any language, project type, or co
 - **[critical-code-reviewer](./posit-dev/critical-code-reviewer/)** - Conduct rigorous, adversarial code reviews identifying security holes, lazy patterns, edge case failures, and bad practices across Python, R, JavaScript/TypeScript, SQL, and front-end code
 - **[describe-design](./posit-dev/describe-design/)** - Research a codebase and create architectural documentation describing how features or systems work, with Mermaid diagrams and stable code references suitable for humans and AI agents
 
+
 ### GitHub
 
 Skills for GitHub pull request workflows — creating PRs, addressing review feedback, and resolving threads.
@@ -39,6 +40,12 @@ R package development skills for working with the r-lib ecosystem and modern R p
 - **[r-package-development](./r-lib/r-package-development/)** - R package development with devtools, testthat, and roxygen2, covering key commands, coding conventions, testing, documentation, and NEWS.md practices
 - **[mirai](./r-lib/mirai/)** - Async, parallel, and distributed computing in R using mirai, covering explicit dependency passing, daemon setup, parallel mapping with `mirai_map()`, Shiny integration, remote/HPC launchers, and migration from future/parallel
 - **[pkgdown-alt-text](./r-lib/pkgdown-alt-text/)** - Add accessible alt text to all images and plots in a pkgdown site, covering vignette code chunks (`fig.alt`), static markdown images, multi-plot chunks, and Quarto vignettes
+
+### ggsql
+
+Skills for writing ggsql queries — a grammar of graphics for SQL.
+
+- **[ggsql](./ggsql/ggsql/)** - Write ggsql queries — a grammar of graphics for SQL. Use when the user wants to create, modify, or understand a ggsql visualization query
 
 ### Shiny
 
@@ -96,6 +103,7 @@ Install specific skill categories directly:
 /plugin install posit-dev@posit-dev-skills
 /plugin install github@posit-dev-skills
 /plugin install open-source@posit-dev-skills
+/plugin install ggsql@posit-dev-skills
 /plugin install r-lib@posit-dev-skills
 /plugin install shiny@posit-dev-skills
 /plugin install quarto@posit-dev-skills
@@ -156,6 +164,7 @@ This repository organizes skills into categories to make it easier to find and i
 | Category        | Description                                                 |
 | --------------- | ----------------------------------------------------------- |
 | **posit-dev**   | General-purpose developer skills (code review, architecture docs) |
+| **ggsql**     | ggsql query writing — a grammar of graphics for SQL                 |
 | **github**    | GitHub PR workflows (create PRs, address review threads, resolve threads) |
 | **open-source** | Open-source R/Python package workflows (releases, changelogs)     |
 | **r-lib**       | R package development with the r-lib ecosystem              |
