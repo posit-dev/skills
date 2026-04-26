@@ -158,10 +158,13 @@ For markdown table output from code, use `output: asis` (see the [output: asis](
 
 ## Caching and Freeze
 
-**knitr engine**: cell-level caching with `#| cache: true` stores results per cell.
+> **`#| cache: true` is only supported by the knitr engine at cell level.
+> Do NOT use it on individual cells with the jupyter or julia engines — it has no effect.**
 
-**jupyter engine**: caching is managed by `jupyter-cache` at document level via `execute: cache: true` in YAML front matter.
-Individual cells can opt out with `#| cache: false` but cannot opt in with `#| cache: true`.
+**knitr engine**: use `#| cache: true` per cell to store results independently.
+
+**jupyter and other non-knitr engines**: caching is document-level only, managed by `jupyter-cache`.
+Enable it in YAML front matter; individual cells cannot opt in — they can only opt out with `#| cache: false`.
 
 ```yaml
 execute:
