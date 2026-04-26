@@ -373,10 +373,10 @@ params:
 Use in document:
 
 ````markdown
-```{r}
+```{language}
 #| label: read-data
 
-data <- read.csv(params$data_file)
+# access params$data_file (knitr) or params["data_file"] (jupyter) etc.
 ```
 ````
 
@@ -411,9 +411,13 @@ format:
     theme: cosmo
 ```
 
+## Compute Engine
+
+Use the `engine` and `jupyter` keys to select and configure the compute engine.
+See [engines.md](engines.md) for options, auto-detection rules, and engine-specific behaviour.
+
 ## Resources
 
 - [Quarto Document Options](https://quarto.org/docs/reference/formats/html.html)
 - [PDF Options](https://quarto.org/docs/reference/formats/pdf.html)
 - [Project Configuration](https://quarto.org/docs/projects/quarto-projects.html)
-

@@ -21,7 +21,7 @@ Quarto documents may have multiple H1 headers, especially in books and multi-par
 Quarto uses HTML in specific contexts:
 
 - Shortcodes: `{{< shortcode >}}`
-- Raw HTML blocks: `` ```{=html} ``
+- Raw HTML blocks: ` ```{=html} `
 - Elements like `<div>`, `<span>`, `<iframe>` for advanced layouts
 
 ### First Line H1 (MD041)
@@ -65,7 +65,7 @@ globs:
 
 When using fenced divs, ensure proper blank-line spacing:
 
-````markdown
+```markdown
 Some text.
 
 ::: {.callout-note}
@@ -73,13 +73,12 @@ Note content here.
 :::
 
 More text.
-````
+```
 
 Key points:
 
 - Blank line before opening `:::`.
 - Blank line after closing `:::`.
-- Use `::::` (four+ colons) for nesting outer divs.
 
 ## Resources
 

@@ -1,21 +1,21 @@
 ---
 name: quarto-authoring
 description: >
-  Writing and authoring Quarto documents (.qmd), including code cell options,
-  figure and table captions, cross-references, callout blocks (notes, warnings,
-  tips), citations and bibliography, page layout and columns, Mermaid diagrams,
-  YAML metadata configuration, and Quarto extensions. Also covers converting and
-  migrating R Markdown (.Rmd), bookdown, blogdown, xaringan, and distill projects
-  to Quarto, and creating Quarto websites, books, presentations, and reports.
+  Writing and authoring Quarto documents (.qmd) with any compute engine (knitr,
+  jupyter, julia). Covers code cell options, figure and table captions,
+  cross-references, callout blocks, citations, page layout, Mermaid diagrams,
+  YAML metadata, and extensions. Also covers converting R Markdown, bookdown,
+  blogdown, xaringan, distill, and Jupyter notebooks to Quarto, and creating
+  websites, books, presentations, and reports.
 metadata:
   author: Mickaël Canouil (@mcanouil)
-  version: "1.1"
+  version: "1.2"
 license: MIT
 ---
 
 # Quarto Authoring
 
-> This skill is based on Quarto CLI v1.8.26.
+> This skill is based on Quarto CLI v1.9.36.
 
 ## When to Use What
 
@@ -36,6 +36,9 @@ Use: [references/conversion-distill.md](references/conversion-distill.md)
 
 Task: Migrate blogdown site
 Use: [references/conversion-blogdown.md](references/conversion-blogdown.md)
+
+Task: Convert Jupyter notebook (.ipynb) to Quarto (.qmd), or Quarto to .ipynb
+Use: [references/conversion-jupyter.md](references/conversion-jupyter.md)
 
 Task: Add cross-references
 Use: [references/cross-references.md](references/cross-references.md)
@@ -78,6 +81,9 @@ Use: [references/extensions.md](references/extensions.md)
 
 Task: Apply markdown linting rules
 Use: [references/markdown-linting.md](references/markdown-linting.md)
+
+Task: Choose or configure a compute engine (knitr, jupyter, julia)
+Use: [references/engines.md](references/engines.md)
 
 ## QMD Essentials
 
@@ -124,30 +130,19 @@ Code cells are code blocks that can be executed to produce output.
 
 Quarto uses the language's comment symbol + `|` for cell options. Options use **dashes, not dots** (e.g., `fig-cap` not `fig.cap`).
 
-- R, Python: `#|`
+- R, Python, Julia: `#|`
 - Mermaid: `%%|`
 - Graphviz/DOT: `//|`
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-example
 #| echo: false
 #| fig-cap: "A scatter plot example."
 
-plot(x, y)
+# code that produces a figure
 ```
 ````
-
-Common execution options:
-
-| Option    | Description       | Values                    |
-| --------- | ----------------- | ------------------------- |
-| `eval`    | Evaluate code     | `true`, `false`           |
-| `echo`    | Show code         | `true`, `false`, `fenced` |
-| `output`  | Include output    | `true`, `false`, `asis`   |
-| `warning` | Show warnings     | `true`, `false`           |
-| `error`   | Show errors       | `true`, `false`           |
-| `include` | Include in output | `true`, `false`           |
 
 Set document-level defaults in YAML front matter:
 
@@ -169,10 +164,11 @@ Labels must start with a type prefix. Reference with `@`:
 - Equation: `eq-` prefix, e.g., `{#eq-model}` → `@eq-model`
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-plot
 #| fig-cap: "A caption for the plot."
-plot(1)
+
+# code that produces a figure
 ```
 
 See @fig-plot for the results.

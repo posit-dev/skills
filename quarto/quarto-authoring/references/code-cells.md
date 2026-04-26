@@ -7,29 +7,20 @@ Quarto uses a hashpipe (`#|`) syntax for code cell options, providing a clean, Y
 Code cell options are specified with `#|` at the start of lines within the code block:
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-scatter
 #| echo: false
 #| fig-cap: "A scatter plot of x versus y."
 #| fig-width: 8
 #| fig-height: 6
 
-plot(x, y)
-```
-````
-
-````markdown
-```{python}
-#| label: fig-histogram
-#| fig-cap: "Distribution of values."
-
-import matplotlib.pyplot as plt
-plt.hist(data)
-plt.show()
+# code that produces a scatter plot
 ```
 ````
 
 **Important:** Options use **dashes, not dots**. Use `fig-cap` not `fig.cap`, `fig-width` not `fig.width`.
+
+The hashpipe prefix is `#|` for R, Python, and Julia; diagram cells use a different prefix. See [engines.md](engines.md) for the full table.
 
 ## Execution Options
 
@@ -49,32 +40,30 @@ Control whether and how code is executed:
 Show code but don't run it:
 
 ````markdown
-```{r}
+```{language}
 #| eval: false
 
 # This code is displayed but not executed
-x <- 1 + 1
 ```
 ````
 
 Run code but hide it:
 
 ````markdown
-```{r}
+```{language}
 #| echo: false
 
 # This code runs but is not shown
-library(ggplot2)
 ```
 ````
 
 Show fenced code block with attributes:
 
 ````markdown
-```{r}
+```{language}
 #| echo: fenced
 
-plot(1:10)
+# code here
 ```
 ````
 
@@ -97,7 +86,7 @@ Options for controlling figure output:
 ### Figure Example
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-analysis
 #| fig-cap: "Analysis results showing the relationship between variables."
 #| fig-alt: "Scatter plot with trend line showing positive correlation."
@@ -105,16 +94,14 @@ Options for controlling figure output:
 #| fig-height: 6
 #| fig-align: center
 
-ggplot(data, aes(x, y)) +
-  geom_point() +
-  geom_smooth()
+# code that produces a scatter plot with trend line
 ```
 ````
 
 ### Multiple Figures
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-panels
 #| fig-cap: "Multiple panel figure."
 #| fig-subcap:
@@ -122,8 +109,7 @@ ggplot(data, aes(x, y)) +
 #|   - "Distribution of Y"
 #| layout-ncol: 2
 
-hist(x)
-hist(y)
+# code that produces two figures (one per panel)
 ```
 ````
 
@@ -141,11 +127,24 @@ Options for controlling table output:
 ### Table Example
 
 ````markdown
-```{r}
+```{language}
 #| label: tbl-summary
 #| tbl-cap: "Summary statistics by group."
 
-knitr::kable(summary_data)
+# code that produces a table
+```
+````
+
+Table rendering behaviour differs between the knitr and jupyter engines; see [tables.md](tables.md) for details.
+Use `output: asis` to emit a pre-formatted markdown or HTML string:
+
+````markdown
+```{language}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics by group."
+#| output: asis
+
+# print a markdown table string to stdout
 ```
 ````
 
@@ -162,12 +161,11 @@ Control caching of code cell results:
 ### Caching Example
 
 ````markdown
-```{r}
+```{language}
 #| label: slow-computation
 #| cache: true
 
 # This expensive computation is cached
-result <- slow_function(data)
 ```
 ````
 
@@ -228,11 +226,10 @@ format:
 Per cell override:
 
 ````markdown
-```{r}
+```{language}
 #| code-fold: show
 
 # This code is visible by default
-plot(1:10)
 ```
 ````
 
@@ -241,19 +238,18 @@ plot(1:10)
 Add annotations to explain code:
 
 ````markdown
-```{r}
+```{language}
 #| code-annotations: hover
 
-library(tidyverse)
-mtcars |>                 # <1>
-  filter(mpg > 20) |>     # <2>
-  select(mpg, cyl, hp)    # <3>
+step_one()   # <1>
+step_two()   # <2>
+step_three() # <3>
 ```
 ````
 
-1. Start with the mtcars dataset
-2. Filter to cars with MPG over 20
-3. Select only the columns we need
+1. First step description.
+2. Second step description.
+3. Third step description.
 
 Annotation styles: `hover`, `select`, `below`, `beside`.
 
@@ -262,11 +258,10 @@ Annotation styles: `hover`, `select`, `below`, `beside`.
 Show a filename above the code block:
 
 ````markdown
-```{python}
-#| filename: "analysis.py"
+```{language}
+#| filename: "analysis.ext"
 
-import pandas as pd
-df = pd.read_csv("data.csv")
+# code here
 ```
 ````
 
@@ -276,7 +271,7 @@ R Markdown uses dots (`.`), Quarto uses dashes (`-`): `fig.cap` → `fig-cap`, `
 
 ## Resources
 
-- [Quarto Code Cells](https://quarto.org/docs/computations/execution-options.html)
-- [Quarto Figures](https://quarto.org/docs/authoring/figures.html)
+- [Quarto Execution Options](https://quarto.org/docs/computations/execution-options.html)
 - [Code Annotation](https://quarto.org/docs/authoring/code-annotation.html)
-
+- [Code Cells: Knitr](https://quarto.org/docs/reference/cells/cells-knitr.html)
+- [Code Cells: Jupyter](https://quarto.org/docs/reference/cells/cells-jupyter.html)

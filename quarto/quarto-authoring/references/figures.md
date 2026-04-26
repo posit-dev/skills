@@ -6,23 +6,23 @@ Quarto provides comprehensive support for figures including sizing, layout, subf
 
 ### Markdown Images
 
-````markdown
+```markdown
 ![Caption text](image.png)
-````
+```
 
 ### With Attributes
 
-````markdown
+```markdown
 ![Caption text](image.png){width=50%}
-````
+```
 
 ### Cross-Referenceable Figure
 
-````markdown
+```markdown
 ![Caption text](image.png){#fig-example}
 
 See @fig-example.
-````
+```
 
 ## Figure Attributes
 
@@ -39,26 +39,26 @@ Common attributes for images:
 
 Multiple units supported:
 
-````markdown
+```markdown
 ![](image.png){width=50%}
 ![](image.png){width=400px}
 ![](image.png){width=4in}
 ![](image.png){width=10cm}
-````
+```
 
 ### Alignment
 
-````markdown
+```markdown
 ![Left aligned](image.png){fig-align="left"}
 ![Centered](image.png){fig-align="center"}
 ![Right aligned](image.png){fig-align="right"}
-````
+```
 
 ### Alt Text for Accessibility
 
-````markdown
+```markdown
 ![Caption](image.png){fig-alt="Detailed description for screen readers"}
-````
+```
 
 Alt text differs from caption - it describes the image content for accessibility.
 
@@ -67,7 +67,7 @@ Alt text differs from caption - it describes the image content for accessibility
 Figures generated from code use hashpipe options:
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-scatter
 #| fig-cap: "Scatter plot showing the relationship."
 #| fig-alt: "Scatter plot with positive trend."
@@ -75,22 +75,7 @@ Figures generated from code use hashpipe options:
 #| fig-height: 6
 #| fig-align: center
 
-plot(x, y)
-```
-````
-
-### Python Example
-
-````markdown
-```{python}
-#| label: fig-histogram
-#| fig-cap: "Distribution of values."
-#| fig-width: 10
-#| fig-height: 6
-
-import matplotlib.pyplot as plt
-plt.hist(data, bins=30)
-plt.show()
+# code that produces a figure
 ```
 ````
 
@@ -112,7 +97,7 @@ plt.show()
 
 Group multiple images with a shared caption:
 
-````markdown
+```markdown
 ::: {#fig-comparison layout-ncol=2}
 
 ![First image](image1.png){#fig-first}
@@ -123,12 +108,12 @@ Comparison of two approaches.
 :::
 
 See @fig-comparison, particularly @fig-first.
-````
+```
 
 ### From Code
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-panels
 #| fig-cap: "Panel figure."
 #| fig-subcap:
@@ -136,8 +121,7 @@ See @fig-comparison, particularly @fig-first.
 #|   - "Distribution of Y"
 #| layout-ncol: 2
 
-hist(x)
-hist(y)
+# code that produces two figures (one per panel)
 ```
 ````
 
@@ -147,28 +131,28 @@ For arranging multiple figures, use layout divs. See [layout.md](layout.md) for 
 
 ### Basic Layout
 
-````markdown
+```markdown
 ::: {layout-ncol=2}
 ![](image1.png)
 
 ![](image2.png)
 :::
-````
+```
 
 ### Layout Attributes
 
-| Attribute        | Description           | Example             |
-| ---------------- | --------------------- | ------------------- |
-| `layout-ncol`    | Number of columns     | `layout-ncol=2`     |
-| `layout-nrow`    | Number of rows        | `layout-nrow=2`     |
-| `layout`         | Custom layout array   | `layout="[[1,1]]"`  |
-| `layout-valign`  | Vertical alignment    | `layout-valign=top` |
+| Attribute       | Description         | Example             |
+| --------------- | ------------------- | ------------------- |
+| `layout-ncol`   | Number of columns   | `layout-ncol=2`     |
+| `layout-nrow`   | Number of rows      | `layout-nrow=2`     |
+| `layout`        | Custom layout array | `layout="[[1,1]]"`  |
+| `layout-valign` | Vertical alignment  | `layout-valign=top` |
 
 ## Figure Panels
 
 For images without individual captions:
 
-````markdown
+```markdown
 ::: {#fig-panel layout-ncol=2}
 ![](plot1.png)
 
@@ -176,7 +160,7 @@ For images without individual captions:
 
 Multiple plots in a panel.
 :::
-````
+```
 
 ## Caption Location
 
@@ -189,12 +173,12 @@ fig-cap-location: top
 ### Per Figure
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-example
 #| fig-cap: "Caption on top."
 #| fig-cap-location: top
 
-plot(1:10)
+# code that produces a figure
 ```
 ````
 
@@ -204,25 +188,25 @@ Options: `top`, `bottom`, `margin`.
 
 Enable click-to-zoom for images (HTML only):
 
-````markdown
+```markdown
 ![](image.png){.lightbox}
-````
+```
 
 Or for a group:
 
-````markdown
+```markdown
 ::: {.lightbox}
 ![](image1.png)
 
 ![](image2.png)
 :::
-````
+```
 
 ### Lightbox Options
 
-````markdown
+```markdown
 ![](image.png){.lightbox group="gallery" description="Detailed view"}
-````
+```
 
 ### Enable Globally
 
@@ -243,28 +227,28 @@ lightbox:
 
 Make images clickable:
 
-````markdown
+```markdown
 [![Caption](thumbnail.png)](fullsize.png)
-````
+```
 
 Or link to URL:
 
-````markdown
+```markdown
 [![Logo](logo.png)](https://example.com)
-````
+```
 
 ## Figure Divs
 
 For complex figure content:
 
-````markdown
+```markdown
 ::: {#fig-custom}
 
 <iframe src="interactive.html"></iframe>
 
 Custom interactive figure.
 :::
-````
+```
 
 ## Document Defaults
 
@@ -285,4 +269,3 @@ format:
 - [Quarto Figures](https://quarto.org/docs/authoring/figures.html)
 - [Figure Layout](https://quarto.org/docs/authoring/figures.html#figure-panels)
 - [Lightbox](https://quarto.org/docs/output-formats/html-lightbox-figures.html)
-

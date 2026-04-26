@@ -6,23 +6,23 @@ Quarto supports multiple table formats including pipe tables, list tables, and c
 
 The most common table format:
 
-````markdown
+```markdown
 | Column 1 | Column 2 | Column 3 |
 | -------- | -------- | -------- |
 | Row 1    | Data     | More     |
 | Row 2    | Data     | More     |
-````
+```
 
 ### Column Alignment
 
 Use colons to specify alignment:
 
-````markdown
+```markdown
 | Left    | Center  |   Right |
 | :------ | :-----: | ------: |
 | Left    | Center  |   Right |
 | aligned | aligned | aligned |
-````
+```
 
 - `:---` Left align
 - `:---:` Center align
@@ -30,7 +30,7 @@ Use colons to specify alignment:
 
 ### With Caption
 
-````markdown
+```markdown
 ::: {#tbl-example}
 
 | Column 1 | Column 2 |
@@ -39,7 +39,7 @@ Use colons to specify alignment:
 
 Table caption.
 :::
-````
+```
 
 Reference with `@tbl-example`.
 
@@ -49,23 +49,23 @@ Reference with `@tbl-example`.
 
 More dashes = wider column:
 
-````markdown
+```markdown
 | Narrow | Wide Column |
 | ------ | ----------- |
 | A      | B           |
-````
+```
 
 This creates approximately 33%/67% split.
 
 ### Explicit Widths
 
-````markdown
+```markdown
 | Column 1 | Column 2 |
 | -------- | -------- |
 | Data     | Data     |
 
 : Caption {tbl-colwidths="[25,75]"}
-````
+```
 
 ### Document Level
 
@@ -87,7 +87,7 @@ For complex content including multiple paragraphs, lists, and code blocks. Quart
 
 Use bullet lists where top-level items (`-`) are columns and nested items are rows:
 
-````markdown
+```markdown
 ::: {.list-table}
 
 - - Header 1
@@ -98,13 +98,13 @@ Use bullet lists where top-level items (`-`) are columns and nested items are ro
   - Row 2, Col 2
 
 :::
-````
+```
 
 ### List Table Caption
 
 Add a paragraph at the start for the caption:
 
-````markdown
+```markdown
 ::: {.list-table #tbl-example}
 
 Table caption here.
@@ -117,23 +117,23 @@ Table caption here.
   - Data 3
 
 :::
-````
+```
 
 ### List Table Attributes
 
-| Attribute     | Description                  | Example                |
-| ------------- | ---------------------------- | ---------------------- |
-| `header-rows` | Rows in header (default: 1)  | `header-rows=2`        |
-| `header-cols` | Columns as headers           | `header-cols=1`        |
-| `aligns`      | Column alignment             | `aligns="l,c,r"`       |
-| `widths`      | Relative column widths       | `widths="30,70"`       |
+| Attribute     | Description                 | Example          |
+| ------------- | --------------------------- | ---------------- |
+| `header-rows` | Rows in header (default: 1) | `header-rows=2`  |
+| `header-cols` | Columns as headers          | `header-cols=1`  |
+| `aligns`      | Column alignment            | `aligns="l,c,r"` |
+| `widths`      | Relative column widths      | `widths="30,70"` |
 
 ### Header Configuration
 
-````markdown
+```markdown
 ::: {.list-table header-rows=1 header-cols=1}
 
-- - 
+- -
   - Col Header 1
   - Col Header 2
 - - Row Header
@@ -141,7 +141,7 @@ Table caption here.
   - Data 2
 
 :::
-````
+```
 
 Set `header-rows=0` for tables without headers.
 
@@ -149,7 +149,7 @@ Set `header-rows=0` for tables without headers.
 
 Use empty spans with `colspan` or `rowspan`:
 
-````markdown
+```markdown
 ::: {.list-table}
 
 - - Column A
@@ -167,7 +167,7 @@ Use empty spans with `colspan` or `rowspan`:
   - Data 4
 
 :::
-````
+```
 
 List tables also support row/cell attributes (`[]{.highlight}`, `[]{align=r}`), empty cells (lone `-`), and any markdown content in cells.
 
@@ -175,41 +175,31 @@ List tables also support row/cell attributes (`[]{.highlight}`, `[]{align=r}`), 
 
 Tables generated from code:
 
-### R with knitr
-
 ````markdown
-```{r}
+```{language}
 #| label: tbl-summary
 #| tbl-cap: "Summary statistics."
 
-knitr::kable(summary_data)
+# code that produces a table
 ```
 ````
 
-### R with gt
+**Engine note — table rendering differs by engine:**
+
+- **knitr engine**: Recognised table objects are rendered automatically (e.g. a data frame is printed as a markdown table without extra configuration).
+- **jupyter engine**: Cells that return a display-protocol object auto-display as HTML in HTML output only. For portable output across all formats, print a markdown table string and set `output: asis`:
 
 ````markdown
-```{r}
-#| label: tbl-styled
-#| tbl-cap: "Styled table."
+```{language}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics."
+#| output: asis
 
-library(gt)
-gt(data) |>
-  tab_header(title = "My Table")
+# print a markdown table string to stdout
 ```
 ````
 
-### Python with pandas
-
-````markdown
-```{python}
-#| label: tbl-pandas
-#| tbl-cap: "Data summary."
-
-import pandas as pd
-df.to_markdown()
-```
-````
+See [engines.md](engines.md) for full engine details.
 
 ### Table Options
 
@@ -231,12 +221,12 @@ tbl-cap-location: top
 ### Per Table
 
 ````markdown
-```{r}
+```{language}
 #| label: tbl-data
 #| tbl-cap: "Data."
 #| tbl-cap-location: bottom
 
-knitr::kable(data)
+# code that produces a table
 ```
 ````
 
@@ -246,7 +236,7 @@ Options: `top`, `bottom`, `margin`.
 
 Multiple tables with shared caption:
 
-````markdown
+```markdown
 ::: {#tbl-panel layout-ncol=2}
 
 ::: {#tbl-first}
@@ -271,12 +261,12 @@ Combined tables.
 :::
 
 See @tbl-panel, including @tbl-first.
-````
+```
 
 ### From Code
 
 ````markdown
-```{r}
+```{language}
 #| label: tbl-multi
 #| tbl-cap: "Multiple tables."
 #| tbl-subcap:
@@ -284,8 +274,7 @@ See @tbl-panel, including @tbl-first.
 #|   - "Details"
 #| layout-ncol: 2
 
-knitr::kable(summary_df)
-knitr::kable(detail_df)
+# code that produces two tables
 ```
 ````
 
@@ -293,7 +282,7 @@ knitr::kable(detail_df)
 
 Add Bootstrap classes for styling:
 
-````markdown
+```markdown
 ::: {#tbl-styled .striped .hover}
 
 | A   | B   |
@@ -302,7 +291,7 @@ Add Bootstrap classes for styling:
 
 Styled table.
 :::
-````
+```
 
 Available classes:
 
@@ -323,7 +312,7 @@ Quarto also processes HTML tables with `data-qmd` attribute for markdown content
 
 Same as figures:
 
-````markdown
+```markdown
 ::: {layout-ncol=2}
 
 | A   | B   |
@@ -335,26 +324,17 @@ Same as figures:
 | 3   | 4   |
 
 :::
-````
+```
 
 ## Long Tables
 
-For tables spanning multiple pages (PDF):
-
-````markdown
-```{r}
-#| label: tbl-long
-#| tbl-cap: "Long table."
-
-knitr::kable(long_data, longtable = TRUE)
-```
-````
+For tables spanning multiple pages (PDF), use a longtable option appropriate to your engine/package.
 
 ## Cross-Referencing
 
 Tables are referenced with `tbl-` prefix:
 
-````markdown
+```markdown
 ::: {#tbl-summary}
 
 | Data |
@@ -365,11 +345,10 @@ Summary.
 :::
 
 See @tbl-summary for details.
-````
+```
 
 ## Resources
 
 - [Quarto Tables](https://quarto.org/docs/authoring/tables.html)
 - [Table Cross-References](https://quarto.org/docs/authoring/cross-references.html#tables)
 - [Pandoc List Tables](https://github.com/pandoc-ext/list-table)
-
