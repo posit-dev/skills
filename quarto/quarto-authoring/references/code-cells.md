@@ -67,6 +67,24 @@ Show fenced code block with attributes:
 ```
 ````
 
+### output: asis
+
+`output: asis` passes the cell output through as raw content without further Quarto processing.
+Use it when your code prints a pre-formatted markdown or raw string that Quarto should treat as document content.
+
+Requirements:
+
+- The output must already be valid markdown (pipe table, headings, prose) or a raw block (` ```{=html} `, ` ```{=latex} `).
+- `tbl-cap` on an `output: asis` cell does not behave identically to the knitr table-rendering path; prefer a div-wrapped caption for reliability.
+
+````markdown
+```{language}
+#| output: asis
+
+# print("| Col A | Col B |\n| ----- | ----- |\n| 1     | 2     |")
+```
+````
+
 ## Figure Options
 
 Options for controlling figure output:
@@ -136,38 +154,21 @@ Options for controlling table output:
 ````
 
 Table rendering behaviour differs between the knitr and jupyter engines; see [tables.md](tables.md) for details.
-Use `output: asis` to emit a pre-formatted markdown or HTML string:
-
-````markdown
-```{language}
-#| label: tbl-summary
-#| tbl-cap: "Summary statistics by group."
-#| output: asis
-
-# print a markdown table string to stdout
-```
-````
+For markdown table output from code, use `output: asis` (see the [output: asis](#output-asis) section above).
 
 ## Caching and Freeze
 
-Control caching of code cell results:
+**knitr engine**: cell-level caching with `#| cache: true` stores results per cell.
 
-| Option       | Description                         | Values                    |
-| ------------ | ----------------------------------- | ------------------------- |
-| `cache`      | Cache results                       | `true`, `false`           |
-| `cache-lazy` | Use lazy loading for cached objects | `true`, `false`           |
-| `freeze`     | Never re-render (project option)    | `true`, `false`, `"auto"` |
+**jupyter engine**: caching is managed by `jupyter-cache` at document level via `execute: cache: true` in YAML front matter.
+Individual cells can opt out with `#| cache: false` but cannot opt in with `#| cache: true`.
 
-### Caching Example
-
-````markdown
-```{language}
-#| label: slow-computation
-#| cache: true
-
-# This expensive computation is cached
+```yaml
+execute:
+  cache: true
 ```
-````
+
+For details see <https://quarto.org/docs/projects/code-execution.html#cache>.
 
 ### Project-Level Freeze
 
