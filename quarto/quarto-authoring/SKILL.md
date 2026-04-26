@@ -9,36 +9,18 @@ description: >
   websites, books, presentations, and reports.
 metadata:
   author: Mickaël Canouil (@mcanouil)
-  version: "1.2"
+  version: "1.4"
 license: MIT
 ---
 
 # Quarto Authoring
 
-> This skill is based on Quarto CLI v1.9.36.
+> This skill is based on Quarto CLI v1.9.36 (2026-03-24).
 
 ## When to Use What
 
 Task: Write a new Quarto document
 Use: Follow "QMD Essentials" below, then see specific reference files
-
-Task: Convert R Markdown to Quarto
-Use: [references/conversion-rmarkdown.md](references/conversion-rmarkdown.md)
-
-Task: Migrate bookdown project
-Use: [references/conversion-bookdown.md](references/conversion-bookdown.md)
-
-Task: Migrate xaringan slides
-Use: [references/conversion-xaringan.md](references/conversion-xaringan.md)
-
-Task: Migrate distill article
-Use: [references/conversion-distill.md](references/conversion-distill.md)
-
-Task: Migrate blogdown site
-Use: [references/conversion-blogdown.md](references/conversion-blogdown.md)
-
-Task: Convert Jupyter notebook (.ipynb) to Quarto (.qmd), or Quarto to .ipynb
-Use: [references/conversion-jupyter.md](references/conversion-jupyter.md)
 
 Task: Add cross-references
 Use: [references/cross-references.md](references/cross-references.md)
@@ -84,6 +66,18 @@ Use: [references/markdown-linting.md](references/markdown-linting.md)
 
 Task: Choose or configure a compute engine (knitr, jupyter, julia)
 Use: [references/engines.md](references/engines.md)
+
+### Migration (only when converting an existing project)
+
+Do NOT read these references when writing new Quarto documents.
+Only read the one matching the source format when the user explicitly asks to convert or migrate an existing project.
+
+- R Markdown (.Rmd) to Quarto: [references/conversion-rmarkdown.md](references/conversion-rmarkdown.md)
+- bookdown project: [references/conversion-bookdown.md](references/conversion-bookdown.md)
+- xaringan slides: [references/conversion-xaringan.md](references/conversion-xaringan.md)
+- distill article: [references/conversion-distill.md](references/conversion-distill.md)
+- blogdown site: [references/conversion-blogdown.md](references/conversion-blogdown.md)
+- Jupyter notebook (.ipynb) to/from Quarto: [references/conversion-jupyter.md](references/conversion-jupyter.md)
 
 ## QMD Essentials
 

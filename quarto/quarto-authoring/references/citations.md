@@ -296,5 +296,3 @@ Or use `@Manual` for R packages.
 - [Quarto Citations](https://quarto.org/docs/authoring/citations.html)
 - [Pandoc Citations](https://pandoc.org/MANUAL.html#citations)
 - [CSL Styles](https://citationstyles.org/)
-
-

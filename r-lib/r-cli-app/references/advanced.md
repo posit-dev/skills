@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [API Reference](#api-reference)
+- [Testing CLI Apps](#testing-cli-apps)
 - [Launcher Customization](#launcher-customization)
 - [PATH Setup](#path-setup)
 - [Additional Examples](#additional-examples)
@@ -37,6 +38,72 @@ Install CLI launchers for scripts in a package's `exec/` directory.
 ### `Rapp::uninstall_pkg_cli_apps(package, destdir)`
 
 Remove launchers previously installed by `install_pkg_cli_apps()`.
+
+---
+
+## Testing CLI Apps
+
+### Using `Rapp::run()` for Testing
+
+In tests, `Rapp::run()` returns the evaluation environment invisibly, giving you
+access to all variables and computed values from the script:
+
+```r
+# tests/testthat/test-myapp.R
+test_that("myapp computes correctly", {
+  app_path <- system.file("exec/myapp", package = "mypkg")
+
+  env <- Rapp::run(app_path, c("--input", "42", "--double", "true"))
+
+  # Access computed values
+  expect_equal(env$result, 84)
+  expect_equal(env$count, 42)
+})
+```
+
+### Testing Output with Snapshots
+
+Use `expect_snapshot()` to test help text, error messages, and formatted output:
+
+```r
+test_that("myapp help is correct", {
+  app_path <- system.file("exec/myapp", package = "mypkg")
+  expect_snapshot(Rapp::run(app_path, c("--help")))
+})
+
+test_that("todo list command help", {
+  app_path <- system.file("exec/todo", package = "mypkg")
+  expect_snapshot(Rapp::run(app_path, c("list", "--help")))
+})
+```
+
+Snapshot files live in `tests/testthat/_snaps/`. When help text changes, run
+`testthat::snapshot_accept()` to review and approve updates.
+
+### Testing Side Effects
+
+For apps that modify files or state, test the behavior directly:
+
+```r
+test_that("todo add writes to store", {
+  app_path <- system.file("exec/todo", package = "mypkg")
+  store <- tempfile(fileext = ".yml")
+  on.exit(unlink(store), add = TRUE)
+
+  Rapp::run(app_path, c("add", "Buy milk", "--store", store))
+
+  expect_true(file.exists(store))
+  tasks <- yaml::read_yaml(store)
+  expect_equal(tasks, "Buy milk")
+})
+```
+
+### Testing Strategy Summary
+
+- **Computed values & state**: Access via the returned environment (`env$variable`)
+- **Output/help text**: Use `expect_snapshot()` to capture exact text
+- **Side effects**: Test directly (file creation, data integrity, state changes)
+- **When `--help` is used**: `Rapp::run()` returns `NULL` instead of an environment
 
 ---
 

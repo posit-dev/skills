@@ -79,6 +79,7 @@ Key points:
 
 - Blank line before opening `:::`.
 - Blank line after closing `:::`.
+- Use `:::` (three colons) for both opening and closing divs, including when nesting.
 
 ## Resources
 
