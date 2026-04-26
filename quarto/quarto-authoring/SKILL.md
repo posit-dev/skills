@@ -149,6 +149,16 @@ execute:
   warning: false
 ```
 
+**Caching — critical engine difference:** Only suggest `#| cache: true` for R code cells (knitr engine).
+Never suggest it for other language cells — it does not work and will be silently ignored.
+The only correct approach is `execute: cache: true` in the top-level YAML front matter when using engines other than `knitr`.
+Python/Jupyter requires `jupyter-cache` (`pip install jupyter-cache`):
+
+```yaml
+execute:
+  cache: true
+```
+
 Details: [references/code-cells.md](references/code-cells.md)
 
 ### Cross-References
