@@ -92,14 +92,13 @@ Create and use `_brand.yml` files for consistent branding across Quarto document
 
 ---
 
-### `quarto-alt-text`
+### `alt-text`
 
-Generate accessible alt text for data visualizations in Quarto documents. Use when adding, improving, or reviewing `fig-alt` for figures in `.qmd` files, or when making documents more accessible for screen readers.
+Generate and improve accessible alt text for data visualizations and images in Quarto documents and R packages. Use when adding, improving, or auditing `fig-alt` for figures in `.qmd` files, or when making documents more accessible for screen readers.
 
-#### Authors
+**Organization**: Uses progressive disclosure with reference files. The main skill detects the project type (pkgdown vs. Quarto) and loads the relevant reference.
 
-- [Emil Hvitfeldt](https://github.com/emilhvitfeldt)
-
+**Note**: This skill is also registered in the r-lib category since it covers both Quarto documents and pkgdown sites.
 ---
 
 ## Potential Skills

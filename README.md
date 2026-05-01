@@ -39,6 +39,7 @@ R package development skills for working with the r-lib ecosystem and modern R p
 - **[lifecycle](./r-lib/lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
 - **[r-package-development](./r-lib/r-package-development/)** - R package development with devtools, testthat, and roxygen2, covering key commands, coding conventions, testing, documentation, and NEWS.md practices
 - **[mirai](./r-lib/mirai/)** - Async, parallel, and distributed computing in R using mirai, covering explicit dependency passing, daemon setup, parallel mapping with `mirai_map()`, Shiny integration, remote/HPC launchers, and migration from future/parallel
+- **[alt-text](./alt-text/)** - Generate and improve accessible alt text for data visualizations and images in pkgdown sites and Quarto documents, covering vignette code chunks (`fig.alt`), static markdown images, and multi-plot chunks
 
 ### ggsql
 
@@ -60,7 +61,7 @@ Skills for Quarto document creation and publishing.
 
 - **[brand-yml](./brand-yml/)** - Create and apply brand.yml files for consistent styling across Quarto projects, supporting HTML documents, dashboards, RevealJS presentations, Typst PDFs, and websites with automatic brand discovery and theme layering
 - **[authoring](quarto/README.md#quarto-authoring-skill)** - Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions
-- **[quarto-alt-text](./quarto/quarto-alt-text/)** - Generate accessible alt text for figures in Quarto documents using Amy Cesal's three-part formula (chart type, data description, key insight). Supports code-generated plots and static images
+- **[alt-text](./alt-text/)** - Generate and improve accessible alt text for figures in Quarto documents using Amy Cesal's three-part formula (chart type, data description, key insight). Supports code-generated plots and static images
 
 ## Installation
 
