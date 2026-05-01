@@ -1,6 +1,6 @@
 ---
 name: quarto-authoring
-description: Writing and authoring Quarto documents (.qmd) with the knitr, jupyter, and julia engines (and any Quarto 1.9+ engine extensions). Covers code cell options, figure and table captions, cross-references, callout blocks (notes, warnings, tips), citations and bibliography, page layout and columns, Mermaid diagrams, YAML metadata configuration, and Quarto extensions. Also covers converting and migrating R Markdown (.Rmd), bookdown, blogdown, xaringan, distill projects, and Jupyter notebooks (.ipynb) to Quarto, and creating Quarto websites, books, presentations, and reports.
+description: Use when working with Quarto (.qmd) documents, code cells, cross-references, callouts, citations, YAML frontmatter, Mermaid diagrams, or Quarto extensions. Also use when migrating R Markdown (.Rmd), bookdown, blogdown, xaringan, distill, or Jupyter notebooks (.ipynb) to Quarto, or creating Quarto websites, books, presentations, or reports.
 metadata:
   author: Mickaël Canouil (@mcanouil)
   version: "1.4"
