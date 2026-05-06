@@ -1,6 +1,6 @@
 ---
 name: implement
-description: "Orchestrates implementation of a plan file by delegating work to subagents in parallel. Verifies git branch state, manages task lists for progress tracking, and ensures high-quality implementation. Invoke with a plan file path and optional model override: /implement plans/my-plan.md [--model sonnet]"
+description: "Orchestrates implementation of a plan file by delegating work to subagents in parallel. Verifies git branch state, tracks progress, and ensures high-quality implementation. Invoke with a plan file path and optional model override: /implement plans/my-plan.md [--model sonnet]"
 disable-model-invocation: true
 arguments: [path]
 argument-hint: "[plan-file-path] [--model sonnet|haiku|opus]"
@@ -14,7 +14,7 @@ license: MIT
 
 You are an implementation orchestrator. Your job is to read the plan at `$path`, break it into tasks, and execute it by delegating work to subagents—dispatched in parallel where possible. You manage progress, ensure quality, and keep the plan file updated.
 
-**You do NOT implement code yourself.** You read, analyze, delegate, review, and verify.
+**You do NOT implement code yourself.** You read, analyze, delegate, review, and verify. If subagent delegation is not available in your environment, implement items sequentially yourself, but maintain the same discipline around progress tracking, verification, and incremental commits.
 
 ## Arguments
 
@@ -79,47 +79,20 @@ Think critically about what can be parallelized:
 - **Interface/type changes** must complete before code that depends on them
 - **Shared utilities or helpers** introduced by one item and used by another create a dependency
 
-## Step 3: Create Task List
+## Step 3: Track Progress
 
-Create a task for each work item (skipping already-completed items). Use clear, imperative subjects and detailed descriptions.
+Use task tracking to manage work items if your environment provides it (e.g., TaskCreate, TaskUpdate, TaskList tools). Create a task for each work item, skipping already-completed items. Use clear, imperative subjects and set up dependency relationships between tasks.
 
-```
-TaskCreate:
-  subject: "Add input validation to UserForm component"
-  description: |
-    Implement client-side validation for the UserForm component.
-
-    Context: The form currently submits without validation, allowing
-    invalid email addresses and empty required fields.
-
-    Files to modify:
-    - src/components/UserForm.tsx (add validation logic)
-    - src/utils/validators.ts (add email validator)
-
-    Acceptance criteria:
-    - Email field validates format on blur
-    - Required fields show error state when empty on submit
-    - Form submission is blocked until all validations pass
-    - Follow existing error display patterns in the codebase
-  activeForm: "Adding input validation to UserForm"
-```
-
-After creating all tasks, set up dependency relationships:
-
-```
-TaskUpdate:
-  taskId: <dependent-task-id>
-  addBlockedBy: [<prerequisite-task-ids>]
-```
+If task tracking tools are not available, use the plan file itself as the progress record—check items off as they complete.
 
 ## Step 4: Delegate to Subagents
 
 ### Dispatching Strategy
 
-1. **Call TaskList** to identify unblocked tasks (no `blockedBy` or all blockers completed)
-2. **Dispatch all independent tasks simultaneously** — include multiple Agent tool calls in a single message
+1. Identify unblocked tasks (no dependencies, or all dependencies completed)
+2. **Dispatch all independent tasks simultaneously** — send multiple subagent requests in a single message to maximize parallelism
 3. **Limit batch size** to 3-5 concurrent subagents to manage complexity
-4. **After a batch completes**, call TaskList again to find newly unblocked tasks
+4. After a batch completes, identify newly unblocked tasks
 5. **Repeat** until all tasks are complete
 
 ### Model Selection Strategy
@@ -134,7 +107,7 @@ If the user provided `--model`, use that model for ALL subagents. Otherwise, sel
 
 **Key principle: if a task feels like it needs Opus, that's a signal to break it down further.** Well-defined atomic tasks rarely need the most capable model. Split the task into smaller pieces that Sonnet or Haiku can handle. The only exception is when the user explicitly requests `--model opus`.
 
-When in doubt, default to **sonnet**. It's better to use a capable-enough model than to under-assign and get poor results from Haiku on a task that needed more reasoning.
+When in doubt, default to **sonnet**.
 
 ### Writing Effective Subagent Prompts
 
@@ -178,26 +151,12 @@ You are implementing a specific task in [project/repo name].
 - [ ] Constraints prevent scope creep
 - [ ] Context explains *why*, not just *what*
 
-### Launching Subagents
-
-Use the Agent tool with `subagent_type: "general-purpose"` and the selected model:
-
-```
-Agent:
-  description: "Implement [3-5 word summary]"
-  subagent_type: "general-purpose"
-  model: [selected model]
-  prompt: [detailed prompt following the template above]
-```
-
-**CRITICAL: To run subagents in parallel, include multiple Agent tool calls in a single message.** Do not send them one at a time if they are independent.
-
 ### Handling Complex or Risky Items
 
 For work items that are large, ambiguous, or touch critical code:
 
 1. **Split into smaller sub-tasks** before delegating
-2. **Use an Explore subagent first** (`subagent_type: "Explore"`) to gather context, then write a better-informed implementation prompt
+2. **Research first** — use a read-only exploration subagent to gather context, then write a better-informed implementation prompt
 3. **Dispatch alone** (not in parallel) so you can review before proceeding
 
 ## Step 5: Monitor, Verify, and Iterate
@@ -212,19 +171,13 @@ Read each subagent's result carefully. Check for:
 - Scope — did it modify files it shouldn't have?
 - Conflicts — did parallel subagents make incompatible changes?
 
-### 5b. Update task status
+### 5b. Update progress
 
-```
-TaskUpdate:
-  taskId: <task-id>
-  status: "completed"
-```
-
-If a subagent's work is incomplete or incorrect, keep the task `in_progress` and re-dispatch with a corrected, more specific prompt that addresses what went wrong.
+Mark completed tasks as done. If a subagent's work is incomplete or incorrect, re-dispatch with a corrected, more specific prompt that addresses what went wrong.
 
 ### 5c. Update the plan file
 
-Check off completed items in the plan file (`- [ ]` → `- [x]`) using the Edit tool. This creates a durable progress record.
+Check off completed items in the plan file (`- [ ]` → `- [x]`). This creates a durable progress record.
 
 ### 5d. Run verification
 
@@ -248,7 +201,7 @@ Use conventional commits. Stage specific files—never use `git add -A` or `git 
 
 ### 5f. Dispatch next batch
 
-Call TaskList, find newly unblocked tasks, and repeat from Step 4.
+Identify newly unblocked tasks and repeat from Step 4.
 
 ## Step 6: Final Verification and Report
 
