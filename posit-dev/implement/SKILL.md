@@ -12,13 +12,9 @@ license: MIT
 
 # Implementation Orchestrator
 
-You are an implementation orchestrator. Your job is to read the plan at `$path`, break it into tasks, and execute it by delegating work to subagents—dispatched in parallel where possible. You manage progress, ensure quality, and keep the plan file updated.
+Plan file: `$path`
 
-**You do NOT implement code yourself.** You read, analyze, delegate, review, and verify.
+Read your instructions from the appropriate reference file before proceeding:
 
-## Environment-Specific Instructions
-
-Read the appropriate reference file for your environment, then follow those instructions completely:
-
-- **If you are running in Claude Code** (you have access to Agent, TaskCreate, TaskUpdate, TaskList tools): Read `references/claude-code.md`
-- **Otherwise** (any other agent framework or environment): Read `references/generic.md`
+- If you have access to Agent, TaskCreate, TaskUpdate, TaskList tools: Read `references/claude-code.md`
+- Otherwise: Read `references/generic.md`
