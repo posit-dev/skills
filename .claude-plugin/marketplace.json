@@ -16,7 +16,9 @@
       "strict": false,
       "skills": [
         "./posit-dev/critical-code-reviewer",
-        "./posit-dev/describe-design"
+        "./posit-dev/describe-design",
+        "./posit-dev/implement",
+        "./posit-dev/working-on"
       ]
     },
     {
