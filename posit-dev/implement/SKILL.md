@@ -97,17 +97,17 @@ If task tracking tools are not available, use the plan file itself as the progre
 
 ### Model Selection Strategy
 
-If the user provided `--model`, use that model for ALL subagents. Otherwise, select the model per-task based on complexity:
+If the user provided `--model`, use that model for ALL subagents. Otherwise, match model capability to task complexity:
 
-| Model | When to Use | Examples |
-|-------|-------------|---------|
-| **haiku** | Mechanical, well-scoped changes with clear instructions. The task requires no judgment calls. | Renaming a variable across files, adding a field to a type and updating all references, writing a test for a function with obvious behavior, applying a repetitive pattern to multiple files |
-| **sonnet** | Standard implementation work requiring some understanding of context and conventions. This is the default for most tasks. | Implementing a new function or component, refactoring a module, adding error handling, writing tests that require understanding behavior |
-| **opus** | Reserved for tasks requiring deep architectural reasoning or subtle judgment across many interacting concerns. **Use very sparingly.** | — |
+| Capability tier | When to Use | Examples |
+|-----------------|-------------|---------|
+| **Lightweight** (e.g., haiku) | Mechanical, well-scoped changes with clear instructions. The task requires no judgment calls. | Renaming a variable across files, adding a field to a type and updating all references, writing a test for a function with obvious behavior, applying a repetitive pattern to multiple files |
+| **Standard** (e.g., sonnet) | Implementation work requiring understanding of context and conventions. This is the default for most tasks. | Implementing a new function or component, refactoring a module, adding error handling, writing tests that require understanding behavior |
+| **Advanced** (e.g., opus) | Tasks requiring deep architectural reasoning or subtle judgment across many interacting concerns. **Use very sparingly.** | — |
 
-**Key principle: if a task feels like it needs Opus, that's a signal to break it down further.** Well-defined atomic tasks rarely need the most capable model. Split the task into smaller pieces that Sonnet or Haiku can handle. The only exception is when the user explicitly requests `--model opus`.
+**Key principle: if a task feels like it needs the most capable model, that's a signal to break it down further.** Well-defined atomic tasks rarely need maximum capability. Split the task into smaller pieces that a standard-tier model can handle.
 
-When in doubt, default to **sonnet**.
+When in doubt, default to the **standard** tier. It's better to use a capable-enough model than to under-assign and get poor results from a lightweight model on a task that needed more reasoning.
 
 ### Writing Effective Subagent Prompts
 
@@ -150,6 +150,12 @@ You are implementing a specific task in [project/repo name].
 - [ ] Acceptance criteria are concrete and verifiable
 - [ ] Constraints prevent scope creep
 - [ ] Context explains *why*, not just *what*
+
+### Launching Subagents
+
+Dispatch each task as a subagent with the selected model and the detailed prompt from above. Give each subagent a short 3-5 word description summarizing its task.
+
+**CRITICAL: To run subagents in parallel, dispatch multiple subagent requests in a single message.** Do not send them one at a time if they are independent — parallelism is the primary advantage of the orchestrator pattern.
 
 ### Handling Complex or Risky Items
 
