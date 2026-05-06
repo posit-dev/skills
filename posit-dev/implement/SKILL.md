@@ -17,4 +17,5 @@ Plan file: `$path`
 Read your instructions from the appropriate reference file before proceeding:
 
 - If you have access to Agent, TaskCreate, TaskUpdate, TaskList tools: Read `references/claude-code.md`
+- Else if you have access to task and read_agent tools: Read `references/copilot-cli.md`
 - Otherwise: Read `references/generic.md`
