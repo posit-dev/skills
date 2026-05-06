@@ -2,6 +2,7 @@
 name: working-on
 description: "Set a tracking document as the source of truth for the current feature or task. Use when starting work on a feature, bug fix, or multi-step task that benefits from a persistent record of decisions, discoveries, and progress. Keeps the document updated as work proceeds."
 disable-model-invocation: true
+arguments: [path]
 argument-hint: "[path-to-tracking-doc] [additional instructions]"
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
@@ -11,13 +12,9 @@ license: MIT
 
 # Working On
 
-You are managing a tracking document that serves as the source of truth for the current task or feature. The argument to this skill is the path to the tracking document and optional additional instructions.
+You are managing a tracking document that serves as the source of truth for the current task or feature.
 
-## Arguments
-
-Parse the skill arguments:
-- **Tracking document path** (required): The first argument, e.g. `docs/feature-plan.md` or `_dev/auth-refactor.md`
-- **Additional instructions** (optional): Any further context or direction following the path
+The tracking document is: `$path`
 
 ## Behavior
 

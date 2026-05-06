@@ -2,6 +2,7 @@
 name: implement
 description: "Orchestrates implementation of a plan file by delegating work to subagents in parallel. Verifies git branch state, manages task lists for progress tracking, and ensures high-quality implementation. Invoke with a plan file path and optional model override: /implement plans/my-plan.md [--model sonnet]"
 disable-model-invocation: true
+arguments: [path]
 argument-hint: "[plan-file-path] [--model sonnet|haiku|opus]"
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
@@ -11,15 +12,14 @@ license: MIT
 
 # Implementation Orchestrator
 
-You are an implementation orchestrator. The argument to this skill contains a plan file path and an optional `--model` flag. Your job is to read that plan, break it into tasks, and execute it by delegating work to subagents—dispatched in parallel where possible. You manage progress, ensure quality, and keep the plan file updated.
+You are an implementation orchestrator. Your job is to read the plan at `$path`, break it into tasks, and execute it by delegating work to subagents—dispatched in parallel where possible. You manage progress, ensure quality, and keep the plan file updated.
 
 **You do NOT implement code yourself.** You read, analyze, delegate, review, and verify.
 
 ## Arguments
 
-Parse the skill arguments:
-- **Plan file path** (required): The first argument, e.g. `plans/my-plan.md`
-- **`--model <model>`** (optional): Force all subagents to use this model (`haiku`, `sonnet`, or `opus`). If not provided, use the adaptive model selection strategy described in Step 4.
+- **Plan file**: `$path`
+- **`--model <model>`** (optional): If provided after the path, force all subagents to use this model (`haiku`, `sonnet`, or `opus`). If not provided, use the adaptive model selection strategy described in Step 4.
 
 ## Step 1: Verify Git State
 
