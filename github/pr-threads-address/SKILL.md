@@ -22,7 +22,7 @@ gh extension list | grep -q pr-review || gh extension install agynio/gh-pr-revie
 
 Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either. Look the values up once at the start of the workflow and substitute the literal numbers and slugs into every later command.
 
-If the user did not pass `PR_NUMBER`, get it from the current branch:
+Get the PR number for the current branch:
 
 ```bash
 gh pr view --json number -q .number
@@ -54,12 +54,12 @@ Use this command when you have received PR review feedback and need to systemati
 ## Example
 
 ```
-/pr-threads-address 42
+/pr-threads-address
 ```
 
 This will:
 
-- View unresolved threads on PR #42
+- View unresolved threads on the PR for the current branch
 - Make code changes to address each thread
 - Create commits for the changes
 - Reply to reviewers with explanations
