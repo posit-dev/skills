@@ -8,15 +8,17 @@ metadata:
 license: MIT
 ---
 
-# /pr-threads-address
+## Prerequisites
 
-**Usage:** `/pr-threads-address [PR_NUMBER]`
+### gh pr-review extension
 
-**Description:** Review all unresolved PR review threads, address them by making necessary code changes, and commit the changes appropriately.
+Before using this command, check if the gh pr-review extension is installed:
 
-**Note:** If `PR_NUMBER` is omitted, the command will automatically detect and use the PR associated with the current branch.
+```bash
+gh extension list | grep -q pr-review || gh extension install agynio/gh-pr-review
+```
 
-## Resolve PR context first
+### Resolve PR context
 
 Before running any `gh pr-review` subcommand, resolve the PR number and repo once and reuse them. Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either.
 
@@ -29,15 +31,14 @@ Pass `--pr "$PR_NUMBER" --repo "$REPO"` on every subsequent `gh pr-review` call 
 
 ## Workflow
 
-1. Resolve `PR_NUMBER` and `REPO` as shown above
-2. Fetch and display all unresolved PR review threads
-3. Analyze each thread to understand the requested changes
-4. For each thread:
+1. Fetch and display all unresolved PR review threads
+2. Analyze each thread to understand the requested changes
+3. For each thread:
    1. Make the necessary code modifications
    2. (When possible) Add unit tests to verify the change
    3. Commit the changes with descriptive commit messages using conventional commit specification
-5. Report back with a summary of addressed threads
-6. Ask if the user wants to resolve the threads. If so, reply to each thread indicating what was done and then resolve the thread.
+4. Report back with a summary of addressed threads
+5. Ask if the user wants to resolve the threads. If so, reply to each thread indicating what was done and then resolve the thread.
 
 ## When to use
 
@@ -50,20 +51,13 @@ Use this command when you have received PR review feedback and need to systemati
 ```
 
 This will:
+
 - View unresolved threads on PR #42
 - Make code changes to address each thread
 - Create commits for the changes
 - Reply to reviewers with explanations
 - Provide a summary of all addressed items
 - Ask if you want to resolve the threads
-
-## Prerequisites
-
-Before using this command, check if the gh pr-review extension is installed:
-
-```bash
-gh extension list | grep -q pr-review || gh extension install agynio/gh-pr-review
-```
 
 ## CLI Reference
 

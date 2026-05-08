@@ -8,15 +8,17 @@ metadata:
 license: MIT
 ---
 
-# /pr-threads-resolve
+## Prerequisites
 
-**Usage:** `/pr-threads-resolve [PR_NUMBER]`
+### gh pr-review extension
 
-**Description:** Bulk resolve unresolved PR review threads. Useful after manually addressing threads or after using `/pr-threads-address`.
+Before using this command, check if the gh pr-review extension is installed:
 
-**Note:** If `PR_NUMBER` is omitted, the command will automatically detect and use the PR associated with the current branch.
+```bash
+gh extension list | grep -q pr-review || gh extension install agynio/gh-pr-review
+```
 
-## Resolve PR context first
+### Resolve PR context first
 
 Before running any `gh pr-review` subcommand, resolve the PR number and repo once and reuse them. Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either.
 
@@ -29,12 +31,11 @@ Pass `--pr "$PR_NUMBER" --repo "$REPO"` on every subsequent `gh pr-review` call 
 
 ## Workflow
 
-1. Resolve `PR_NUMBER` and `REPO` as shown above
-2. Fetch and display all unresolved PR review threads
-3. Show thread details (file, line, comment text)
-4. Ask for confirmation or allow selective resolution
-5. Resolve the confirmed threads
-6. Report back with a summary of resolved threads
+1. Fetch and display all unresolved PR review threads
+2. Show thread details (file, line, comment text)
+3. Ask for confirmation or allow selective resolution
+4. Resolve the confirmed threads
+5. Report back with a summary of resolved threads
 
 ## When to use
 
@@ -47,19 +48,12 @@ Use this command when you have already addressed PR review threads and want to b
 ```
 
 This will:
+
 - List all unresolved threads on PR #42
 - Show what each thread is about
 - Ask which threads to resolve (all or specific ones)
 - Resolve the selected threads
 - Provide a summary of resolved items
-
-## Prerequisites
-
-Before using this command, check if the gh pr-review extension is installed:
-
-```bash
-gh extension list | grep -q pr-review || gh extension install agynio/gh-pr-review
-```
 
 ## CLI Reference
 
