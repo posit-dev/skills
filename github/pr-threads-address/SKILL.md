@@ -20,14 +20,21 @@ gh extension list | grep -q pr-review || gh extension install agynio/gh-pr-revie
 
 ### Resolve PR context
 
-Before running any `gh pr-review` subcommand, resolve the PR number and repo once and reuse them. Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either.
+Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either. Look the values up once at the start of the workflow and substitute the literal numbers and slugs into every later command.
+
+If the user did not pass `PR_NUMBER`, get it from the current branch:
 
 ```bash
-PR_NUMBER="${1:-$(gh pr view --json number -q .number)}"
-REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
+gh pr view --json number -q .number
 ```
 
-Pass `--pr "$PR_NUMBER" --repo "$REPO"` on every subsequent `gh pr-review` call in this workflow (review view, comments reply, threads resolve, etc.).
+Get the repository slug:
+
+```bash
+gh repo view --json nameWithOwner -q .nameWithOwner
+```
+
+Then pass the resulting values directly — e.g. `--pr 42 --repo posit-dev/skills` — on every subsequent `gh pr-review` call in this workflow (review view, comments reply, threads resolve, etc.).
 
 ## Workflow
 

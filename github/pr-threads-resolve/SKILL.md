@@ -20,14 +20,21 @@ gh extension list | grep -q pr-review || gh extension install agynio/gh-pr-revie
 
 ### Resolve PR context first
 
-Before running any `gh pr-review` subcommand, resolve the PR number and repo once and reuse them. Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either.
+Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either. Look the values up once at the start of the workflow and substitute the literal numbers and slugs into every later command.
+
+If the user did not pass `PR_NUMBER`, get it from the current branch:
 
 ```bash
-PR_NUMBER="${1:-$(gh pr view --json number -q .number)}"
-REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
+gh pr view --json number -q .number
 ```
 
-Pass `--pr "$PR_NUMBER" --repo "$REPO"` on every subsequent `gh pr-review` call in this workflow (list, resolve, view, reply).
+Get the repository slug:
+
+```bash
+gh repo view --json nameWithOwner -q .nameWithOwner
+```
+
+Then pass the resulting values directly — e.g. `--pr 42 --repo posit-dev/skills` — on every subsequent `gh pr-review` call in this workflow (list, resolve, view, reply).
 
 ## Workflow
 
@@ -101,11 +108,12 @@ gh pr-review threads unresolve --thread-id <PRRT_...> --pr <number> --repo <owne
 
 ### Bulk Resolve Example
 
+Substitute the actual PR number and repo slug resolved in "Resolve PR context first" — the `42` / `owner/repo` below are placeholders.
+
 ```bash
-# Assumes PR_NUMBER and REPO were resolved as shown in "Resolve PR context first".
-gh pr-review threads list --pr "$PR_NUMBER" --unresolved --repo "$REPO" | \
+gh pr-review threads list --pr 42 --unresolved --repo owner/repo | \
   jq -r '.threads[].id' | \
-  xargs -I {} gh pr-review threads resolve --thread-id {} --pr "$PR_NUMBER" --repo "$REPO"
+  xargs -I {} gh pr-review threads resolve --thread-id {} --pr 42 --repo owner/repo
 ```
 
 ## Usage Notes
