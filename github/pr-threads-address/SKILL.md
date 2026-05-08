@@ -62,11 +62,8 @@ gh pr-review review view --pr <number> --repo <owner/repo>
 - `--reviewer <login>` — Filter by specific reviewer
 - `--states <list>` — Comma-separated review states (APPROVED, CHANGES_REQUESTED, COMMENTED, DISMISSED)
 - `--unresolved` — Show only unresolved threads
-- `--not_outdated` — Exclude outdated threads
 - `--tail <n>` — Show only the last n replies per thread
 - `--include-comment-node-id` — Include GraphQL node IDs for replies
-
-Combine `--unresolved --not_outdated` to focus on actionable threads.
 
 ### Reply to Review Threads
 
