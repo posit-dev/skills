@@ -16,13 +16,25 @@ license: MIT
 
 **Note:** If `PR_NUMBER` is omitted, the command will automatically detect and use the PR associated with the current branch.
 
+## Resolve PR context first
+
+Before running any `gh pr-review` subcommand, resolve the PR number and repo once and reuse them. Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either.
+
+```bash
+PR_NUMBER="${1:-$(gh pr view --json number -q .number)}"
+REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
+```
+
+Pass `--pr "$PR_NUMBER" --repo "$REPO"` on every subsequent `gh pr-review` call in this workflow (list, resolve, view, reply).
+
 ## Workflow
 
-1. Fetch and display all unresolved PR review threads
-2. Show thread details (file, line, comment text)
-3. Ask for confirmation or allow selective resolution
-4. Resolve the confirmed threads
-5. Report back with a summary of resolved threads
+1. Resolve `PR_NUMBER` and `REPO` as shown above
+2. Fetch and display all unresolved PR review threads
+3. Show thread details (file, line, comment text)
+4. Ask for confirmation or allow selective resolution
+5. Resolve the confirmed threads
+6. Report back with a summary of resolved threads
 
 ## When to use
 
@@ -96,15 +108,15 @@ gh pr-review threads unresolve --thread-id <PRRT_...> --pr <number> --repo <owne
 ### Bulk Resolve Example
 
 ```bash
-# Get all unresolved thread IDs and resolve them
-gh pr-review threads list --pr 42 --unresolved --repo owner/repo | \
+# Assumes PR_NUMBER and REPO were resolved as shown in "Resolve PR context first".
+gh pr-review threads list --pr "$PR_NUMBER" --unresolved --repo "$REPO" | \
   jq -r '.threads[].id' | \
-  xargs -I {} gh pr-review threads resolve --thread-id {} --pr 42 --repo owner/repo
+  xargs -I {} gh pr-review threads resolve --thread-id {} --pr "$PR_NUMBER" --repo "$REPO"
 ```
 
 ## Usage Notes
 
-1. **Repository Context**: Always include `--repo owner/repo` to ensure correct repository context, or run commands from within a local clone of the repository.
+1. **Required flags**: Every `gh pr-review` subcommand (`threads list`, `threads resolve`, `threads unresolve`, `review view`, `comments reply`, etc.) requires both `--pr <number>` and `--repo <owner/repo>`. Resolve them once at the start of the workflow and reuse on every call — do not drop them in pipelines or `xargs` loops.
 
 2. **Thread IDs**: Thread IDs (format `PRRT_...`) can be obtained from `review view --include-comment-node-id` or `threads list` commands.
 

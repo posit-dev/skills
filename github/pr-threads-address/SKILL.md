@@ -16,16 +16,28 @@ license: MIT
 
 **Note:** If `PR_NUMBER` is omitted, the command will automatically detect and use the PR associated with the current branch.
 
+## Resolve PR context first
+
+Before running any `gh pr-review` subcommand, resolve the PR number and repo once and reuse them. Every `gh pr-review` subcommand requires both `--pr <number>` and `--repo <owner/repo>` — do not omit either.
+
+```bash
+PR_NUMBER="${1:-$(gh pr view --json number -q .number)}"
+REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
+```
+
+Pass `--pr "$PR_NUMBER" --repo "$REPO"` on every subsequent `gh pr-review` call in this workflow (review view, comments reply, threads resolve, etc.).
+
 ## Workflow
 
-1. Fetch and display all unresolved PR review threads
-2. Analyze each thread to understand the requested changes
-3. For each thread:
+1. Resolve `PR_NUMBER` and `REPO` as shown above
+2. Fetch and display all unresolved PR review threads
+3. Analyze each thread to understand the requested changes
+4. For each thread:
    1. Make the necessary code modifications
    2. (When possible) Add unit tests to verify the change
    3. Commit the changes with descriptive commit messages using conventional commit specification
-4. Report back with a summary of addressed threads
-5. Ask if the user wants to resolve the threads. If so, reply to each thread indicating what was done and then resolve the thread.
+5. Report back with a summary of addressed threads
+6. Ask if the user wants to resolve the threads. If so, reply to each thread indicating what was done and then resolve the thread.
 
 ## When to use
 
@@ -154,7 +166,7 @@ gh pr-review review --submit --review-id <PRR_...> --event <EVENT_TYPE> --body "
 
 ## Usage Notes
 
-1. **Repository Context**: Always include `--repo owner/repo` to ensure correct repository context, or run commands from within a local clone of the repository.
+1. **Required flags**: Every `gh pr-review` subcommand (`review view`, `comments reply`, `threads list`, `threads resolve`, `review --start`, `review --add-comment`, `review --submit`, etc.) requires both `--pr <number>` and `--repo <owner/repo>`. Resolve them once at the start of the workflow and reuse on every call — do not drop them in loops or per-thread reply commands.
 
 2. **Thread IDs**: Thread IDs (format `PRRT_...`) can be obtained from `review view --include-comment-node-id` or `threads list` commands.
 
