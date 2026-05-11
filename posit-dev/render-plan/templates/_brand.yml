@@ -1,0 +1,56 @@
+meta:
+  name:
+    full: Posit Software, PBC
+    short: Posit
+  link:
+    home: https://posit.co
+    guide: https://positpbc.atlassian.net/wiki/x/AQAgBQ
+    mastodon: https://fosstodon.org/@Posit
+    linkedin: https://www.linkedin.com/company/posit-software/
+    twitter: https://twitter.com/posit_pbc
+
+color:
+  palette:
+    blue: "#447099"
+    orange: "#EE6331"
+    gray: "#404041"
+    white: "#FFFFFF"
+    teal: "#419599"
+    green: "#72994E"
+    burgundy: "#9A4665"
+    accent: orange
+  foreground: "#151515"
+  background: "#FFFFFF"
+  primary: "#447099"
+  secondary: "#707073"
+  tertiary: "#C2C2C4"
+  success: "#72994E"
+  info: "#419599"
+  warning: "#EE6331"
+  danger: "#9A4665"
+  light: "#FFFFFF"
+  dark: "#404041"
+
+typography:
+  fonts:
+    - source: google
+      family: Open Sans
+    - source: google
+      family: Fira Code
+    - source: google
+      family: Roboto Slab
+      weight: 600
+      style: normal
+      display: block
+
+  base:
+    family: "Open Sans"
+    line-height: 1.25
+    size: 1rem
+  headings:
+    family: "Roboto Slab"
+    color: primary
+    weight: 600
+  monospace:
+    family: "Fira Code"
+    size: 0.9em
