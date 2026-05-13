@@ -1,58 +1,50 @@
 ---
 name: mirai
-description: Help users write correct R code for async, parallel, and distributed computing using mirai. Use when users need to: run R code asynchronously or in parallel, write mirai code with correct dependency passing, set up local or remote parallel workers, convert code from future or parallel, use parallel map operations, integrate async tasks with Shiny or promises, or configure cluster/HPC computing.
+description: Help users write correct R code for async, parallel, and distributed computing using mirai. Use when users need to run R code asynchronously or in parallel, write mirai code with correct dependency passing, set up parallel workers, convert from future or parallel, use mirai_map, integrate with Shiny or promises, or configure cluster/HPC computing.
 metadata:
   author: Charlie Gao (@shikokuchuo)
-  version: "1.1"
+  version: "1.2"
 license: MIT
 ---
 
-You are an expert on the mirai R package for async, parallel, and distributed computing. Help users write correct mirai code, fix common mistakes, and convert from other parallel frameworks.
-
-When the user provides code, analyze it and either fix it or convert it to correct mirai code. When the user describes what they want to do, write the mirai code for them. Always explain the key mirai concepts that apply to their situation.
+mirai is a minimalist R framework for async, parallel, and distributed evaluation, built on nanonext.
 
 ## Core Principle: Explicit Dependency Passing
 
-mirai evaluates expressions in a **clean environment** on a daemon process. Nothing from the calling environment is available unless explicitly passed. This is the #1 source of mistakes.
-
-There are two ways to pass objects:
-
-### `.args` (recommended for most cases)
-
-Objects in `.args` are placed in the **local evaluation environment** of the expression. They are available directly by name inside the expression.
+mirai evaluates expressions in a **clean environment** on a daemon process. Nothing from the calling environment is available unless passed explicitly — this is the #1 source of mistakes.
 
 ```r
-my_data <- data.frame(x = 1:10)
-my_func <- function(df) sum(df$x)
-
-m <- mirai(my_func(my_data), .args = list(my_func = my_func, my_data = my_data))
+# WRONG: my_data and my_func are not available on the daemon
+m <- mirai(my_func(my_data))
 ```
 
-**Shortcut** — pass the entire calling environment:
+There are two ways to pass objects, and the names used **must match** the names referenced in the expression.
+
+### `.args` (recommended)
+
+Objects in `.args` populate the expression's **local evaluation environment** — available directly by name inside the expression.
 
 ```r
-process <- function(x, y) {
-  mirai(x + y, .args = environment())
-}
+m <- mirai(my_func(my_data), .args = list(my_func = my_func, my_data = my_data))
 ```
 
 ### `...` (dot-dot-dot)
 
-Objects passed via `...` are assigned to the **daemon's global environment**. Use this when objects need to be found by R's standard scoping rules (e.g., helper functions that are called by other functions).
+Objects passed via `...` are assigned to the **daemon's global environment**. Use this when objects need to be found by R's standard scoping rules (e.g., helper functions called by other functions).
 
 ```r
-m <- mirai(run(data), run = my_run_func, data = my_data)
+m <- mirai(my_func(my_data), my_func = my_func, my_data = my_data)
 ```
 
-**Shortcut** — pass the entire calling environment via `...`:
+### Shortcut: pass the whole calling environment
 
 ```r
-df_matrix <- function(x, y) {
-  mirai(as.matrix(rbind(x, y)), environment())
-}
-```
+# .args form — populates local eval env
+process <- function(x, y) mirai(x + y, .args = environment())
 
-When `...` receives a single unnamed environment, all objects in that environment are assigned to the daemon's global environment.
+# ... form — single unnamed environment, populates daemon global env
+df_matrix <- function(x, y) mirai(as.matrix(rbind(x, y)), environment())
+```
 
 ### When to use which
 
@@ -60,86 +52,42 @@ When `...` receives a single unnamed environment, all objects in that environmen
 |----------|-----|
 | Data and simple functions | `.args` |
 | Helper functions called by other functions that need lexical scoping | `...` |
-| Passing the entire local scope to local eval env | `.args = environment()` |
-| Passing the entire local scope to global env | `mirai(expr, environment())` via `...` |
-| Large persistent objects shared across tasks | `everywhere()` first, then reference by name |
+| Pass entire local scope to local eval env | `.args = environment()` |
+| Pass entire local scope to daemon global env | `mirai(expr, environment())` |
+| Large objects shared across many tasks | `everywhere()` first, then reference by name |
 
-## Common Mistakes and Fixes
+## Common Mistakes
 
-### Mistake 1: Not passing dependencies
+### Unqualified package functions
 
-```r
-# WRONG: my_data and my_func are not available on the daemon
-m <- mirai(my_func(my_data))
-
-# CORRECT: Pass via .args
-m <- mirai(my_func(my_data), .args = list(my_func = my_func, my_data = my_data))
-
-# CORRECT: Or pass via ...
-m <- mirai(my_func(my_data), my_func = my_func, my_data = my_data)
-```
-
-### Mistake 2: Using unqualified package functions
+Daemons start with no user packages loaded. Same applies inside `mirai_map()` callbacks.
 
 ```r
 # WRONG: dplyr is not loaded on the daemon
 m <- mirai(filter(df, x > 5), .args = list(df = my_df))
 
-# CORRECT: Use namespace-qualified calls
+# CORRECT: namespace-qualify
 m <- mirai(dplyr::filter(df, x > 5), .args = list(df = my_df))
 
-# CORRECT: Or load the package inside the expression
+# CORRECT: load inside the expression
 m <- mirai({
   library(dplyr)
   filter(df, x > 5)
 }, .args = list(df = my_df))
 
-# CORRECT: Or pre-load on all daemons with everywhere()
+# CORRECT: pre-load on all daemons
 everywhere(library(dplyr))
 m <- mirai(filter(df, x > 5), .args = list(df = my_df))
 ```
 
-### Mistake 3: Expecting results immediately
+### Expecting results immediately
 
-`m$data` accesses the mirai's value — but it may still be unresolved. Use `m[]` to block until done, or check with `unresolved(m)` first.
+`m$data` accesses the value but may still be unresolved. Use `m[]` (or `collect_mirai(m)`) to block until done; use `unresolved(m)` for a non-blocking check.
 
 ```r
-# WRONG: m$data may still be an unresolved value
 m <- mirai(slow_computation())
-result <- m$data  # may return an 'unresolved' logical value
-
-# CORRECT: Use [] to wait for the result
-m <- mirai(slow_computation())
-result <- m[]  # blocks until resolved, returns the value directly
-
-# CORRECT: Or use call_mirai() then access $data
-call_mirai(m)
-result <- m$data
-
-# CORRECT: Non-blocking check
-if (!unresolved(m)) result <- m$data
-```
-
-### Mistake 4: Mixing up .args names and expression names
-
-```r
-# WRONG: .args names don't match what the expression uses
-m <- mirai(process(input), .args = list(fn = process, data = input))
-
-# CORRECT: Names in .args must match names used in the expression
-m <- mirai(process(input), .args = list(process = process, input = input))
-```
-
-### Mistake 5: Unqualified package functions in mirai_map callbacks
-
-The same namespace issue from Mistake 2 applies to `mirai_map()` — each callback runs on a daemon with no packages loaded by default.
-
-```r
-# WRONG: dplyr not available on daemons
-results <- mirai_map(data_list, function(x) filter(x, val > 0))[]
-
-# CORRECT: Namespace-qualify, or use everywhere() first
-results <- mirai_map(data_list, function(x) dplyr::filter(x, val > 0))[]
+result <- m[]                          # blocks until resolved
+if (!unresolved(m)) result <- m$data   # non-blocking
 ```
 
 ## Setting Up Daemons
@@ -157,10 +105,10 @@ daemons(4)
 # Direct connection (no dispatcher) — lower overhead, round-robin scheduling
 daemons(4, dispatcher = FALSE)
 
-# Check daemon status
+# Concise programmatic statistics (vs. the richer status())
 info()
 
-# Daemons persist until explicitly reset
+# Reset (daemons otherwise persist for the session)
 daemons(0)
 ```
 
@@ -205,9 +153,31 @@ m1 <- mirai(cpu_work(), .compute = "cpu")
 m2 <- mirai(gpu_work(), .compute = "gpu")
 ```
 
+## Memory Backpressure (`memory` + `try_mirai()`)
+
+For high-throughput producers (Shiny, promises, ingest pipelines), use the `memory` argument to `daemons()` to cap the queued task payload at dispatcher (MB, metric). Pair it with `try_mirai()` so the host R thread never blocks on submission.
+
+```r
+# 100 MB queue cap. mirai() blocks on submission once the queue is full.
+daemons(4, memory = 100)
+
+# try_mirai() returns NULL (invisibly) instead of blocking when the cap is hit.
+m <- try_mirai(work(x), .args = list(x = x))
+if (is.null(m)) {
+  # backpressure: drop, retry later, or signal upstream
+} else {
+  # m is a regular mirai
+}
+
+# Inspect current and peak queue usage
+status()$memory
+```
+
+`memory` requires dispatcher. Without dispatcher (or with `memory = NULL`), `try_mirai()` always returns a mirai.
+
 ## mirai_map: Parallel Map
 
-Requires daemons to be set. Maps `.x` element-wise over a function, distributing across daemons.
+Requires daemons to be set. Maps `.x` element-wise over a function, distributing across daemons. Namespace-qualify any package functions used inside the callback (see Mistake 2).
 
 ```r
 daemons(4)
@@ -215,17 +185,11 @@ daemons(4)
 # Basic map — collect with []
 results <- mirai_map(1:10, function(x) x^2)[]
 
-# With constant arguments via .args
-results <- mirai_map(
-  1:10,
-  function(x, power) x^power,
-  .args = list(power = 3)
-)[]
-
-# With helper functions via ... (assigned to daemon global env)
+# Constants via .args, helpers via ... (same passing rules as mirai())
 results <- mirai_map(
   data_list,
-  function(x) transform(x, helper),
+  function(x, power) helper(x, power),
+  .args = list(power = 3),
   helper = my_helper_func
 )[]
 
@@ -250,6 +214,19 @@ params <- data.frame(mean = 1:5, sd = c(0.1, 0.5, 1, 2, 5))
 results <- mirai_map(params, function(mean, sd) rnorm(100, mean, sd))[]
 ```
 
+### Process as completed (`race_mirai`)
+
+`race_mirai()` returns the integer index of the first resolved mirai in a list (or `0L` if empty). Useful when you want to handle results in completion order rather than submission order.
+
+```r
+remaining <- mirai_map(jobs, run)
+while (length(remaining) > 0) {
+  idx <- race_mirai(remaining)
+  process(remaining[[idx]]$data)
+  remaining <- remaining[-idx]
+}
+```
+
 ## everywhere: Pre-load State on All Daemons
 
 ```r
@@ -264,6 +241,11 @@ everywhere(con <<- dbConnect(RSQLite::SQLite(), db_path), db_path = tempfile())
 # Export objects to daemon global environment via ...
 # The empty {} expression is intentional — the point is to export objects via ...
 everywhere({}, api_key = my_key, config = my_config)
+
+# .min = N forces a synchronization point: the call must complete on at least
+# N daemons before subsequent mirai evaluations proceed. Useful when launching
+# remote daemons that connect over time.
+everywhere(library(arrow), .min = 4)
 ```
 
 ## Error Handling
@@ -314,6 +296,8 @@ server <- function(input, output, session) {
   output$result <- renderPlot(hist(task$result()))
 }
 ```
+
+For high-traffic apps, set `daemons(4, memory = ...)` and submit with `try_mirai()` to apply backpressure without stalling the Shiny event loop.
 
 ### Promise piping
 
@@ -369,7 +353,7 @@ daemons(n = 2, url = host_url(), remote = http_config())
 |--------|-------|
 | Auto-detects globals | Must pass all dependencies explicitly |
 | `future({expr})` | `mirai({expr}, .args = list(...))` |
-| `value(f)` | `m[]` or `call_mirai(m); m$data` |
+| `value(f)` | `m[]` or `collect_mirai(m)` |
 | `plan(multisession, workers = 4)` | `daemons(4)` |
 | `plan(sequential)` / reset | `daemons(0)` |
 | `future_lapply(X, FUN)` | `mirai_map(X, FUN)[]` |
@@ -396,7 +380,6 @@ For code that already uses the parallel package extensively, `make_cluster()` pr
 
 ```r
 cl <- mirai::make_cluster(4)
-# Use with all parallel::par* functions as normal
 parallel::parLapply(cl, 1:100, my_func)
 mirai::stop_cluster(cl)
 
@@ -410,8 +393,8 @@ cl <- parallel::makeCluster(4, type = "MIRAI")
 # Default: L'Ecuyer-CMRG stream per daemon (statistically safe, non-reproducible)
 daemons(4)
 
-# Reproducible: L'Ecuyer-CMRG stream per mirai call
-# Results are the same regardless of daemon count or scheduling
+# Reproducible: L'Ecuyer-CMRG stream per mirai call.
+# Results are the same regardless of daemon count or scheduling.
 daemons(4, seed = 42)
 ```
 
