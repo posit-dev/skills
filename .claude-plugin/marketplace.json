@@ -18,6 +18,7 @@
         "./posit-dev/critical-code-reviewer",
         "./posit-dev/describe-design",
         "./posit-dev/implement",
+        "./posit-dev/review-testing",
         "./posit-dev/working-on"
       ]
     },
