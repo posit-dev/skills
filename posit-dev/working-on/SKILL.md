@@ -6,7 +6,7 @@ arguments: [path]
 argument-hint: "[path-to-tracking-doc] [additional instructions]"
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
-  version: "1.0"
+  version: "1.1"
 license: MIT
 ---
 
@@ -27,6 +27,7 @@ Once activated, treat the tracking document as a living record. Update it after:
 - Any significant implementation work is completed
 - A key part of a conversation with the user that would be useful to recall later
 - Any time you commit files — a commit is a strong signal that the tracking document should also be reviewed and updated
+- Any plan you form — write it to the document rather than presenting it only in chat; the document is the persistent record
 
 If in doubt, update the document. It is better to over-document than to lose context.
 
