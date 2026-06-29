@@ -26,15 +26,16 @@ So: drive and assert from the browser, but get errors from the **server process 
 Install the recommended packages first; the no-install/manual path is a **fallback, not the default**. Use the project's env manager (`renv`, `uv`/`venv`), not global installs; confirm before system/sudo-level steps.
 
 - **R (install these):** `install.packages(c("shinytest2", "reactlog"))` — `shinytest2` is the official E2E tool (drives real Chrome via `chromote` with idle-waiting built in); `reactlog` is the reactive-graph debugger. See **`shiny-testing`** / **`shiny-reactivity`**.
-- **Python (install these):** `uv add --dev pytest playwright pytest-playwright` then `playwright install chromium`; use the `shiny.playwright` controllers for E2E.
-- **Interactive driving:** prefer the **Playwright MCP or agent-browser** tool when present (no install). *Alternate* — raw Playwright + the idle helper below.
-- **Fallback only** (can't install / locked-down env): drive an already-running app with raw Playwright (§3) and scrape server stdout for errors (§4). On restricted Linux, the official `mcr.microsoft.com/playwright` image ships browsers + OS libs.
+- **Python (install these):** `uv add --dev pytest playwright pytest-playwright` then `uv run playwright install chromium`; use the `shiny.playwright` controllers for E2E.
+- **Browser driver:** Playwright is JS/Python; **R has no Playwright** — drive R apps from `chromote` (which `shinytest2` already uses) or from a Playwright/agent-browser process pointed at the running app over HTTP. The `shiny-busy` idle signal (below) is identical either way.
+- **Interactive driving:** prefer the **Playwright MCP or agent-browser** tool when present (no install). *Alternate* — raw Playwright (Python) / `chromote` (R) + the idle helper below.
+- **Fallback only** (can't install / locked-down env): drive an already-running app and scrape server stdout for errors (see *Read errors the browser can't show*). On restricted Linux, the official `mcr.microsoft.com/playwright` image ships browsers + OS libs.
 
 ## 1. Authoring for legibility
 
 Habits that make an app driveable and debuggable without instrumentation:
 
-- **Stable, explicit IDs.** Hand-write every `inputId`/`outputId` (`"country_filter"`). Never auto-generate them — your selectors and assertions depend on them.
+- **Stable, explicit IDs.** Hand-write every `inputId`/`outputId` (e.g. `id = "country_filter"`). Never auto-generate them — your selectors and assertions depend on them.
 - **Consistent modules.** One `moduleServer(id, ...)` per module, every child ID wrapped in `ns()`, so the DOM id is predictable: `#<moduleId>-<inputId>`.
 - **Logic in named reactives / pure functions, not inside `render*`** — so it's testable without a browser. See **`shiny-reactivity`** for reactive design and **`shiny-testing`** for the headless test layers.
 
@@ -49,7 +50,7 @@ set.seed(1); Sys.setenv(TZ = "UTC")
 shiny::runApp("path/to/app", launch.browser = FALSE)
 ```
 
-- Run it in the **background and capture stdout/stderr** — that stream is your source of truth for errors (§3).
+- Run it in the **background and capture stdout/stderr** — that stream is your source of truth for server errors.
 - `launch.browser = FALSE` — *your* browser attaches, at `http://127.0.0.1:7654`.
 - Determinism: fixed seed/timezone/fixtures so assertions don't flap.
 
@@ -94,11 +95,11 @@ To go beyond observing — reproducing a server error or asserting on a reactive
 
 ## 5. Shiny for Python
 
-The client JS is identical, so §3 (wait on `shiny-busy`) and the `shiny:*` events apply unchanged. Differences: launch with `shiny run --port 7654 --reload app.py`; server errors go to the `shiny run` process output; there is **no `testServer`** — write logic as pure Python functions and unit-test them; E2E uses `pytest` + `shiny.playwright` controllers (`from shiny.playwright import controller`), which wait on Shiny state for you.
+The client JS is identical, so the idle-waiting approach (wait on `shiny-busy`) and the `shiny:*` events apply unchanged. Differences: launch with `shiny run --port 7654 --reload app.py`; server errors go to the `shiny run` process output; there is **no `testServer`** — write logic as pure Python functions and unit-test them; E2E uses `pytest` + `shiny.playwright` controllers (`from shiny.playwright import controller`), which wait on Shiny state for you.
 
 ## 6. The wall, and how to work with it
 
-There is currently **no API to read a reactive's value or trace invalidation from outside the server** — no dev-mode reactive accessor, no machine-readable invalidation stream, no structured error object over the protocol (not even a `shiny:invalidated` JS event; `shiny:recalculating` lags invalidation). Everything above works *around* this split-runtime wall. So the most reliable way to inspect server state today is to not need to: put logic in named reactives / pure functions and exercise it headlessly (§1, §4) rather than trying to read it through the browser.
+You **can** expose chosen reactive values for inspection by opting in: under `shiny.testmode`, `exportTestValues()` (R) registers internals that `shinytest2` reads via `app$get_value(export=)` (Shiny for Python is gaining an equivalent — posit-dev/py-shiny#2270). What there's still **no** API for is reading *arbitrary* reactive state without that opt-in, or getting a machine-readable invalidation trace (not even a `shiny:invalidated` JS event; `shiny:recalculating` lags invalidation). So the most reliable way to inspect server state today is to design for it: put logic in named reactives / pure functions and exercise it headlessly (see *Authoring for legibility* above and **`shiny-testing`**) rather than trying to read it through the browser.
 
 ## See also
 

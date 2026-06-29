@@ -19,15 +19,16 @@ Shiny builds a **dependency graph**: inputs → reactive expressions → outputs
 
 | Construct | Purpose | Eager/lazy | Returns a value? |
 |---|---|---|---|
+| `reactiveVal()` / `reactiveValues()` | **Mutable state** you set explicitly | — | get/set |
 | `reactive(expr)` | **Compute a value** from inputs/other reactives | lazy + cached | yes — call it like `x()` |
 | `eventReactive(event, expr)` | Computed value that updates **only** when `event` fires | lazy | yes |
 | `observeEvent(event, handler)` | **Side effect** in response to an event | eager | no |
 | `observe(expr)` | Side effect tracking all reactive reads in `expr` | eager | no |
-| `reactiveVal()` / `reactiveValues()` | **Mutable state** you set explicitly | — | get/set |
 
 **Rules of thumb:**
 - Use `reactive()` to *compute*; use `observe`/`observeEvent` only for *side effects* (writing files, updating inputs, showing notifications). A construct that returns a value you use elsewhere should almost always be a `reactive()`.
-- A module's return value should be a `reactive()` (or a list of reactives), never a plain value.
+- To inspect a module's reactive state, have the module **return** a `reactive()` (or a list of reactives), never a plain value.
+- Prefer a **list of `reactiveVal()`** over a single `reactiveValues()` object for explicit state. Get/set on a `reactiveVal()` is visibly a function call (`state$count()` to read, `state$count(n)` to set), whereas `rv$count <- n` reads like ordinary R assignment and hides that it's reactive — easy to misread.
 - Keep reactives small and single-purpose — one job each makes the graph legible and avoids over-broad invalidation.
 
 ## The #1 anti-pattern: observers that write state
@@ -35,16 +36,17 @@ Shiny builds a **dependency graph**: inputs → reactive expressions → outputs
 Writing to `reactiveValues` from an `observe` to feed a render **hides the dependency** from the graph — the thing this whole framework exists to make visible:
 
 ```r
-# BAD — the nrows -> df edge is invisible; harder to trace, test, and reason about
-observe({ r$df <- head(cars, input$nrows) })
-output$plot <- renderPlot(plot(r$df))
+# BAD — the nrows -> data edge is invisible; harder to trace, test, and reason about
+data <- reactiveVal()
+observe({ data(head(cars, input$nrows)) })
+output$plot <- renderPlot(plot(data()))
 
 # GOOD — the dependency is explicit in the graph
-df <- reactive(head(cars, input$nrows))
-output$plot <- renderPlot(plot(df()))
+data <- reactive(head(cars, input$nrows))
+output$plot <- renderPlot(plot(data()))
 ```
 
-Use `reactiveValues` only when you genuinely need mutable state that several events update (accumulators, "either button sets this", pause/resume). When an observer must update a value it also reads, wrap the read in `isolate()` to avoid an infinite invalidation loop.
+Use `reactiveVal()`/`reactiveValues()` only when you genuinely need mutable state that several events update (accumulators, "either button sets this", pause/resume). When an observer must update a value it also reads, wrap the read in `isolate()` to avoid an infinite invalidation loop.
 
 `isolate(x())` reads a reactive's current value **without** taking a dependency on it — the tool for "use this value but don't re-run when it changes."
 

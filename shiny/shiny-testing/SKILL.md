@@ -9,7 +9,7 @@ license: MIT
 
 # Testing Shiny Apps
 
-Test in three layers, cheapest first. Most logic should be covered by the fast lower layers; reserve the slow browser layer for what genuinely needs rendering.
+Test in three layers, fastest first. Most logic should be covered by the fast lower layers; reserve the slow browser layer for what genuinely needs rendering.
 
 | Layer | Tool | Tests | Speed |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Test in three layers, cheapest first. Most logic should be covered by the fast l
 
 **Design for testability first:** push computation into plain functions (Layer 1) and named reactives (Layer 2). Logic buried inside `renderPlot({...})` can only be reached through the slow Layer 3.
 
-This skill is **R-specific**. For Shiny for Python there's no `testServer` — unit-test pure functions, and use `pytest` + `shiny.playwright` controllers for E2E (see **`shiny-for-agents` §5**).
+This skill is **R-specific**. For Shiny for Python there's no `testServer` — unit-test pure functions, and use `pytest` + `shiny.playwright` controllers for E2E (see the *Shiny for Python* section of **`shiny-for-agents`**).
 
 ## Layer 1 — pure functions (testthat)
 
@@ -89,7 +89,7 @@ Key `AppDriver` methods: `set_inputs()`, `wait_for_idle()`, `wait_for_value()`, 
 
 ## Test behavior, not wiring
 
-Tests break when they assert *implementation* (internal IDs, intermediate values, exact HTML) instead of *behavior*. Assert what the user observes — the output value, the visible state — so refactors don't break green tests. Snapshot the result, not the plumbing.
+Tests break when they assert *implementation* (internal IDs, intermediate values, exact HTML) instead of *behavior*. Assert what the user observes — the output value, the visible state — so refactors don't break green tests. Snapshot app author values, not the plumbing.
 
 ## Determinism (or tests flake)
 
