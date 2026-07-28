@@ -66,6 +66,12 @@ Skills for Quarto document creation and publishing.
 - **[authoring](quarto/README.md#quarto-authoring-skill)** - Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions
 - **[alt-text](./alt-text/)** - Generate and improve accessible alt text for figures in Quarto documents using Amy Cesal's three-part formula (chart type, data description, key insight). Supports code-generated plots and static images
 
+### Connect
+
+Skills for deploying and managing content on Posit Connect.
+
+- **[deploy-to-connect](./connect/deploy-to-connect/)** - Deploy or publish Python and R content to a Posit Connect server using the posit CLI, rsconnect-python, or the R rsconnect package. Covers interactive apps and dashboards, web APIs, rendered documents, and prepared bundles/manifests
+
 ## Installation
 
 ### Using `npx skills add` (Any Agent)
@@ -110,6 +116,7 @@ Install specific skill categories directly:
 /plugin install r-lib@posit-dev-skills
 /plugin install shiny@posit-dev-skills
 /plugin install quarto@posit-dev-skills
+/plugin install connect@posit-dev-skills
 ```
 
 Each command installs all skills in that category.
@@ -173,11 +180,11 @@ This repository organizes skills into categories to make it easier to find and i
 | **r-lib**       | R package development with the r-lib ecosystem              |
 | **shiny**       | Shiny app development and deployment (R and Python)         |
 | **quarto**      | Quarto document creation and publishing                     |
+| **connect**     | Posit Connect deployment and management                     |
 
 <!-- Future category ideas
 
 | **tidyverse** | Tidyverse-specific package development |
-| **connect** | Posit Connect deployment and management |
 -->
 
 ## Contributing
