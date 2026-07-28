@@ -1,5 +1,5 @@
 ---
-name: connect-deploy
+name: deploy-to-connect
 description: >-
   Deploy or publish Python and R content to a Posit Connect server, via
   the posit CLI, rsconnect-python, or the R rsconnect package. Covers
