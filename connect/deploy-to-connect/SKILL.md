@@ -1,16 +1,15 @@
 ---
 name: deploy-to-connect
 description: >-
-  Deploy or publish Python and R content to a Posit Connect server using the
-  posit CLI, rsconnect-python, or the R rsconnect package. Handles interactive
-  apps and dashboards, web APIs, rendered documents, and prepared
-  bundles/manifests. Use whenever the user asks to deploy, publish, or redeploy
-  content to Posit Connect, or mentions the posit CLI or rsconnect. The posit
-  CLI is newer than your training data, so consult this skill instead of
-  guessing flags or commands.
+  Deploy or publish Python and R content to a Posit Connect server using
+  rsconnect-python or the R rsconnect package. Handles interactive apps and
+  dashboards, web APIs, rendered documents, and prepared bundles/manifests. Use
+  whenever the user asks to deploy, publish, or redeploy content to Posit
+  Connect, or mentions rsconnect. Consult this skill instead of guessing flags
+  or commands.
 metadata:
   author: posit-pbc
-  version: "2.0"
+  version: "1.0"
 ---
 
 # Deploying to Posit Connect
@@ -20,9 +19,9 @@ through the stages in order.
 
 Two toolchains are involved:
 
-- **Python** — the `posit` CLI (its deploy commands are mounted from
-  [rsconnect-python](https://github.com/posit-dev/rsconnect-python), so
-  rsconnect-python is an equivalent fallback).
+- **Python** —
+  [rsconnect-python](https://github.com/posit-dev/rsconnect-python), which
+  provides the `rsconnect` CLI and is published on PyPI.
 - **R** — the R [`rsconnect`](https://rstudio.github.io/rsconnect/) package,
   targeting the Connect **server** (not Connect Cloud).
 
@@ -76,18 +75,21 @@ Probe the environment and build a capability set — don't assume anything is
 installed.
 
 ```console
-command -v posit                                    # posit CLI on PATH
-uv tool list 2>/dev/null | grep -E 'posit-cli|rsconnect'   # posit-cli / rsconnect-python via uv
-command -v uv                                        # uv (installs Python tools, runs rsconnect-python)
+command -v rsconnect                                 # rsconnect-python on PATH
+command -v uv                                        # uv (installs and runs Python tools)
+uv tool list 2>/dev/null | grep rsconnect            # rsconnect-python installed via uv
 command -v Rscript                                   # R present
 Rscript -e 'cat(requireNamespace("rsconnect", quietly=TRUE))' 2>/dev/null   # R rsconnect package
 command -v quarto                                     # quarto CLI
 command -v git                                        # git
 ```
 
-Note which of these are present: `posit`, `uv`, rsconnect-python (runnable via
-`uv tool run --from rsconnect-python`), `Rscript` + R `rsconnect`, `quarto`,
-`git`.
+Note which of these are present: `rsconnect` (or `uv`, which can run it without
+installing), `Rscript` + R `rsconnect`, `quarto`, `git`.
+
+With `uv` available you never need an install step for Python content —
+`uv tool run --from rsconnect-python rsconnect ...` fetches and runs it on
+demand.
 
 ---
 
@@ -97,19 +99,33 @@ Cross the detected content (Stage 1) with your capabilities (Stage 2):
 
 ### Python content
 
-1. **Preferred:** the `posit` CLI.
+Use rsconnect-python.
+
+1. **`rsconnect` already on `PATH`:**
    ```console
-   posit connect deploy <framework> ./my-app
+   rsconnect deploy <framework> ./my-app
    ```
-2. **Fallback** (posit not installed/on PATH but `uv` is): rsconnect-python
-   directly — the deploy commands are identical, just mounted differently.
+2. **Not on `PATH` but `uv` is** — run it without installing anything:
    ```console
    uv tool run --from rsconnect-python rsconnect deploy <framework> ./my-app
    ```
 
+Both forms take identical arguments; the rest of this skill writes the bare
+`rsconnect ...` form, so prefix it with `uv tool run --from rsconnect-python`
+if you're on route 2.
+
 `<framework>` is one of `api`, `bokeh`, `bundle`, `dash`, `fastapi`, `flask`,
-`gradio`, `html`, `manifest`, `nodejs`, `notebook`, `panel`, `pyproject`,
-`quarto`, `shiny`, `streamlit`, `tensorflow`, `voila`.
+`git`, `gradio`, `html`, `manifest`, `nodejs`, `notebook`, `panel`, `pyproject`,
+`quarto`, `shiny`, `streamlit`, `tensorflow`, `voila`
+(`rsconnect deploy other-content` prints guidance for anything not in that
+list).
+
+**The available frameworks and flags depend on the installed version** — that
+list is from **1.30.0**, and older versions have fewer (e.g. `bundle`, `git`,
+and `pyproject` are absent in 1.29.0). Always confirm against
+`rsconnect deploy --help` rather than trusting this list. If `uv tool run`
+resolves a stale cached version, pin it:
+`uv tool run --from 'rsconnect-python==1.30.0' rsconnect ...`.
 
 ### R content
 
@@ -151,7 +167,7 @@ using a `manifest.json`.
 
 - If a `manifest.json` already exists, deploy it directly:
   ```console
-  uv tool run --from rsconnect-python rsconnect deploy manifest ./manifest.json
+  rsconnect deploy manifest ./manifest.json
   ```
 - If there's no manifest and R *is* available elsewhere, generate one first with
   `rsconnect::writeManifest()` (see Stage 4).
@@ -161,11 +177,10 @@ using a `manifest.json`.
 
 ### Quarto content
 
-Use the posit / rsconnect quarto route:
+Use the rsconnect quarto route:
 
 ```console
-posit connect deploy quarto ./report
-# or: uv tool run --from rsconnect-python rsconnect deploy quarto ./report
+rsconnect deploy quarto ./report
 ```
 
 Note: **R-flavored Quarto** (documents with R code chunks) needs R available to
@@ -178,17 +193,19 @@ render. If the `.qmd` has R chunks and R is absent, treat it like R content
 
 When Stage 3 finds a gap, close it and **record the action**:
 
-- **`posit` CLI missing** → install it with `uv` (it is **not on PyPI**):
+- **`rsconnect` not on `PATH`** → don't install anything if `uv` is present;
+  just run it on demand:
   ```console
-  uv tool install git+https://github.com/posit-dev/posit-cli.git
+  uv tool run --from rsconnect-python rsconnect deploy <framework> ./my-app
   ```
-  **Warning:** There is an unrelated `posit` package on PyPI. Do not
-  `uv tool install posit` or `uv tool run posit` — always use `--from posit-cli`
-  or install from the GitHub URL above. If GitHub is set up for SSH auth, use
-  the `git+ssh://git@github.com/posit-dev/posit-cli.git` form (uv requires the
-  `git@` username); for tokens or other hosts, see uv's
-  [Git authentication docs](https://docs.astral.sh/uv/concepts/authentication/git/).
-  To update later: `uv tool upgrade posit-cli`.
+  If the user wants it installed persistently (or `uv tool run` isn't viable):
+  ```console
+  uv tool install rsconnect-python     # or: pip install rsconnect-python
+  ```
+  **Note the package/command mismatch:** the PyPI package is
+  `rsconnect-python`, the command it provides is `rsconnect`. That's why
+  `uv tool run` needs `--from rsconnect-python`. To update later:
+  `uv tool upgrade rsconnect-python`.
 - **R `rsconnect` package missing** (but `Rscript` present) → install it from
   Posit Package Manager (P3M), which serves **precompiled Linux binaries** — far
   faster than a source build and with no `-dev` system libraries to apt-get. Two
@@ -211,6 +228,10 @@ When Stage 3 finds a gap, close it and **record the action**:
   ```console
   Rscript -e 'rsconnect::writeManifest()'
   ```
+  Alternatively, rsconnect-python can write one for Python content:
+  ```console
+  rsconnect write-manifest <framework> ./my-app
+  ```
   Then deploy the manifest via rsconnect-python if R can't deploy directly.
 - **Dependencies** → you generally do **not** hand-list them. rsconnect and
   rsconnect-python scan the code and snapshot required package versions
@@ -227,41 +248,55 @@ When Stage 3 finds a gap, close it and **record the action**:
 
 Deploying needs credentials for the Connect server.
 
-### Python (`posit` / rsconnect-python)
+### Python (rsconnect-python)
 
 In order of preference:
 
-1. **OAuth login (interactive).** One browser flow per server; tokens land in
-   the OS keyring and refresh automatically:
+1. **OAuth login (interactive).** Requires **rsconnect-python 1.30.0+** — check
+   with `rsconnect version` first. One browser flow per server; tokens land in
+   the OS keyring (falling back to a local credential store) and refresh
+   automatically:
    ```console
-   posit connect login https://connect.example.com
-   posit connect login https://connect.example.com --use-device-code   # headless
+   rsconnect login https://connect.example.com
+   rsconnect login https://connect.example.com --use-device-code   # headless
+   rsconnect logout https://connect.example.com                    # drop the tokens
    ```
-2. **Env vars / ad hoc flags.** Best for headless/automated runs:
+   In CI, skip the browser entirely by exchanging an OIDC identity token (e.g. a
+   GitHub Actions token) for a short-lived Connect API key — prefer the
+   `-file` form so the token never lands in process args or logs:
+   ```console
+   rsconnect login https://connect.example.com --identity-token-file "$TOKEN_FILE"
+   ```
+2. **Env vars.** Best for headless/automated runs — no state to manage, and
+   works on any version:
    ```console
    export CONNECT_SERVER=https://connect.example.com
-   export CONNECT_API_KEY=...        # honored across the whole `posit connect` surface
+   export CONNECT_API_KEY=...        # honored across the whole `rsconnect` surface
    ```
 3. **Saved API-key nickname.** Save once, select later with `-n/--name`:
    ```console
-   posit connect add -n myserver -s https://connect.example.com -k <api-key>
+   rsconnect add -n myserver -s https://connect.example.com -k <api-key>
+   rsconnect list                    # confirm what's saved
    ```
+4. **Ad hoc flags** on the deploy command itself: `-s <url> -k <api-key>`.
 
 **Shared credential flags:** `-n/--name` (saved server), `-s/--server` (env
 `CONNECT_SERVER`), `-k/--api-key` (env `CONNECT_API_KEY`), `-i/--insecure` (env
-`CONNECT_INSECURE`, for self-signed TLS), `-c/--cacert <file>`.
+`CONNECT_INSECURE`, for self-signed TLS), `-c/--cacert <file>` (env
+`CONNECT_CA_CERTIFICATE`).
 
-> **Pick ONE auth path — never mix `-n` with env-var credentials.** The CLI
+> **Pick ONE auth path — never mix `-n` with env-var credentials.** rsconnect
 > rejects a command that combines a saved-server name (`-n/--name`) with
-> `CONNECT_SERVER`/`CONNECT_API_KEY` set in the environment. Choose by what you
-> have:
+> `CONNECT_SERVER`/`CONNECT_API_KEY` set in the environment, with an error like
+> `-n/--name (from COMMANDLINE) cannot be specified in conjunction with options
+> -s/--server (from ENVIRONMENT)`. Choose by what you have:
 >
 > - **`CONNECT_SERVER` and `CONNECT_API_KEY` are set** (typical headless/automated
 >   run) → do **not** pass `-n`; let the env vars supply the target and key.
->   Deploy with just `posit connect deploy <framework> <dir>`.
+>   Deploy with just `rsconnect deploy <framework> <dir>`.
 > - **The request names a specific saved server** (e.g. "deploy to dogfood") →
 >   use `-n dogfood`, and make sure `CONNECT_SERVER`/`CONNECT_API_KEY` are **not**
->   also exported for that command (`unset` them, or don't run `posit connect add`
+>   also exported for that command (`unset` them, or don't run `rsconnect add`
 >   from a shell that has them set).
 >
 > If you have env-var creds but the request also names a server, prefer the env
@@ -290,61 +325,73 @@ rsconnect::accounts()   # lists linked servers/accounts; empty => authenticate
 
 ### Discover the live command surface (Python)
 
-The `posit connect deploy` commands track upstream and their flags can change,
-so **read the help text — it's the source of truth**:
+rsconnect-python's frameworks and flags change between releases, so **read the
+help text — it's the source of truth**:
 
 ```console
-posit connect deploy --help              # every framework you can deploy
-posit connect deploy <framework> --help  # flags for one framework
+rsconnect version                  # which version you're actually running
+rsconnect deploy --help            # every framework you can deploy
+rsconnect deploy <framework> --help  # flags for one framework
 ```
 
 ### Deploy
 
 ```console
-posit connect deploy streamlit ./my-app
-posit connect deploy shiny ./my-shiny-app
-posit connect deploy fastapi ./my-api
-posit connect deploy quarto ./report
-posit connect deploy manifest ./manifest.json   # a prepared bundle
+rsconnect deploy streamlit ./my-app
+rsconnect deploy shiny ./my-shiny-app
+rsconnect deploy fastapi ./my-api
+rsconnect deploy quarto ./report
+rsconnect deploy manifest ./manifest.json   # a prepared bundle
 ```
+
+Useful flags on any deploy command: `-t/--title`, `-N/--new` (force a new
+deployment instead of updating the recorded one), `-a/--app-id <id>` (target an
+existing item explicitly — mutually exclusive with `--new`), `-E NAME=VALUE`
+(set an environment variable, repeatable), `--draft` (keep serving the previous
+bundle until published).
 
 For R, run the `deployApp()` / `deployDoc()` / `deploySite()` call from Stage 3.
 
-### Resolving `posit` not found
+### Resolving `rsconnect` not found
 
-The `posit` CLI may be installed but not on `PATH` in the current shell (common
-in IDE-spawned terminals or when a virtualenv is active). Check with
-`uv tool list | grep posit-cli`; if it's installed, invoke it via `uv tool run`:
+rsconnect-python may be installed but not on `PATH` in the current shell (common
+in IDE-spawned terminals or when a virtualenv is active). Check
+`uv tool list | grep rsconnect`; either way, `uv tool run` works:
 
 ```console
-uv tool run --from posit-cli posit connect deploy shiny ./my-app -n myserver
+uv tool run --from rsconnect-python rsconnect deploy shiny ./my-app -n myserver
 ```
 
-**Critical:** always pass `--from posit-cli` — a bare `uv tool run posit`
-resolves an unrelated PyPI package and will fail.
-
-If it's not installed, install it (Stage 4) or fall back to rsconnect-python
-(Stage 3, route 2).
+**Critical:** always pass `--from rsconnect-python` — the package name and the
+command name differ, so a bare `uv tool run rsconnect` won't resolve.
 
 ### Pre-flight check (optional)
 
 Before deploying, verify CLI access:
 
 ```console
-posit connect list 2>/dev/null || uv tool run --from rsconnect-python rsconnect list
+rsconnect list                                  # saved servers
+rsconnect details -n myserver                   # reachability + auth for one server
 ```
 
 ### When a deploy fails
 
 **Python:**
 
-- Auth errors: confirm the target with `posit connect list`, re-run
-  `posit connect login`, or pass `-s`/`-k` (or set
+- Auth errors: confirm the target with `rsconnect list`, re-run
+  `rsconnect login` (1.30.0+), or pass `-s`/`-k` (or set
   `CONNECT_SERVER`/`CONNECT_API_KEY`).
+- `-n/--name ... cannot be specified in conjunction with ... ENVIRONMENT`: you
+  mixed a saved nickname with env-var credentials — see the Stage 5 warning.
+  Drop `-n` or `unset CONNECT_SERVER CONNECT_API_KEY`.
+- `The requirements file 'requirements.txt' does not exist`: Python content
+  needs one. Create it, point at another file with `--requirements-file`, or
+  generate it with `--force-generate` (a `pip freeze`, so it may over-pin).
 - Self-signed TLS: use `-i/--insecure` (or `-c/--cacert <file>`); set
-  `CONNECT_INSECURE` to apply it everywhere.
-- Rejected flag: re-read `posit connect deploy <framework> --help` — a rejected
-  flag usually means it moved or changed upstream.
+  `CONNECT_INSECURE` / `CONNECT_CA_CERTIFICATE` to apply it everywhere.
+- Rejected flag or unknown framework: re-check `rsconnect version` and re-read
+  `rsconnect deploy <framework> --help` — this usually means the installed
+  version is older than the flag you used.
 
 **R:**
 

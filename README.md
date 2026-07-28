@@ -70,7 +70,7 @@ Skills for Quarto document creation and publishing.
 
 Skills for deploying and managing content on Posit Connect.
 
-- **[deploy-to-connect](./connect/deploy-to-connect/)** - Deploy or publish Python and R content to a Posit Connect server using the posit CLI, rsconnect-python, or the R rsconnect package. Covers interactive apps and dashboards, web APIs, rendered documents, and prepared bundles/manifests
+- **[deploy-to-connect](./connect/deploy-to-connect/)** - Deploy or publish Python and R content to a Posit Connect server using rsconnect-python or the R rsconnect package. Covers interactive apps and dashboards, web APIs, rendered documents, and prepared bundles/manifests
 
 ## Installation
 
