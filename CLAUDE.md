@@ -77,6 +77,7 @@ When adding a new plugin to `marketplace.json`, also update the root `README.md`
 | `r-lib/` | R package development with the r-lib ecosystem |
 | `shiny/` | Shiny app development |
 | `quarto/` | Quarto document authoring |
+| `connect/` | Deploying and managing content on Posit Connect |
 | `brand-yml/` | Shared skill registered under both `shiny` and `quarto` plugins |
 
 ## Key Conventions

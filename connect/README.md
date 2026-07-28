@@ -4,13 +4,12 @@ Skills for Posit Connect deployment and management.
 
 ## Available Skills
 
-*No skills yet - contributions welcome!*
+- **[deploy-to-connect](./deploy-to-connect/)** - Deploy or publish Python and R content to a Posit Connect server using rsconnect-python or the R rsconnect package. Covers interactive apps and dashboards, web APIs, rendered documents, and prepared bundles/manifests.
 
 ## Potential Skills
 
 This category could include skills for:
 
-- Deployment configuration
 - Content management
 - Access control and permissions
 - Environment setup

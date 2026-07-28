@@ -90,6 +90,15 @@
         "./quarto/quarto-authoring",
         "./alt-text"
       ]
+    },
+    {
+      "name": "connect",
+      "description": "Skills for deploying and managing content on Posit Connect",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./connect/deploy-to-connect"
+      ]
     }
   ]
 }
