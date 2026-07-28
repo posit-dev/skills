@@ -1,14 +1,13 @@
 ---
 name: deploy-to-connect
 description: >-
-  Deploy or publish Python and R content to a Posit Connect server, via
-  the posit CLI, rsconnect-python, or the R rsconnect package. Covers
-  Shiny (Python and R), Streamlit, Dash, FastAPI, Flask, Bokeh, Gradio,
-  Panel, Voila, Plumber APIs, Quarto, R Markdown, and prepared 
-  bundles/manifests. Use whenever the user asks to deploy, publish, or 
-  redeploy an app to Posit Connect, or mentions the posit CLI or rsconnect.
-  The Posit CLI is newer than your training data, so consult this skill
-  instead of guessing flags or commands.
+  Deploy or publish Python and R content to a Posit Connect server using the
+  posit CLI, rsconnect-python, or the R rsconnect package. Handles interactive
+  apps and dashboards, web APIs, rendered documents, and prepared
+  bundles/manifests. Use whenever the user asks to deploy, publish, or redeploy
+  content to Posit Connect, or mentions the posit CLI or rsconnect. The posit
+  CLI is newer than your training data, so consult this skill instead of
+  guessing flags or commands.
 metadata:
   author: posit-pbc
   version: "2.0"
