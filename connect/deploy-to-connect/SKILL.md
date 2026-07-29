@@ -170,20 +170,25 @@ server. **This is a check, not a login** — being authenticated already is the
 common case (env vars set by CI, an account linked in an earlier session). If a
 path is live, do nothing here: don't run a login, don't run `rsconnect add`.
 
-Both tools read `CONNECT_SERVER` / `CONNECT_API_KEY` from the environment, so
-start there either way:
+Start with the environment — it's the cheapest check, and it tells you what you
+have to work with either way:
 
 ```console
 env | grep -E '^CONNECT_(SERVER|API_KEY)=' | sed 's/=.*/=<set>/'   # don't print the key
 ```
 
-**Python (rsconnect-python)** — saved servers and stored tokens:
+**Python (rsconnect-python)** — reads `CONNECT_SERVER` / `CONNECT_API_KEY`
+directly, so finding both set *is* a live credential path. Saved servers and
+stored tokens (and which server is the default, 1.30.0+):
 
 ```console
 rsconnect list
 ```
 
-**R (`rsconnect`)** — linked servers and accounts:
+**R (`rsconnect`)** — does **not** read `CONNECT_SERVER` / `CONNECT_API_KEY`.
+It authenticates only from a registered account, so those variables are a place
+for *you* to read the key from when you register one (Stage 5) — never a
+credential path on their own. What counts as live here:
 
 ```console
 Rscript -e 'print(rsconnect::accounts())'
@@ -194,8 +199,8 @@ you need; close the install gap in Stage 5, then run the tool-specific check.
 
 Record the verdict: either a credential path is live (continue to Stage 6 once
 any other gaps are closed) or there is none, which is a discrepancy for Stage 5.
-Beware of having *two* paths live at once for Python — see the mixing warning in
-the [credentials reference](#credentials-reference).
+If both a saved server and `CONNECT_SERVER` are live for Python, see the
+[credentials reference](#credentials-reference) before choosing.
 
 ---
 
@@ -308,10 +313,10 @@ rsconnect details -n myserver                   # reachability + auth for one se
 - Auth errors: confirm the target with `rsconnect list`, re-run
   `rsconnect login` (1.30.0+), or pass `-s`/`-k` (or set
   `CONNECT_SERVER`/`CONNECT_API_KEY`).
-- `-n/--name ... cannot be specified in conjunction with ... ENVIRONMENT`: you
-  mixed a saved nickname with env-var credentials — see the mixing warning in
-  the credentials reference. Drop `-n` or
-  `unset CONNECT_SERVER CONNECT_API_KEY`.
+- `-n/--name ... cannot be specified in conjunction with ... -s/--server (from
+  ENVIRONMENT)`: `CONNECT_SERVER` is set and you also passed `-n`. `unset
+  CONNECT_SERVER` and keep `-n` — see the credentials reference for why that
+  direction and not the other. `CONNECT_API_KEY` can stay.
 - `The requirements file 'requirements.txt' does not exist`: Python content
   needs one. Create it, point at another file with `--requirements-file`, or
   generate it with `--force-generate` (a `pip freeze`, so it may over-pin).
@@ -326,8 +331,10 @@ rsconnect details -n myserver                   # reachability + auth for one se
 - "No account" / auth errors: run `rsconnect::accounts()`; if empty, re-run
   `rsconnect::addServer()` + `connectUser()`/`connectApiUser()`. Double-check you
   used a server function, not `connectCloudUser()` (Cloud).
-- Deploy hangs at an account prompt: more than one account is linked. Pass
-  `account =` (and `server =`) explicitly to the deploy call.
+- `Found multiple accounts. Please disambiguate by setting server and/or
+  account`: more than one account is linked. Pass `account =` (and `server =`)
+  explicitly to the deploy call. In an interactive R session this appears as a
+  menu instead, which will hang a headless run that somehow reaches it.
 - Wrong deploy function: use `deployApp()` for directories/apps, `deployDoc()`
   for a single document, `deploySite()` for a site.
 - Self-signed TLS: pass the CA bundle via the `RETICULATE`/`curl` options or
@@ -360,6 +367,11 @@ In order of preference:
    rsconnect add -n myserver -s https://connect.example.com -k <api-key>
    rsconnect list                    # confirm what's saved
    ```
+   On **1.30.0+** a server can be the **default**, used when a command passes
+   neither `-n` nor `-s`. `add` sets it only with `--set-default`; `login` sets
+   it unless you pass `--no-set-default`; `rsconnect server set-default -n
+   <name>` changes it later. `CONNECT_SERVER` still takes precedence over the
+   default.
 3. **Env vars.** Best for headless/automated runs — no state to manage, and
    works on any version:
    ```console
@@ -373,22 +385,30 @@ In order of preference:
 `CONNECT_INSECURE`, for self-signed TLS), `-c/--cacert <file>` (env
 `CONNECT_CA_CERTIFICATE`).
 
-> **Pick ONE auth path — never mix `-n` with env-var credentials.** rsconnect
-> rejects a command that combines a saved-server name (`-n/--name`) with
-> `CONNECT_SERVER`/`CONNECT_API_KEY` set in the environment, with an error like
+> **`-n` and `CONNECT_SERVER` cannot both be in play.** rsconnect rejects a
+> command that combines a saved-server name (`-n/--name`) with a server URL,
+> including one that came from the environment:
 > `-n/--name (from COMMANDLINE) cannot be specified in conjunction with options
-> -s/--server (from ENVIRONMENT)`. Choose by what you have:
+> -s/--server (from ENVIRONMENT)`.
 >
-> - **`CONNECT_SERVER` and `CONNECT_API_KEY` are set** (typical headless/automated
->   run) → do **not** pass `-n`; let the env vars supply the target and key.
->   Deploy with just `rsconnect deploy <framework> <dir>`.
+> **Only the *server* conflicts.** `CONNECT_API_KEY` (and `CONNECT_INSECURE`,
+> `CONNECT_CA_CERTIFICATE`) sit alongside `-n` without complaint — the key is
+> not part of the exclusion. So `-n dogfood` with `CONNECT_API_KEY` exported is
+> a valid command; it's `CONNECT_SERVER` that has to go.
+>
+> Choose by what the *request* names, not by what happens to be exported:
+>
 > - **The request names a specific saved server** (e.g. "deploy to dogfood") →
->   use `-n dogfood`, and make sure `CONNECT_SERVER`/`CONNECT_API_KEY` are **not**
->   also exported for that command (`unset` them, or don't run `rsconnect add`
->   from a shell that has them set).
+>   use `-n dogfood` and `unset CONNECT_SERVER` for that command. Do **not**
+>   resolve the conflict the other way: `CONNECT_SERVER` may point somewhere
+>   else entirely, and dropping `-n` to keep it would silently deploy to a
+>   server the user didn't ask for.
+> - **The request names no server** (typical headless/automated run) → let
+>   `CONNECT_SERVER`/`CONNECT_API_KEY` supply the target and deploy with just
+>   `rsconnect deploy <framework> <dir>`.
 >
-> If you have env-var creds but the request also names a server, prefer the env
-> vars (drop `-n`) — mixing is what triggers the rejection.
+> If you're unsure which server `CONNECT_SERVER` points at, print it — it isn't
+> secret — and say which one you deployed to in your report.
 
 ### R (`rsconnect`)
 
@@ -418,6 +438,8 @@ rsconnect::connectApiUser(
 
 ### If no credentials can be found
 
-- Rely on the `CONNECT_SERVER` / `CONNECT_API_KEY` env vars and, if
-  they're absent, **report the missing credentials** rather than guessing 
-  or asking the user to paste an API key into the context.
+- `CONNECT_SERVER` / `CONNECT_API_KEY` are the last place to look — for Python
+  because rsconnect reads them itself, for R because they're a source for the
+  `apiKey` you pass to `connectApiUser()`. If they're absent too, **report the
+  missing credentials** rather than guessing or asking the user to paste an API
+  key into the context.
