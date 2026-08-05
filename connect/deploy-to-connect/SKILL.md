@@ -9,7 +9,7 @@ description: >-
   or commands.
 metadata:
   author: posit-pbc
-  version: "3.0"
+  version: "4.0"
 ---
 
 # Deploying to Posit Connect
@@ -124,31 +124,39 @@ R-flavored Quarto (a `.qmd` with R code chunks) needs R to render. If R is absen
 
 ---
 
-## Stage 4 — Check credentials for that tool
+## Stage 4 — Find the target and check its credentials
 
-Now that the tool is known, find out whether it can already reach the server. This is a check, not a login. Credentials are usually already in place, from CI environment variables or an account linked in an earlier session. If a path is live, run no login and no `rsconnect add`.
+Now that the tool is known, find out which server to deploy to and whether the tool can already reach it. This is a check, not a login.
 
-Start with the environment. It is the cheapest check, and it tells you what you have to work with either way:
+**Do not search the environment for API keys.** Do not read `CONNECT_API_KEY`, `CONNECT_SERVER`, a `.env` file, a keychain entry, or any other stored secret to pick a target or to register a server. Do this only when the user explicitly asks for it. An environment variable is not a request to use it.
 
-```console
-env | grep -E '^CONNECT_(SERVER|API_KEY)=' | sed 's/=.*/=<set>/'   # keeps the key out of the transcript
-```
-
-For Python, rsconnect-python reads `CONNECT_SERVER` and `CONNECT_API_KEY` directly, so both variables set is a live credential path. Saved servers and stored tokens (and the default server, on 1.30.0+):
+List the accounts the tool already has. This is the only credential check you need.
 
 ```console
-rsconnect list
+rsconnect list                                   # Python: saved servers, stored tokens, and the default server on 1.30.0+
+Rscript -e 'print(rsconnect::accounts())'        # R: registered accounts
 ```
 
-For R, the `rsconnect` package does not read `CONNECT_SERVER` or `CONNECT_API_KEY`. It authenticates only from a registered account, so those variables are a place for you to read the key from when you register one in Stage 5. On their own they are not a credential path. What counts as live here:
+If the tool is not installed yet, close that gap in Stage 5 first. Then run the check.
+
+Compare the result with the target the user named. Three outcomes:
+
+- **An account matches the named target.** The credential path is live. Run no login and no `rsconnect add`. Continue to Stage 6 once the other gaps are closed.
+- **The user named no target.** Ask them. List the servers the check found, and ask which one to deploy to, or whether they want a new target instead. Do not pick one for them, and do not deploy to the only saved server because it is the only one.
+- **The target is new, or no account matches it.** This is a gap for Stage 5. Register it with a browser login.
+
+A browser login is the way to register a new target:
 
 ```console
-Rscript -e 'print(rsconnect::accounts())'
+rsconnect login https://connect.example.com      # Python
 ```
 
-If the tool itself is not installed yet, the environment check still tells you what you have. Close the install gap in Stage 5, then run the tool-specific check.
+```r
+rsconnect::addServer(url = "https://connect.example.com", name = "myserver")   # R
+rsconnect::connectUser(server = "myserver")
+```
 
-Either a credential path is live, and you continue to Stage 6 once the other gaps are closed, or there is none, which is a gap for Stage 5. If a saved server and `CONNECT_SERVER` are both live for Python, read the [credentials reference](#credentials-reference) before you choose.
+Both forms open a browser flow, so the user approves the login and no key passes through the conversation. The [credentials reference](#credentials-reference) has the details and the pitfalls.
 
 ---
 
@@ -197,7 +205,7 @@ rsconnect write-manifest <framework> ./my-app
 
 Then deploy the manifest with rsconnect-python if R cannot deploy directly.
 
-**No credentials.** Authenticate now. The [credentials reference](#credentials-reference) has the ordering, the pitfalls, and what to do when nothing can supply them. A browser login (`rsconnect login`, `rsconnect::connectUser()`) is the best option when one is available.
+**No account for the target.** Register it now with a browser login: `rsconnect login` for Python, or `rsconnect::addServer()` and `rsconnect::connectUser()` for R. The [credentials reference](#credentials-reference) has the details and the pitfalls. Do not fall back to an API key from the environment. If the browser flow is not available, report that and stop.
 
 **Dependencies.** rsconnect and rsconnect-python scan the code and snapshot the required package versions for you, so hand-listing them is rarely necessary. Python content needs a `requirements.txt`. For R, the content's own packages must be installed locally for rsconnect to detect them — `plumber` for a Plumber API, `shiny` for a Shiny app. Install any that are missing from the same P3M repo shown above.
 
@@ -239,7 +247,7 @@ rsconnect details -n myserver
 
 Python:
 
-- Auth errors — confirm the target with `rsconnect list`, re-run `rsconnect login` (1.30.0+), or pass `-s`/`-k`.
+- Auth errors — confirm the target with `rsconnect list`, then re-run `rsconnect login` (1.30.0+). Pass `-s`/`-k` only when the user told you to use an existing key.
 - `-n/--name ... cannot be specified in conjunction with ... -s/--server (from ENVIRONMENT)` — `CONNECT_SERVER` is set and you also passed `-n`. Run `unset CONNECT_SERVER` and keep `-n`. The credentials reference explains why that direction. `CONNECT_API_KEY` can stay.
 - `The requirements file 'requirements.txt' does not exist` — Python content needs one. Create it, point at another file with `--requirements-file`, or generate it with `--force-generate`. The last option runs a `pip freeze`, so it can over-pin.
 - Self-signed TLS — use `-i/--insecure` or `-c/--cacert <file>`. Set `CONNECT_INSECURE` or `CONNECT_CA_CERTIFICATE` to apply it everywhere.
@@ -257,29 +265,29 @@ R:
 
 ## Credentials reference
 
-How to authenticate when Stage 4 found no credentials. If a credential path is already live, none of this is needed.
+How to register a target that Stage 4 found no account for. If an account already matches the target, none of this is needed.
+
+A browser login is the route. The API-key routes below it are there for one case only: the user explicitly tells you to use a key that already exists, in an environment variable or a credential store. Do not go looking for a key on your own, and never ask the user to give you one. An API key does not belong in the conversation.
 
 ### Python (rsconnect-python)
 
-In order of preference:
-
-1. **OAuth login (interactive).** Needs rsconnect-python 1.30.0+, so check `rsconnect version` first. One browser flow per server. Tokens land in the OS keyring, or a local credential store, and refresh automatically.
+1. **OAuth login (interactive).** The default route. Needs rsconnect-python 1.30.0+, so check `rsconnect version` first. One browser flow per server. Tokens land in the OS keyring, or a local credential store, and refresh automatically.
    ```console
    rsconnect login https://connect.example.com
    rsconnect login https://connect.example.com --use-device-code   # headless
    ```
-2. **Saved API-key nickname.** Save once, select later with `-n/--name`.
+2. **Saved API-key nickname.** Only when the user asked for a key route. Save once, select later with `-n/--name`.
    ```console
    rsconnect add -n myserver -s https://connect.example.com -k <api-key>
    rsconnect list                    # confirm what is saved
    ```
    On 1.30.0+ a server can be the default, used when a command passes neither `-n` nor `-s`. `add` sets the default only with `--set-default`. `login` sets it unless you pass `--no-set-default`. `rsconnect server set-default -n <name>` changes it later. `CONNECT_SERVER` still takes precedence over the default.
-3. **Environment variables.** Best for headless and automated runs, with no state to manage, on any version.
+3. **Environment variables.** Only when the user asked you to use them. rsconnect-python reads them directly, which suits a headless or automated run with no state to manage.
    ```console
    export CONNECT_SERVER=https://connect.example.com
    export CONNECT_API_KEY=...        # honored across the whole `rsconnect` surface
    ```
-4. **Ad hoc flags** on the deploy command: `-s <url> -k <api-key>`.
+4. **Ad hoc flags** on the deploy command: `-s <url> -k <api-key>`. Same condition, and read the key from the variable the user named rather than writing it out.
 
 Shared credential flags: `-n/--name` (saved server), `-s/--server` (env `CONNECT_SERVER`), `-k/--api-key` (env `CONNECT_API_KEY`), `-i/--insecure` (env `CONNECT_INSECURE`, for self-signed TLS), `-c/--cacert <file>` (env `CONNECT_CA_CERTIFICATE`).
 
@@ -307,7 +315,7 @@ rsconnect::addServer(url = "https://connect.example.com", name = "myserver")
 # 2a. Interactive — approve in a browser, no key to handle
 rsconnect::connectUser(server = "myserver")
 
-# 2b. Or non-interactively (CI) — connectApiUser() requires an apiKey
+# 2b. Or non-interactively (CI), only when the user asked for a key route
 rsconnect::connectApiUser(
   server  = "myserver",
   account = "your-username",
@@ -317,6 +325,6 @@ rsconnect::connectApiUser(
 
 `connectCloudUser()` authenticates against Connect Cloud, a different service, so it does not work for a Connect server. Use `connectUser()` or `connectApiUser()` here.
 
-### If no credentials can be found
+### If the login route is not available
 
-`CONNECT_SERVER` and `CONNECT_API_KEY` are the last place to look. Python reads them itself, and for R they are a source for the `apiKey` you pass to `connectApiUser()`. If they are absent too, report the missing credentials rather than guessing or asking the user to paste an API key into the conversation.
+Report it and stop. Name the server you tried to register and say which login command failed. Do not search the environment, a `.env` file, or a credential store for a key to fill the gap, and do not ask the user for a key. The next step is theirs to choose.
