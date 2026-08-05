@@ -1,6 +1,6 @@
 ---
 name: critical-code-reviewer
-description: Rigorously review code or pull requests for correctness, security, maintainability, tests, and edge cases. Use when users request a critical code review, want a guided walkthrough of findings, need implementer-facing feedback, or want to prepare, create, or submit a GitHub pull request review.
+description: Rigorously review code or pull requests for correctness, security, accessibility, maintainability, tests, and edge cases. Use when users request a critical code review, want a guided walkthrough of findings, need implementer-facing feedback, or want to prepare, create, or submit a GitHub pull request review.
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
   version: "1.2"
@@ -89,6 +89,21 @@ Prioritize:
 
 Do not spend review attention repeating issues that automated tooling reliably enforces unless the tooling is absent, misconfigured, or the violation reveals a behavioral problem.
 
+### 8. Accessibility as Design Completeness
+
+Treat accessibility as a cross-cutting quality requirement, not optional polish or a front-end-only concern. Accessibility gaps often reveal that the feature was designed around one happy path without considering the full range of users, content formats, input methods, or assistive technologies.
+
+Review every user-facing artifact affected by the change:
+- Prose and documentation: meaningful structure, descriptive links, understandable language, and useful alternatives for images, diagrams, charts, audio, and video
+- Interfaces and components: semantic controls, accessible names and states, keyboard operation, logical focus behavior, and perceivable validation or status updates
+- Visual presentation: sufficient contrast, information not conveyed by color alone, usable zoom and reflow, and respect for reduced-motion preferences
+- Workflows: no step that depends exclusively on sight, hearing, precise pointer movement, memory, or a particular input device
+- Tests: appropriate automated checks plus manual reasoning or testing for behavior automation cannot verify
+
+Do not reduce accessibility review to the presence of attributes such as `alt` or `aria-label`; verify that alternatives are meaningful in context and that the complete task remains usable. Treat automated audit results as supporting evidence, not proof of accessibility.
+
+Call out concrete barriers and identify the affected users and tasks. Treat barriers that prevent users from completing a core task as Blocking. Raise other verified accessibility gaps at a severity proportional to their impact. When several gaps share a cause, identify the broader design omission rather than reporting only isolated symptoms.
+
 ## Operating Constraints
 
 When reviewing partial code:
@@ -106,8 +121,8 @@ When reviewing partial code:
 ## Review Protocol
 
 **Severity Tiers:**
-1. **Blocking**: Security holes, data corruption risks, logic errors, race conditions, accessibility failures
-2. **Required Changes**: Slop, lazy patterns, unhandled edge cases, poor naming, type safety violations
+1. **Blocking**: Security holes, data corruption risks, logic errors, race conditions, and accessibility barriers that prevent a core task
+2. **Required Changes**: Slop, lazy patterns, unhandled edge cases, poor naming, type safety violations, and other verified accessibility gaps
 3. **Strong Suggestions**: Suboptimal approaches, missing tests, unclear intent, performance concerns
 4. **Noted**: Minor style issues (mention once, then move on)
 
@@ -210,9 +225,10 @@ Ask yourself:
 - What's the most likely production incident this code will cause?
 - What did the author assume that isn't validated?
 - What happens when this code meets real users/data/scale?
+- Who cannot perceive, understand, navigate, or operate this change as implemented?
 - Have I flagged actual problems, or am I manufacturing issues?
 
-If you can't answer the first three, you haven't reviewed deeply enough.
+If you have not investigated the first four, you haven't reviewed deeply enough.
 
 ## Next Steps
 
