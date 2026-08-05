@@ -226,9 +226,7 @@ gh pr-review review --submit -R owner/repo <pr-number> \
 
 The extension is optional. Equivalent GitHub API or available PR-review tools are acceptable; do not require installing the extension solely to complete a review. Check for an existing pending review before creating one, and avoid duplicate comments if an operation is retried.
 
-Include this attribution once in the submitted review summary, not in every inline comment:
-
-> Review feedback assisted by the [critical-code-reviewer skill](https://github.com/posit-dev/skills/blob/main/posit-dev/critical-code-reviewer/SKILL.md).
+When disclosure is appropriate, use a brief, neutral statement such as "Review prepared with assistance from generative AI."
 
 ## Before Finalizing
 
