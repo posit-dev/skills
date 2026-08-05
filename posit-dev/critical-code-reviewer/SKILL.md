@@ -60,58 +60,34 @@ Code organization reveals thinking. Flag:
 
 ### 6. The Adversarial Lens
 
-- Every unhandled Promise will reject at 3 AM
-- Every `None`/`null`/`undefined`/`NA` will appear where you don't expect it
-- Every API response will be malformed
-- Every user input is malicious (XSS, injection, type coercion attacks)
-- Every "temporary" solution is permanent
-- Every `any` type in TypeScript is a bug waiting to happen
-- Every missing `try/except` or `.catch()` is a silent failure
-- Every fire-and-forget promise is a silent failure
-- Every missing `await` is a race condition
+Assume happy-path expectations will eventually be violated. Investigate:
+- Nullable or missing values crossing boundaries
+- Malformed, incomplete, delayed, or failed external responses
+- Malicious or unexpectedly typed user input
+- Asynchronous work rejecting, racing, or outliving its caller
+- Failures being swallowed, ignored, or reported without enough context
+- Temporary exceptions becoming permanent behavior
 
-### 7. Language-Specific Red Flags
+### 7. Language- and Framework-Aware Review
 
-**Python:**
-- Bare `except:` clauses swallowing all errors
-- `except Exception:` that catches but doesn't re-raise
-- Mutable default arguments (`def foo(items=[])`)
-- Global state mutations
-- `import *` polluting namespace
-- Ignoring type hints in typed codebases
+Apply language and framework knowledge when tracing concrete failure modes. Treat suspicious syntax as a prompt to investigate, not as a finding by itself.
 
-**R:**
-- `T` and `F` instead of `TRUE` and `FALSE`
-- Relying on partial argument matching
-- Vectorized conditions in `if` statements
-- Ignoring vectorization for explicit loops
-- Not using early returns
-- Using `return()` at the end of functions unnecessarily
+Before raising a language-specific concern:
+- Verify the actual behavior and practical failure mode
+- Check the repository's conventions, language or framework version, and toolchain
+- Account for existing lint, type, and test coverage without assuming those tools prove correctness
+- Distinguish correctness and security problems from style preferences
+- Require evidence for performance claims
 
-**JavaScript/TypeScript:**
-- `==` instead of `===`
-- `any` type abuse
-- Missing null checks before property access
-- `var` in modern codebases
-- Uncontrolled re-renders in React (missing memoization, unstable references)
-- `useEffect` dependency array lies, stale closures, missing cleanup functions
-- `key` prop abuse (using index as key for dynamic lists)
-- Inline object/function props causing unnecessary re-renders
-- Unhandled promise rejections
-- Missing `await` on async calls
+Prioritize:
+- Error propagation, cleanup, and resource ownership
+- Nullability, type, serialization, and API boundaries
+- Async, concurrency, cancellation, and lifecycle behavior
+- Untrusted input, authorization, and query construction
+- Data access patterns, resource use, and demonstrated performance problems
+- Framework-specific correctness, accessibility, and lifecycle requirements
 
-**Front-End General:**
-- Accessibility violations (missing alt text, unlabeled inputs, poor contrast)
-- Layout shifts from unoptimized images/fonts
-- N+1 API calls in loops
-- State management chaos (prop drilling 5+ levels, global state for local concerns)
-- Hardcoded strings that should be i18n-ready
-
-**SQL/ORM:**
-- N+1 query patterns
-- Raw string interpolation in queries (SQL injection risk)
-- Missing indexes on frequently queried columns
-- Unbounded queries without LIMIT
+Do not spend review attention repeating issues that automated tooling reliably enforces unless the tooling is absent, misconfigured, or the violation reveals a behavioral problem.
 
 ## Operating Constraints
 
