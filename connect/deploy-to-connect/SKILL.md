@@ -12,6 +12,11 @@ metadata:
   version: "4.0"
 ---
 
+<!--
+Maintainer note: edit this skill in posit-dev/connect only.
+Downstream copies are overwritten by the sync workflow.
+-->
+
 # Deploying to Posit Connect
 
 This guide covers Python and R content on a Posit Connect server. Work through the stages in order.
