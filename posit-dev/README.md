@@ -5,6 +5,7 @@ General-purpose developer skills useful across any language, project type, or co
 ## Skills
 
 - **[critical-code-reviewer](./critical-code-reviewer/)** - Rigorous, adversarial code review across Python, R, JavaScript/TypeScript, SQL, and front-end code
+- **[bionic-reading](./bionic-reading/)** - Makes chat text scannable by bolding word prefixes for faster skimming during brainstorming and planning
 - **[review-testing](./review-testing/)** - Review test code for quality, design, and completeness after implementing a feature or fixing a bug, covering assertion completeness, mocking boundaries, fixture design, test smells, and coverage gaps
 - **[describe-design](./describe-design/)** - Research a codebase and create architectural documentation with Mermaid diagrams
 - **[implement](./implement/)** - Orchestrates implementation of a plan file by delegating work to subagents in parallel
