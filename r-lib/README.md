@@ -41,6 +41,17 @@ Prepare R packages for CRAN submission by checking for common ad-hoc requirement
 - `usethis::use_release_issue()` checklist
 - Common CRAN rejection reasons
 
+### `r-cmd-check-cpu-time`
+
+Diagnose and fix the R CMD check NOTE "had CPU time N times elapsed time" for tests, examples, or vignettes. Use when a CRAN submission reports that NOTE, when check output shows a `[cpu/elapsed]` ratio above ~1, or when you need to find which test file or vignette is silently using multiple cores.
+
+**Organization**: Single SKILL.md walking through the workflow in order: make the ratio visible with the `_R_CHECK_*_TIMING_CPU_TO_ELAPSED_THRESHOLD_` variables, get a Linux runner with a threaded BLAS via R-hub v2, localize per test file or vignette before changing code, cap threads (with a table of measured knobs for BLAS, data.table, xgboost, lightgbm, ranger, and others), then verify against the recorded baseline.
+
+**Resources**: This skill synthesizes guidance from:
+- [Writing R Extensions / R Internals](https://cran.r-project.org/doc/manuals/r-release/R-ints.html) on check timing thresholds
+- [R-hub v2](https://r-hub.github.io/rhub/) documentation
+- Package-specific thread-control APIs (verified against xgboost 3.x, lightgbm 4.x, ranger 0.16)
+
 ### `lifecycle`
 
 Guidance for managing R package lifecycle according to tidyverse principles using the lifecycle package. Use when setting up lifecycle infrastructure in a package, deprecating functions or arguments, renaming functions/arguments, superseding functions, or marking functions as experimental.
