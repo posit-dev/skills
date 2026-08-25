@@ -209,14 +209,19 @@ quarto.log.output("my-var:", my_var)
 
 ```lua
 local utils = require("./utils")
-local parsing = require("./utils/parsing")
-local shared = require("../shared")
+local parsing = require("./sub/parsing")
 ```
 
-Quarto replaces the standard Lua `require()` so that a path starting with `./` or `../` resolves relative to the calling script.
+Quarto replaces the standard Lua `require()` so that a path that starts with `./` or `../` resolves relative to the calling script.
 Always use the relative form.
+
+Inside an extension, keep every module path within the extension directory.
+`quarto add` copies only `_extensions/<name>/`, so a `require("../shared")` that works in the source project stops the render after installation with `cannot open .../_extensions/shared.lua`.
+Put shared code in a subdirectory of the extension instead.
+
 A bare `require("utils")` still loads, but the module name is global to the render.
 If two filters each ship a `utils.lua`, the second filter silently receives the module of the first one.
+This happens across separate installed extensions as well.
 There is no error, only a wrong result.
 
 ### Testing
