@@ -3,13 +3,8 @@
 Quarto extends Pandoc's AST with custom node types.
 Filters match these by name in handler tables (e.g., `{ Callout = handle_callout }`).
 
-## Available Node Types
-
-**Block-level:** Callout, ConditionalBlock, Tabset, PanelLayout, FloatRefTarget, DecoratedCodeBlock, Theorem, Proof.
-
-**Inline-level:** Shortcode.
-
-**Other:** LatexEnvironment, LatexInlineCommand, HtmlTag.
+`SKILL.md` lists the node types.
+Only `Shortcode` is an inline node; the rest are block-level, except `LatexEnvironment`, `LatexInlineCommand`, and `HtmlTag`.
 
 Note: `_quarto.ast.add_handler()` is internal to Quarto.
 Extension authors interact via standard filter handlers.
@@ -68,7 +63,20 @@ filters:
     at: pre-quarto
 ```
 
-Default (no `at`): filters listed before a "quarto" marker get `pre-quarto`, filters listed after get `post-render`.
+Without `at`, the position of the entry decides the phase.
+The literal entry `quarto` in the list is a marker, not a filter.
+Entries before it get `pre-quarto`, entries after it get `post-render`.
+A list with no marker at all is therefore entirely `pre-quarto`.
+
+```yaml
+filters:
+  - runs-at-pre-quarto.lua
+  - quarto
+  - runs-at-post-render.lua
+```
+
+This is the syntax Quarto used before 1.4.
+It still works, and it mixes with `at` entries in the same list.
 
 ## FloatRefTarget
 

@@ -17,7 +17,10 @@ Write Lua shortcodes and filters for Quarto.
 
 ## When to Use What
 
-**First question**: When asked to create a new shortcode or filter, ask the user whether it should be a standalone file (registered in `_quarto.yml` or document YAML) or packaged as a Quarto extension (with `_extension.yml`).
+**First question**: A new shortcode or filter is either a standalone file, registered in `_quarto.yml` or document YAML, or packaged as a Quarto extension with `_extension.yml`.
+Infer which one from the context before asking.
+An `_extensions/<name>/_extension.yml` beside the target path, or a path already inside `_extensions/`, settles it.
+Ask the user only when the context gives no answer, and assume a standalone file when you cannot ask.
 
 Task: Write a shortcode -> "Writing a Shortcode" below
 Task: Write a filter -> "Writing a Filter" below
@@ -27,7 +30,7 @@ Task: Shortcode details (args, raw output) -> Read `https://quarto.org/docs/exte
 Task: Filter details (AST traversal, multi-pass) -> Read `https://quarto.org/docs/extensions/filters.llms.md`
 Task: Metadata / project filters -> Read `https://quarto.org/docs/extensions/metadata.llms.md`
 Task: Custom AST node fields, custom renderers, AST processing phases -> Read `https://quarto.org/docs/advanced/quarto-ast.llms.md`
-Task: Custom AST node constructor signatures, full node type list, all eight filter timing phases -> Read the file `references/custom-ast-nodes.md` in this skill directory
+Task: Custom AST node constructor signatures, all eight filter timing phases -> Read the file `references/custom-ast-nodes.md` in this skill directory
 
 Fetch only pages relevant to the current task.
 Prefer `references/custom-ast-nodes.md` over the Quarto AST page for constructor signatures and timing phases.
@@ -155,7 +158,7 @@ Always generate for new files. Update `@description` when modifying.
 
 - **Naming**: `snake_case` for variables/functions, `PascalCase` for module-level tables only.
 - **Indentation**: 2 spaces.
-- **Strings**: double quotes for user-facing text, single quotes for identifiers/keys.
+- **Strings**: double quotes throughout, as in Quarto's own filter sources.
 - **Scoping**: always `local` unless intentionally global.
 - **Errors**: fail fast with `error("context: what went wrong")`.
 - **Docs**: `---` comment blocks above functions (LDoc-compatible):
@@ -271,7 +274,7 @@ Cross-referenceable figures, tables, and listings are all `FloatRefTarget` nodes
 
 Filter timing supports eight phases, `pre-ast` through `post-finalize`, set with the `at` property in `_extension.yml` or document YAML.
 
-For the full node type list, constructor signatures, and timing phases, read `references/custom-ast-nodes.md`.
+For constructor signatures and timing phases, read `references/custom-ast-nodes.md`.
 
 ## Resources
 
