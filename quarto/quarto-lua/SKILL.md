@@ -214,15 +214,26 @@ local parsing = require("./sub/parsing")
 
 Quarto replaces the standard Lua `require()` so that a path that starts with `./` or `../` resolves relative to the calling script.
 Always use the relative form.
+It resolves against the file that calls it, so it also works inside a module that another module requires.
+
+A bare name does not work inside a module.
+Quarto puts only the directory of the top-level filter or shortcode file on `package.path`, so a module cannot load a file beside it by bare name.
+The render stops with `module 'b' not found`.
+
+```lua
+-- _modules/a.lua
+local b = require("b")    -- fails
+local b = require("./b")  -- correct
+```
+
+A bare name called from the top-level file does load, but the module name is then global to the render.
+If two filters each ship a `utils.lua`, the second filter silently receives the module of the first one.
+This happens across separate installed extensions as well.
+There is no error, only a wrong result.
 
 Inside an extension, keep every module path within the extension directory.
 `quarto add` copies only `_extensions/<name>/`, so a `require("../shared")` that works in the source project stops the render after installation with `cannot open .../_extensions/shared.lua`.
 Put shared code in a subdirectory of the extension instead.
-
-A bare `require("utils")` still loads, but the module name is global to the render.
-If two filters each ship a `utils.lua`, the second filter silently receives the module of the first one.
-This happens across separate installed extensions as well.
-There is no error, only a wrong result.
 
 ### Testing
 
