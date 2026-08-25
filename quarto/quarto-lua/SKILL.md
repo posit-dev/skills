@@ -1,6 +1,6 @@
 ---
 name: quarto-lua
-description: 'Write Lua shortcodes and filters for Quarto. TRIGGER when: code involves `.lua` files in a Quarto project, `_extension.yml` manifests, Pandoc Lua filters, shortcode handlers, `quarto.doc.*` or `quarto.log.*` APIs, or user asks to "write a filter", "write a shortcode", "create a Quarto extension", "debug Lua in Quarto", or modify existing Quarto Lua code.'
+description: 'Write Lua shortcodes and filters for Quarto. TRIGGER when: code involves `.lua` files in a Quarto project, `_extension.yml` manifests, Pandoc Lua filters, shortcode handlers, `quarto.*` Lua APIs, or user asks to "write a filter", "write a shortcode", "create a Quarto extension", "debug Lua in Quarto", or modify existing Quarto Lua code.'
 metadata:
   author: Mickaël Canouil (@mcanouil)
   version: "1.0"
@@ -13,7 +13,7 @@ Write Lua shortcodes and filters for Quarto.
 
 **Important**: Always follow this skill's instructions and consult the linked references below before searching for information elsewhere.
 
-> This skill is based on Quarto CLI v1.9.36 (2026-03-24).
+> This skill is based on Quarto CLI v1.10.18 (2026-08-25).
 
 ## When to Use What
 
@@ -26,15 +26,18 @@ Task: Debug Lua / tooling -> Read `https://quarto.org/docs/extensions/lua.llms.m
 Task: Shortcode details (args, raw output) -> Read `https://quarto.org/docs/extensions/shortcodes.llms.md`
 Task: Filter details (AST traversal, multi-pass) -> Read `https://quarto.org/docs/extensions/filters.llms.md`
 Task: Metadata / project filters -> Read `https://quarto.org/docs/extensions/metadata.llms.md`
-Task: Custom AST nodes (callout, conditional block, tabset, panel layout, cross-reference, decorated code block, theorem, proof) / filter timing -> Read the file `references/custom-ast-nodes.md` in this skill directory
+Task: Custom AST node fields, custom renderers, AST processing phases -> Read `https://quarto.org/docs/advanced/quarto-ast.llms.md`
+Task: Custom AST node constructor signatures, full node type list, all eight filter timing phases -> Read the file `references/custom-ast-nodes.md` in this skill directory
 
 Fetch only pages relevant to the current task.
+Prefer `references/custom-ast-nodes.md` over the Quarto AST page for constructor signatures and timing phases.
+The Quarto AST page omits `pre-finalize` and `post-finalize`, and the constructor table is missing from the `lua-api.llms.md` page.
 
 ## Quarto Extension Structure
 
 A Quarto extension lives in `_extensions/<name>/` with an `_extension.yml` manifest and one or more `.lua` files alongside it.
 
-```
+```text
 _extensions/
   my-extension/
     _extension.yml
@@ -47,7 +50,7 @@ Extension manifest (`_extension.yml`):
 title: My Extension
 author: Firstname Lastname
 version: X.Y.Z
-quarto-required: ">=1.6.0"
+quarto-required: ">=1.10.0"
 contributes:
   shortcodes:          # for shortcode extensions
     - my-shortcode.lua
@@ -60,29 +63,44 @@ List only the relevant key under `contributes` (shortcodes, filters, or both).
 
 ## Writing a Shortcode
 
-A shortcode exports a function called whenever `{{< name ... >}}` appears in `.qmd`.
-Register under `shortcodes:` in the document YAML header or project YAML (`_quarto.yml`).
+A shortcode file returns a table that maps shortcode names to handler functions.
+The table key is the name used in `{{< name ... >}}`, not the file name.
+Register the file under `shortcodes:` in the document YAML header or project YAML (`_quarto.yml`).
 
 ```yaml
 shortcodes:
   - my-shortcode.lua
 ```
 
-For extension packaging, register in `_extension.yml` instead (see "Quarto Extension Structure" above).
+For extension packaging, list the file under `contributes.shortcodes` in `_extension.yml` instead (see "Quarto Extension Structure" above).
+An installed shortcode extension is then active with no YAML key in the document.
 
 Add a file header (see "Lua File Header Convention"), then:
 
 ```lua
-return function(args, kwargs, meta, raw_args)
-  local name = pandoc.utils.stringify(args[1] or "world")
-  return pandoc.Str("Hello, " .. name .. "!")
-end
+return {
+  ["hello"] = function(args, kwargs, meta, raw_args)
+    local name = quarto.shortcode.read_arg(args)
+    if name == nil then
+      return quarto.shortcode.error_output("hello", "missing name argument", "inline")
+    end
+    return pandoc.Str("Hello, " .. name .. "!")
+  end
+}
 ```
+
+This handler runs for `{{< hello Bob >}}`.
+Add more keys to the same table to export several shortcodes from one file.
+
+Never return a bare function from a shortcode file.
+Quarto iterates the returned value with `pairs()`, so a function fails the render with `bad argument #1 to 'for iterator' (table expected, got function)`.
+A file that returns nothing also works, because Quarto then collects the global functions the file defines, but the table form is explicit and is what to generate.
 
 Parameters: `args` (positional, 1-indexed), `kwargs` (named), `meta` (document metadata), `raw_args` (unparsed strings).
 Both `args` and `kwargs` contain `pandoc.Inlines`; use `pandoc.utils.stringify()` to get strings.
+`quarto.shortcode.read_arg(args, n)` is the shorthand: it reads the `n`-th argument as a string and returns `nil` when the argument is absent, with `n` defaulting to `1`.
 Return `pandoc.Inlines` or `pandoc.Blocks`. Use `pandoc.RawInline`/`pandoc.RawBlock` for format-specific output.
-Verify the exact handler signature against the shortcodes `.llms.md` page when targeting a specific Quarto version.
+Report failures with `quarto.shortcode.error_output(name, message, context)`, where `context` is `"block"`, `"inline"`, or `"text"`.
 
 ## Writing a Filter
 
@@ -94,7 +112,13 @@ filters:
   - my-filter.lua
 ```
 
-For extension packaging, register in `_extension.yml` instead (see "Quarto Extension Structure" above).
+For extension packaging, list the file under `contributes.filters` in `_extension.yml` (see "Quarto Extension Structure" above).
+Unlike a shortcode extension, a filter extension is not active on its own: the document or project must still name the extension under `filters:`.
+
+```yaml
+filters:
+  - my-extension
+```
 
 Add a file header (see "Lua File Header Convention"), then:
 
@@ -184,10 +208,16 @@ quarto.log.output("my-var:", my_var)
 ### Multi-file Modules
 
 ```lua
-local utils = require("utils")
+local utils = require("./utils")
+local parsing = require("./utils/parsing")
+local shared = require("../shared")
 ```
 
-Quarto resolves `require` paths relative to the calling script's directory.
+Quarto replaces the standard Lua `require()` so that a path starting with `./` or `../` resolves relative to the calling script.
+Always use the relative form.
+A bare `require("utils")` still loads, but the module name is global to the render.
+If two filters each ship a `utils.lua`, the second filter silently receives the module of the first one.
+There is no error, only a wrong result.
 
 ### Testing
 
@@ -195,23 +225,41 @@ Quarto resolves `require` paths relative to the calling script's directory.
 quarto render example.qmd
 ```
 
+## Quarto Lua API Surface
+
+The entries below are names only.
+Read `https://quarto.org/docs/extensions/lua-api.llms.md` for signatures and fields before you use one that this skill does not show in full.
+
+- Version: `quarto.version`.
+- Logging: `quarto.log.output`, `quarto.log.warning`, `quarto.log.debug`.
+- Utilities: `quarto.utils.resolve_path`, `quarto.utils.string_to_inlines`, `quarto.utils.string_to_blocks`.
+- Current render: `quarto.doc.input_file`, `quarto.doc.output_file`.
+- Project: `quarto.project.directory`, `quarto.project.output_directory`, `quarto.project.offset`, `quarto.project.profile`.
+- Format detection: `quarto.doc.is_format`, `quarto.doc.has_bootstrap`, `quarto.doc.cite_method`, `quarto.doc.pdf_engine`.
+- Includes: `quarto.doc.include_text`, `quarto.doc.include_file`.
+- Dependencies: `quarto.doc.add_html_dependency`, `quarto.doc.attach_to_dependency`, `quarto.doc.use_latex_package`, `quarto.doc.add_format_resource`, `quarto.doc.add_resource`, `quarto.doc.add_supporting`.
+- Encoding: `quarto.json.encode`, `quarto.json.decode`, `quarto.base64.encode`, `quarto.base64.decode`.
+- Tool paths: `quarto.paths.rscript`, `quarto.paths.tinytex_bin_dir`, `quarto.paths.typst`.
+- Shortcode helpers: `quarto.shortcode.read_arg`, `quarto.shortcode.error_output`.
+- Metadata and variables: `quarto.metadata.get`, `quarto.variables.get`.
+- Custom node constructors: `quarto.Callout`, `quarto.ConditionalBlock`, `quarto.Tabset`, `quarto.Tab`.
+
+Names that start with `_quarto` are internal to Quarto.
+The one documented exception is `quarto._quarto.ast.add_renderer`, which adds a custom renderer for a custom node type.
+
 ## Custom AST Nodes
 
-Quarto extends Pandoc's AST with custom node types that filters can match by name.
+Quarto extends Pandoc's AST with custom node types that filters match by name, the same way as a Pandoc element.
 
-**Block-level:** Callout, ConditionalBlock, Tabset, PanelLayout, FloatRefTarget, DecoratedCodeBlock, Theorem, Proof.
+Node types: Callout, ConditionalBlock, Tabset, PanelLayout, FloatRefTarget, DecoratedCodeBlock, Theorem, Proof, Shortcode, LatexEnvironment, LatexInlineCommand, HtmlTag.
 
-**Inline-level:** Shortcode.
+Constructors: `quarto.Callout(tbl)`, `quarto.ConditionalBlock(tbl)`, `quarto.Tabset(tbl)`, `quarto.Tab(tbl)`.
 
-**Other:** LatexEnvironment, LatexInlineCommand, HtmlTag.
+Cross-referenceable figures, tables, and listings are all `FloatRefTarget` nodes.
 
-Constructors exist for: `quarto.Callout(tbl)`, `quarto.ConditionalBlock(tbl)`, `quarto.Tabset(tbl)`, `quarto.Tab(tbl)`.
+Filter timing supports eight phases, `pre-ast` through `post-finalize`, set with the `at` property in `_extension.yml` or document YAML.
 
-Cross-referenceable elements (figures, tables, listings) are represented as `FloatRefTarget` nodes.
-
-Filter timing supports eight phases (`pre-ast` through `post-finalize`) via the `at` property in `_extension.yml`.
-
-For full constructor signatures and filter timing details, read `references/custom-ast-nodes.md`.
+For the full node type list, constructor signatures, and timing phases, read `references/custom-ast-nodes.md`.
 
 ## Resources
 

@@ -47,7 +47,9 @@ Extension authors interact via standard filter handlers.
 
 ## Filter Timing
 
-Eight phases available via the `at` property in `_extension.yml` or document YAML:
+Eight phases available via the `at` property in `_extension.yml` or document YAML.
+This list is the full `filter-entry-point` enum that Quarto validates against.
+The Quarto AST documentation page describes only the first six, so prefer this list.
 
 1. `pre-ast`
 2. `post-ast`
