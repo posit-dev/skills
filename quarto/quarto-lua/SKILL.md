@@ -231,10 +231,6 @@ If two filters each ship a `utils.lua`, the second filter silently receives the 
 This happens across separate installed extensions as well.
 There is no error, only a wrong result.
 
-Inside an extension, keep every module path within the extension directory.
-`quarto add` copies only `_extensions/<name>/`, so a `require("../shared")` that works in the source project stops the render after installation with `cannot open .../_extensions/shared.lua`.
-Put shared code in a subdirectory of the extension instead.
-
 ### Testing
 
 ```bash
