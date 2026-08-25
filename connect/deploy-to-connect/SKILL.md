@@ -9,70 +9,60 @@ description: >-
   or commands.
 metadata:
   author: posit-pbc
-  version: "2.0"
+  version: "4.0"
 ---
+
+<!--
+Maintainer note: edit this skill in posit-dev/connect only.
+Downstream copies are overwritten by the sync workflow.
+-->
 
 # Deploying to Posit Connect
 
-This skill deploys **both Python and R content** to **Posit Connect**. Work
-through the stages in order.
+This guide covers Python and R content on a Posit Connect server. Work through the stages in order.
 
-Two toolchains are involved:
+Two toolchains do the work:
 
-- **Python** —
-  [rsconnect-python](https://github.com/posit-dev/rsconnect-python), which
-  provides the `rsconnect` CLI and is published on PyPI.
-- **R** — the R [`rsconnect`](https://rstudio.github.io/rsconnect/) package,
-  targeting the Connect **server** (not Connect Cloud).
+- Python — [rsconnect-python](https://github.com/posit-dev/rsconnect-python), which provides the `rsconnect` CLI and is published on PyPI.
+- R — the R [`rsconnect`](https://rstudio.github.io/rsconnect/) package, pointed at a Connect server.
 
-**As you go, record every decision, install, fallback, and assumption** so you
-can report them at the end — this is what makes the run auditable and
-self-healing rather than silent.
+If the user asks a question ("how do I…", "what is the command…") rather than asking for a deploy, answer from this guide and stop.
+
+At the end, report which server you deployed to, which content type you picked, any tool you installed, and any assumption you made.
 
 ---
 
 ## Stage 1 — Detect the content
 
-Infer the **language** and **framework** from the files in the project
-directory. Common signals:
+Infer the language and framework from the files in the project directory. Common signals:
 
 | Signal in project dir | Likely content |
 | --- | --- |
-| `app.py` | Python web app — Shiny for Python, Streamlit, Dash, Gradio, Panel, or Bokeh (disambiguate by imports, below) |
+| `app.py` | Python web app — Shiny for Python, Streamlit, Dash, Gradio, Panel, or Bokeh |
 | `app.R`, or `ui.R` + `server.R` | Shiny for R |
 | `plumber.R` / `entrypoint.R` containing `plumb()` | Plumber API (R) |
 | `*.qmd` | Quarto document |
 | `*.Rmd` | R Markdown |
 | `*.ipynb` | Jupyter notebook / Voila |
-| `manifest.json` | Prebuilt bundle (deploy directly, no framework guess needed) |
+| `manifest.json` | Prebuilt bundle — deploy it directly, no framework guess needed |
 
-**Disambiguate `app.py` by its imports:**
+The imports in `app.py` name the framework:
 
 ```console
 grep -Eo 'import (shiny|streamlit|dash|gradio|panel|bokeh)|from (shiny|streamlit|dash|gradio|panel|bokeh)' app.py
 ```
 
-- `shiny` → shiny (Python)  · `streamlit` → streamlit  · `dash` → dash
-- `gradio` → gradio  · `panel` → panel  · `bokeh` → bokeh
-- A bare ASGI/WSGI object (`fastapi` / `flask`) → `fastapi` / `flask`
+A bare ASGI or WSGI object means `fastapi` or `flask`.
 
-**Dependency-file signals** confirm the language:
+Dependency files confirm the language: `requirements.txt` and `pyproject.toml` for Python, `DESCRIPTION` and `renv.lock` for R.
 
-- Python: `requirements.txt`, `pyproject.toml`
-- R: `DESCRIPTION`, `renv.lock`, or a spread of `.R` files
-
-**If the content is ambiguous** (e.g. both Python and R files, or an `app.py`
-with no recognizable import): if you have an ask-user / prompt tool available,
-ask the user which framework to deploy. Otherwise, **pick the strongest signal**
-(a framework-specific import beats a generic dep file) and **record the
-assumption** for your report.
+If the content is ambiguous (both Python and R files, or an `app.py` with no recognizable import), use your discretion, and report the assumption you made.
 
 ---
 
 ## Stage 2 — Inventory your tools
 
-Probe the environment and build a capability set — don't assume anything is
-installed.
+Probe the environment and build a capability set:
 
 ```console
 command -v rsconnect                                 # rsconnect-python on PATH
@@ -84,183 +74,145 @@ command -v quarto                                     # quarto CLI
 command -v git                                        # git
 ```
 
-Note which of these are present: `rsconnect` (or `uv`, which can run it without
-installing), `Rscript` + R `rsconnect`, `quarto`, `git`.
-
-With `uv` available you never need an install step for Python content —
-`uv tool run --from rsconnect-python rsconnect ...` fetches and runs it on
-demand.
+With `uv` present, Python content needs no install step. `uv tool run --from rsconnect-python rsconnect ...` fetches and runs the CLI on demand.
 
 ---
 
 ## Stage 3 — Pick a route
 
-Cross the detected content (Stage 1) with your capabilities (Stage 2):
+Cross the detected content (Stage 1) with your capabilities (Stage 2).
 
 ### Python content
 
-Use rsconnect-python.
+Use rsconnect-python. With `rsconnect` on `PATH`:
 
-1. **`rsconnect` already on `PATH`:**
-   ```console
-   rsconnect deploy <framework> ./my-app
-   ```
-2. **Not on `PATH` but `uv` is** — run it without installing anything:
-   ```console
-   uv tool run --from rsconnect-python rsconnect deploy <framework> ./my-app
-   ```
+```console
+rsconnect deploy <framework> ./my-app
+```
 
-Both forms take identical arguments; the rest of this skill writes the bare
-`rsconnect ...` form, so prefix it with `uv tool run --from rsconnect-python`
-if you're on route 2.
+Off `PATH` but with `uv` present:
 
-`<framework>` is one of `api`, `bokeh`, `bundle`, `dash`, `fastapi`, `flask`,
-`git`, `gradio`, `html`, `manifest`, `nodejs`, `notebook`, `panel`, `pyproject`,
-`quarto`, `shiny`, `streamlit`, `tensorflow`, `voila`
-(`rsconnect deploy other-content` prints guidance for anything not in that
-list).
+```console
+uv tool run --from rsconnect-python rsconnect deploy <framework> ./my-app
+```
 
-**The available frameworks and flags depend on the installed version**. 
-Always confirm against `rsconnect deploy --help` rather than trusting this list.
-If `uv tool run` resolves a stale cached version, pin it:
-`uv tool run --from 'rsconnect-python==1.30.0' rsconnect ...`.
+Both forms take identical arguments. The rest of this guide writes the bare `rsconnect ...` form. Prefix it with `uv tool run --from rsconnect-python` when you use the second route.
+
+`<framework>` is one of `api`, `bokeh`, `bundle`, `dash`, `fastapi`, `flask`, `git`, `gradio`, `html`, `manifest`, `nodejs`, `notebook`, `panel`, `pyproject`, `quarto`, `shiny`, `streamlit`, `tensorflow`, `voila`. For anything outside that list, `rsconnect deploy other-content` prints guidance.
+
+The frameworks and flags depend on the installed version, so confirm against `rsconnect deploy --help` rather than this list. If `uv tool run` resolves a stale cached version, pin it: `uv tool run --from 'rsconnect-python==1.30.0' rsconnect ...`.
 
 ### R content
 
-Prefer the R `rsconnect` package targeting the Connect **server**, run through
-`Rscript -e '...'` or an R session.
+Use the R `rsconnect` package, through `Rscript -e '...'` or an R session:
 
-Which deploy function to use:
+- Shiny for R, Plumber API, or any app directory → `deployApp()`
+- A single R Markdown or Quarto document → `deployDoc()`
+- A full R Markdown or Quarto site → `deploySite()`
 
-- **Shiny for R / Plumber API / any app directory** → `deployApp()`
-- **A single R Markdown or Quarto document** → `deployDoc()`
-- **A full R Markdown / Quarto site** → `deploySite()`
+If `Rscript` is absent, deploy the R content through rsconnect-python with a `manifest.json`:
 
-**If R is absent** (no `Rscript`): deploy the R content through rsconnect-python
-using a `manifest.json`.
-
-- If a `manifest.json` already exists, deploy it directly:
+- A `manifest.json` already exists — deploy it directly:
   ```console
   rsconnect deploy manifest ./manifest.json
   ```
-- If there's no manifest and R *is* available elsewhere, generate one first with
-  `rsconnect::writeManifest()` (see Stage 5).
-- If there's **neither R nor a manifest**, you cannot produce a valid R bundle.
-  Surface this as a blocker: ask the user (if you have an ask-user tool) or
-  report it clearly. Don't fake a deploy.
+- No manifest, but R is available elsewhere — generate one first with `rsconnect::writeManifest()` (see Stage 5).
+- Neither R nor a manifest — a valid R bundle is not possible. Surface this as a blocker: ask the user or report it clearly.
 
 ### Quarto content
-
-Use the rsconnect quarto route:
 
 ```console
 rsconnect deploy quarto ./report
 ```
 
-Note: **R-flavored Quarto** (documents with R code chunks) needs R available to
-render. If the `.qmd` has R chunks and R is absent, treat it like R content
-(manifest route) or surface the gap.
+R-flavored Quarto (a `.qmd` with R code chunks) needs R to render. If R is absent, treat the document as R content and use the manifest route, or surface the gap.
 
 ---
 
-## Stage 4 — Check credentials for that tool
+## Stage 4 — Find the target and check its credentials
 
-Now that you know which tool you're using, check whether it can already reach the
-server. **This is a check, not a login** — being authenticated already is the
-common case (env vars set by CI, an account linked in an earlier session). If a
-path is live, do nothing here: don't run a login, don't run `rsconnect add`.
+Now that the tool is known, find out which server to deploy to and whether the tool can already reach it. This is a check, not a login.
 
-Start with the environment — it's the cheapest check, and it tells you what you
-have to work with either way:
+**Do not search the environment for API keys.** Do not read `CONNECT_API_KEY`, `CONNECT_SERVER`, a `.env` file, a keychain entry, or any other stored secret to pick a target or to register a server. Do this only when the user explicitly asks for it. An environment variable is not a request to use it.
+
+List the accounts the tool already has. This is the only credential check you need.
 
 ```console
-env | grep -E '^CONNECT_(SERVER|API_KEY)=' | sed 's/=.*/=<set>/'   # don't print the key
+rsconnect list                                   # Python: saved servers, stored tokens, and the default server on 1.30.0+
+Rscript -e 'print(rsconnect::accounts())'        # R: registered accounts
 ```
 
-**Python (rsconnect-python)** — reads `CONNECT_SERVER` / `CONNECT_API_KEY`
-directly, so finding both set *is* a live credential path. Saved servers and
-stored tokens (and which server is the default, 1.30.0+):
+If the tool is not installed yet, close that gap in Stage 5 first. Then run the check.
+
+Compare the result with the target the user named. Three outcomes:
+
+- **An account matches the named target.** The credential path is live. Run no login and no `rsconnect add`. Continue to Stage 6 once the other gaps are closed.
+- **The user named no target.** Ask them. List the servers the check found, and ask which one to deploy to, or whether they want a new target instead. Do not pick one for them, and do not deploy to the only saved server because it is the only one.
+- **The target is new, or no account matches it.** This is a gap for Stage 5. Register it with a browser login.
+
+A browser login is the way to register a new target:
 
 ```console
-rsconnect list
+rsconnect login https://connect.example.com      # Python
 ```
 
-**R (`rsconnect`)** — does **not** read `CONNECT_SERVER` / `CONNECT_API_KEY`.
-It authenticates only from a registered account, so those variables are a place
-for *you* to read the key from when you register one (Stage 5) — never a
-credential path on their own. What counts as live here:
-
-```console
-Rscript -e 'print(rsconnect::accounts())'
+```r
+rsconnect::addServer(url = "https://connect.example.com", name = "myserver")   # R
+rsconnect::connectUser(server = "myserver")
 ```
 
-If the tool itself isn't installed yet, the env-var check still tells you what
-you need; close the install gap in Stage 5, then run the tool-specific check.
-
-Record the verdict: either a credential path is live (continue to Stage 6 once
-any other gaps are closed) or there is none, which is a discrepancy for Stage 5.
-If both a saved server and `CONNECT_SERVER` are live for Python, see the
-[credentials reference](#credentials-reference) before choosing.
+Both forms open a browser flow, so the user approves the login and no key passes through the conversation. The [credentials reference](#credentials-reference) has the details and the pitfalls.
 
 ---
 
-## Stage 5 — Resolve discrepancies (self-heal)
+## Stage 5 — Resolve gaps
 
-When Stages 3 and 4 find a gap, close it and **record the action**:
+When Stages 3 and 4 find a gap, close it, then include the action in your report.
 
-- **`rsconnect` not on `PATH`** → don't install anything if `uv` is present;
-  just run it on demand:
-  ```console
-  uv tool run --from rsconnect-python rsconnect deploy <framework> ./my-app
-  ```
-  If the user wants it installed persistently (or `uv tool run` isn't viable):
-  ```console
-  uv tool install rsconnect-python     # or: pip install rsconnect-python
-  ```
-  **Note the package/command mismatch:** the PyPI package is
-  `rsconnect-python`, the command it provides is `rsconnect`. That's why
-  `uv tool run` needs `--from rsconnect-python`. To update later:
-  `uv tool upgrade rsconnect-python`.
-- **R `rsconnect` package missing** (but `Rscript` present) → install it from
-  Posit Package Manager (P3M), which serves **precompiled Linux binaries** — far
-  faster than a source build and with no `-dev` system libraries to apt-get. Two
-  things are required to actually get binaries: the `__linux__/<codename>` repo
-  URL **and** a platform-identifying `HTTPUserAgent` (without it P3M serves
-  source):
-  ```console
-  export P3M="https://packagemanager.posit.co/cran/__linux__/$(. /etc/os-release && echo "$VERSION_CODENAME")/latest"
-  Rscript -e '
-    options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(),
-      paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))
-    install.packages("rsconnect", repos = Sys.getenv("P3M"))
-  '
-  ```
-  P3M binaries exist for **x86_64** on common distros; on **arm64** or an
-  unsupported distro P3M transparently falls back to source (still correct, just
-  slower — make sure the usual `-dev` libraries and a compiler are present). Only
-  reach for `https://cloud.r-project.org` (CRAN source) if P3M is unreachable.
-- **`manifest.json` missing for R content** (R present) → generate it:
-  ```console
-  Rscript -e 'rsconnect::writeManifest()'
-  ```
-  Alternatively, rsconnect-python can write one for Python content:
-  ```console
-  rsconnect write-manifest <framework> ./my-app
-  ```
-  Then deploy the manifest via rsconnect-python if R can't deploy directly.
-- **No credentials** (Stage 4 found no env vars, no saved server, no linked
-  account) → authenticate now, following
-  [Credentials reference](#credentials-reference) for the ordering, the
-  pitfalls, and what to do when nothing can supply them. Prefer a browser login
-  (`rsconnect login`, `rsconnect::connectUser()`) when one is available.
-- **Dependencies** → you generally do **not** hand-list them. rsconnect and
-  rsconnect-python scan the code and snapshot required package versions
-  automatically (Python from `requirements.txt`/imports, R from your `.R`
-  code). Make sure a Python `requirements.txt` exists when deploying Python
-  content. For R, the content's own packages must be **installed locally** for
-  rsconnect to detect and snapshot them (e.g. `plumber` for a Plumber API,
-  `shiny` for a Shiny app) — install any that are missing from the same P3M repo
-  shown above, not from CRAN source.
+**`rsconnect` not on `PATH`.** With `uv` present, no install is needed:
+
+```console
+uv tool run --from rsconnect-python rsconnect deploy <framework> ./my-app
+```
+
+If the user wants it installed persistently, or `uv tool run` is not viable:
+
+```console
+uv tool install rsconnect-python     # or: pip install rsconnect-python
+```
+
+The package name and the command name differ: the PyPI package is `rsconnect-python`, and the command it provides is `rsconnect`. That is why `uv tool run` needs `--from rsconnect-python`. To update later, run `uv tool upgrade rsconnect-python`.
+
+**R `rsconnect` package missing, `Rscript` present.** Install it from Posit Package Manager (P3M), which serves precompiled Linux binaries. A binary install is much faster than a source build and needs no `-dev` system libraries. Binaries need two things: the `__linux__/<codename>` repo URL and a platform-identifying `HTTPUserAgent`. Without the user agent, P3M serves source.
+
+```console
+export P3M="https://packagemanager.posit.co/cran/__linux__/$(. /etc/os-release && echo "$VERSION_CODENAME")/latest"
+Rscript -e '
+  options(HTTPUserAgent = sprintf("R/%s R (%s)", getRversion(),
+    paste(getRversion(), R.version["platform"], R.version["arch"], R.version["os"])))
+  install.packages("rsconnect", repos = Sys.getenv("P3M"))
+'
+```
+
+P3M binaries exist for x86_64 on common distros. On arm64 or an unsupported distro, P3M falls back to source. That result is still correct, only slower, and it needs the usual `-dev` libraries and a compiler. Use `https://cloud.r-project.org` (CRAN source) only when P3M is unreachable.
+
+**`manifest.json` missing for R content, R present.** Generate it:
+
+```console
+Rscript -e 'rsconnect::writeManifest()'
+```
+
+rsconnect-python writes one for Python content:
+
+```console
+rsconnect write-manifest <framework> ./my-app
+```
+
+Then deploy the manifest with rsconnect-python if R cannot deploy directly.
+
+**No account for the target.** Register it now with a browser login: `rsconnect login` for Python, or `rsconnect::addServer()` and `rsconnect::connectUser()` for R. The [credentials reference](#credentials-reference) has the details and the pitfalls. Do not fall back to an API key from the environment. If the browser flow is not available, report that and stop.
+
+**Dependencies.** rsconnect and rsconnect-python scan the code and snapshot the required package versions for you, so hand-listing them is rarely necessary. Python content needs a `requirements.txt`. For R, the content's own packages must be installed locally for rsconnect to detect them — `plumber` for a Plumber API, `shiny` for a Shiny app. Install any that are missing from the same P3M repo shown above.
 
 ---
 
@@ -268,147 +220,92 @@ When Stages 3 and 4 find a gap, close it and **record the action**:
 
 ### Discover the live command surface (Python)
 
-rsconnect-python's frameworks and flags change between releases, so **read the
-help text — it's the source of truth**:
+The frameworks and flags in rsconnect-python change between releases, and the help text is the source of truth:
 
 ```console
-rsconnect version                  # which version you're actually running
+rsconnect version                  # which version you are actually running
 rsconnect deploy --help            # every framework you can deploy
 rsconnect deploy <framework> --help  # flags for one framework
 ```
 
 ### Deploy
 
-For Python, `rsconnect deploy <framework> <dir>` with the framework Stage 3
-picked (`manifest` takes the manifest file rather than a directory).
+For Python, run `rsconnect deploy <framework> <dir>` with the framework Stage 3 picked. The `manifest` framework takes the manifest file rather than a directory.
 
-Non-obvious flags: `-t/--title`, `-N/--new` (force a new deployment instead of
-updating the recorded one), `-a/--app-id <id>` (target an existing item
-explicitly — mutually exclusive with `--new`), `-E NAME=VALUE` (set an
-environment variable, repeatable), `--draft` (keep serving the previous bundle
-until published).
+Non-obvious flags: `-t/--title`, `-N/--new` (force a new deployment instead of updating the recorded one), `-a/--app-id <id>` (target an existing item explicitly, mutually exclusive with `--new`), `-E NAME=VALUE` (set an environment variable, repeatable), `--draft` (keep serving the previous bundle until published).
 
-For R, call the function Stage 3 selected, passing `appTitle` so the content
-isn't named after the directory.
+For R, call the function Stage 3 selected. Pass `appTitle` so the content is not named after the directory.
 
-### If `rsconnect` isn't found at deploy time
+### If `rsconnect` is not found at deploy time
 
-It may be installed but off `PATH` in this shell (common in IDE-spawned
-terminals or with a virtualenv active). Fall back to `uv tool run` as described
-in Stage 5 — remembering `--from rsconnect-python`, since the package and
-command names differ.
+It can be installed but off `PATH` in this shell. IDE-spawned terminals and active virtualenvs both cause this. Fall back to `uv tool run` as described in Stage 5, with `--from rsconnect-python`.
 
 ### Pre-flight check (optional)
 
-To confirm the target is reachable and the credentials work before deploying:
+To confirm that the target is reachable and the credentials work before you deploy:
 
 ```console
-rsconnect details -n myserver                   # reachability + auth for one server
+rsconnect details -n myserver
 ```
 
 ### When a deploy fails
 
-**Python:**
+Python:
 
-- Auth errors: confirm the target with `rsconnect list`, re-run
-  `rsconnect login` (1.30.0+), or pass `-s`/`-k` (or set
-  `CONNECT_SERVER`/`CONNECT_API_KEY`).
-- `-n/--name ... cannot be specified in conjunction with ... -s/--server (from
-  ENVIRONMENT)`: `CONNECT_SERVER` is set and you also passed `-n`. `unset
-  CONNECT_SERVER` and keep `-n` — see the credentials reference for why that
-  direction and not the other. `CONNECT_API_KEY` can stay.
-- `The requirements file 'requirements.txt' does not exist`: Python content
-  needs one. Create it, point at another file with `--requirements-file`, or
-  generate it with `--force-generate` (a `pip freeze`, so it may over-pin).
-- Self-signed TLS: use `-i/--insecure` (or `-c/--cacert <file>`); set
-  `CONNECT_INSECURE` / `CONNECT_CA_CERTIFICATE` to apply it everywhere.
-- Rejected flag or unknown framework: re-check `rsconnect version` and re-read
-  `rsconnect deploy <framework> --help` — this usually means the installed
-  version is older than the flag you used.
+- Auth errors — confirm the target with `rsconnect list`, then re-run `rsconnect login` (1.30.0+). Pass `-s`/`-k` only when the user told you to use an existing key.
+- `-n/--name ... cannot be specified in conjunction with ... -s/--server (from ENVIRONMENT)` — `CONNECT_SERVER` is set and you also passed `-n`. Run `unset CONNECT_SERVER` and keep `-n`. The credentials reference explains why that direction. `CONNECT_API_KEY` can stay.
+- `The requirements file 'requirements.txt' does not exist` — Python content needs one. Create it, point at another file with `--requirements-file`, or generate it with `--force-generate`. The last option runs a `pip freeze`, so it can over-pin.
+- Self-signed TLS — use `-i/--insecure` or `-c/--cacert <file>`. Set `CONNECT_INSECURE` or `CONNECT_CA_CERTIFICATE` to apply it everywhere.
+- Rejected flag or unknown framework — re-check `rsconnect version` and re-read `rsconnect deploy <framework> --help`. The installed version is usually older than the flag you used.
 
-**R:**
+R:
 
-- "No account" / auth errors: run `rsconnect::accounts()`; if empty, re-run
-  `rsconnect::addServer()` + `connectUser()`/`connectApiUser()`. Double-check you
-  used a server function, not `connectCloudUser()` (Cloud).
-- `Found multiple accounts. Please disambiguate by setting server and/or
-  account`: more than one account is linked. Pass `account =` (and `server =`)
-  explicitly to the deploy call. In an interactive R session this appears as a
-  menu instead, which will hang a headless run that somehow reaches it.
-- Wrong deploy function: use `deployApp()` for directories/apps, `deployDoc()`
-  for a single document, `deploySite()` for a site.
-- Self-signed TLS: pass the CA bundle via the `RETICULATE`/`curl` options or
-  add the server with the appropriate certificate; for quick tests set
-  `options(rsconnect.check.certificate = FALSE)` (use sparingly).
-- Absolute-path warnings: files with hard-coded absolute paths won't block the
-  deploy but should be made relative to the project directory.
+- "No account" or auth errors — run `rsconnect::accounts()`. If it is empty, re-run `rsconnect::addServer()`, then `connectUser()` or `connectApiUser()`. Make sure that you used a server function and not `connectCloudUser()`.
+- `Found multiple accounts. Please disambiguate by setting server and/or account` — more than one account is linked. Pass `account =` and `server =` explicitly to the deploy call. An interactive R session shows a menu instead, which hangs a headless run.
+- Wrong deploy function — `deployApp()` for directories and apps, `deployDoc()` for a single document, `deploySite()` for a site.
+- Self-signed TLS — pass the CA bundle through the `curl` options, or add the server with the certificate. For a quick test, set `options(rsconnect.check.certificate = FALSE)`.
+- Absolute-path warnings — files with hard-coded absolute paths do not block the deploy, but they are better made relative to the project directory.
 
 ---
 
 ## Credentials reference
 
-How to authenticate when Stage 4 found no credentials and Stage 5 sent you here.
-If a credential path is already live, you don't need any of this.
+How to register a target that Stage 4 found no account for. If an account already matches the target, none of this is needed.
+
+A browser login is the route. The API-key routes below it are there for one case only: the user explicitly tells you to use a key that already exists, in an environment variable or a credential store. Do not go looking for a key on your own, and never ask the user to give you one. An API key does not belong in the conversation.
 
 ### Python (rsconnect-python)
 
-In order of preference:
-
-1. **OAuth login (interactive).** Requires **rsconnect-python 1.30.0+** — check
-   with `rsconnect version` first. One browser flow per server; tokens land in
-   the OS keyring (falling back to a local credential store) and refresh
-   automatically:
+1. **OAuth login (interactive).** The default route. Needs rsconnect-python 1.30.0+, so check `rsconnect version` first. One browser flow per server. Tokens land in the OS keyring, or a local credential store, and refresh automatically.
    ```console
    rsconnect login https://connect.example.com
    rsconnect login https://connect.example.com --use-device-code   # headless
    ```
-2. **Saved API-key nickname.** Save once, select later with `-n/--name`:
+2. **Saved API-key nickname.** Only when the user asked for a key route. Save once, select later with `-n/--name`.
    ```console
    rsconnect add -n myserver -s https://connect.example.com -k <api-key>
-   rsconnect list                    # confirm what's saved
+   rsconnect list                    # confirm what is saved
    ```
-   On **1.30.0+** a server can be the **default**, used when a command passes
-   neither `-n` nor `-s`. `add` sets it only with `--set-default`; `login` sets
-   it unless you pass `--no-set-default`; `rsconnect server set-default -n
-   <name>` changes it later. `CONNECT_SERVER` still takes precedence over the
-   default.
-3. **Env vars.** Best for headless/automated runs — no state to manage, and
-   works on any version:
+   On 1.30.0+ a server can be the default, used when a command passes neither `-n` nor `-s`. `add` sets the default only with `--set-default`. `login` sets it unless you pass `--no-set-default`. `rsconnect server set-default -n <name>` changes it later. `CONNECT_SERVER` still takes precedence over the default.
+3. **Environment variables.** Only when the user asked you to use them. rsconnect-python reads them directly, which suits a headless or automated run with no state to manage.
    ```console
    export CONNECT_SERVER=https://connect.example.com
    export CONNECT_API_KEY=...        # honored across the whole `rsconnect` surface
    ```
-4. **Ad hoc flags** on the deploy command itself: `-s <url> -k <api-key>`.
+4. **Ad hoc flags** on the deploy command: `-s <url> -k <api-key>`. Same condition, and read the key from the variable the user named rather than writing it out.
 
-**Shared credential flags:** `-n/--name` (saved server), `-s/--server` (env
-`CONNECT_SERVER`), `-k/--api-key` (env `CONNECT_API_KEY`), `-i/--insecure` (env
-`CONNECT_INSECURE`, for self-signed TLS), `-c/--cacert <file>` (env
-`CONNECT_CA_CERTIFICATE`).
+Shared credential flags: `-n/--name` (saved server), `-s/--server` (env `CONNECT_SERVER`), `-k/--api-key` (env `CONNECT_API_KEY`), `-i/--insecure` (env `CONNECT_INSECURE`, for self-signed TLS), `-c/--cacert <file>` (env `CONNECT_CA_CERTIFICATE`).
 
-> **`-n` and `CONNECT_SERVER` cannot both be in play.** rsconnect rejects a
-> command that combines a saved-server name (`-n/--name`) with a server URL,
-> including one that came from the environment:
-> `-n/--name (from COMMANDLINE) cannot be specified in conjunction with options
-> -s/--server (from ENVIRONMENT)`.
+> `-n` and `CONNECT_SERVER` cannot both be in play. rsconnect rejects a command that combines a saved-server name (`-n/--name`) with a server URL, including a URL that came from the environment: `-n/--name (from COMMANDLINE) cannot be specified in conjunction with options -s/--server (from ENVIRONMENT)`.
 >
-> **Only the *server* conflicts.** `CONNECT_API_KEY` (and `CONNECT_INSECURE`,
-> `CONNECT_CA_CERTIFICATE`) sit alongside `-n` without complaint — the key is
-> not part of the exclusion. So `-n dogfood` with `CONNECT_API_KEY` exported is
-> a valid command; it's `CONNECT_SERVER` that has to go.
+> Only the server conflicts. `CONNECT_API_KEY`, `CONNECT_INSECURE`, and `CONNECT_CA_CERTIFICATE` sit alongside `-n` without complaint, because the key is not part of the exclusion. `-n dogfood` with `CONNECT_API_KEY` exported is a valid command. It is `CONNECT_SERVER` that has to go.
 >
-> Choose by what the *request* names, not by what happens to be exported:
+> Choose by what the request names, not by what happens to be exported:
 >
-> - **The request names a specific saved server** (e.g. "deploy to dogfood") →
->   use `-n dogfood` and `unset CONNECT_SERVER` for that command. Do **not**
->   resolve the conflict the other way: `CONNECT_SERVER` may point somewhere
->   else entirely, and dropping `-n` to keep it would silently deploy to a
->   server the user didn't ask for.
-> - **The request names no server** (typical headless/automated run) → let
->   `CONNECT_SERVER`/`CONNECT_API_KEY` supply the target and deploy with just
->   `rsconnect deploy <framework> <dir>`.
+> - The request names a saved server ("deploy to dogfood") — use `-n dogfood` and `unset CONNECT_SERVER` for that command. Resolving the conflict the other way is worse: `CONNECT_SERVER` can point somewhere else entirely, so dropping `-n` to keep it would deploy to a server the user did not ask for.
+> - The request names no server, the typical headless run — let `CONNECT_SERVER` and `CONNECT_API_KEY` supply the target, and deploy with `rsconnect deploy <framework> <dir>`.
 >
-> If you're unsure which server `CONNECT_SERVER` points at, print it — it isn't
-> secret — and say which one you deployed to in your report.
+> `CONNECT_SERVER` is not secret. Print it if you are unsure which server it points at, and name the server you deployed to in your report.
 
 ### R (`rsconnect`)
 
@@ -423,7 +320,7 @@ rsconnect::addServer(url = "https://connect.example.com", name = "myserver")
 # 2a. Interactive — approve in a browser, no key to handle
 rsconnect::connectUser(server = "myserver")
 
-# 2b. Or non-interactively (CI) — connectApiUser() requires an apiKey
+# 2b. Or non-interactively (CI), only when the user asked for a key route
 rsconnect::connectApiUser(
   server  = "myserver",
   account = "your-username",
@@ -431,15 +328,8 @@ rsconnect::connectApiUser(
 )
 ```
 
-> **Critical — this is Connect *server*, not Connect Cloud.** Use
-> `rsconnect::connectUser()` or `rsconnect::connectApiUser()`, **never**
-> `connectCloudUser()`. The Cloud functions authenticate against a different
-> service and will not work here.
+`connectCloudUser()` authenticates against Connect Cloud, a different service, so it does not work for a Connect server. Use `connectUser()` or `connectApiUser()` here.
 
-### If no credentials can be found
+### If the login route is not available
 
-- `CONNECT_SERVER` / `CONNECT_API_KEY` are the last place to look — for Python
-  because rsconnect reads them itself, for R because they're a source for the
-  `apiKey` you pass to `connectApiUser()`. If they're absent too, **report the
-  missing credentials** rather than guessing or asking the user to paste an API
-  key into the context.
+Report it and stop. Name the server you tried to register and say which login command failed. Do not search the environment, a `.env` file, or a credential store for a key to fill the gap, and do not ask the user for a key. The next step is theirs to choose.

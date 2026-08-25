@@ -4,7 +4,7 @@ description: Creates a pull request from current changes, monitors GitHub CI, an
 compatibility: Designed for Claude Code; requires TaskCreate, TaskUpdate, and TaskList tools
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
-  version: "1.4"
+  version: "1.5"
 license: MIT
 ---
 
@@ -164,6 +164,8 @@ Follow the project's PR conventions if documented in CLAUDE.md or AGENTS.md. Oth
 ```
 
 Summary: Give an overview of the changes in the PR. The target audience is an experienced developer who works in this code base and needs to be informed about design or architectural changes. Highlight key decisions, structures and patterns.
+
+Write PR descriptions with one physical line per paragraph and list item. Do not hard-wrap Markdown prose. Internal references to list items should be phrased "item N" and not "#N" to avoid creating links to unrelated issues on GitHub.
 
 Verification: include an example that demonstrates the changes in the PR as seen or used by the intended audience. For code packages, include a small, reproducible exmaple. For apps and interfaces, describe the steps required to see the new behavior.
 
