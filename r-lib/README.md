@@ -62,12 +62,19 @@ Comprehensive guidance for async, parallel, and distributed computing in R using
 - [mirai package documentation](https://mirai.r-lib.org/)
 - [mirai GitHub repository](https://github.com/r-lib/mirai)
 
+### `alt-text`
+
+Generate and improve accessible alt text for data visualizations and images in R packages and Quarto documents. Use when adding, improving, or auditing alt text for figures in a pkgdown site or `.qmd` files.
+
+**Organization**: Uses progressive disclosure with reference files. The main skill detects the project type (pkgdown vs. Quarto) and loads the relevant reference. References cover pkgdown-specific workflows and Quarto-specific workflows separately.
+
+**Note**: This skill is also registered in the quarto category since it covers both pkgdown sites and Quarto documents.
+
 ## Potential Skills
 
 This category could include skills for:
 
 - Package development workflows (usethis, devtools)
-- Documentation with roxygen2 and pkgdown
 - Package structure and organization
 - Dependencies and NAMESPACE management
 - R CMD check and CRAN submission

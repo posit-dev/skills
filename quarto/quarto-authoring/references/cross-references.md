@@ -31,7 +31,7 @@ All cross-referenceable elements require a label starting with a type prefix:
 
 For consistency, prefer using div syntax for cross-referenceable elements:
 
-````markdown
+```markdown
 ::: {#tbl-example}
 
 | Column 1 | Column 2 |
@@ -40,17 +40,17 @@ For consistency, prefer using div syntax for cross-referenceable elements:
 
 Table caption.
 :::
-````
+```
 
 Instead of inline caption syntax:
 
-````markdown
+```markdown
 | Column 1 | Column 2 |
 | -------- | -------- |
 | Data     | Data     |
 
 : Table caption. {#tbl-example}
-````
+```
 
 Both syntaxes work, but div syntax provides a more consistent pattern across all element types (figures, tables, theorems, etc.).
 
@@ -58,48 +58,48 @@ Both syntaxes work, but div syntax provides a more consistent pattern across all
 
 Use `@` followed by the label to create a reference:
 
-````markdown
+```markdown
 See @fig-plot for the visualization.
 The data is shown in @tbl-results.
 As discussed in @sec-methods, we used...
-````
+```
 
 ### Capitalization
 
 Use capital letter to get capitalized prefix:
 
-````markdown
+```markdown
 @fig-plot → Figure 1
 @Fig-plot → Figure 1 (same, but ensures capital)
-````
+```
 
 ### Prefix Customization
 
 Use square brackets for custom prefix:
 
-````markdown
+```markdown
 [Figure @fig-plot] → Figure 1
 [See @fig-plot] → See 1
 [-@fig-plot] → 1 (number only)
-````
+```
 
 ### Multiple References
 
-````markdown
+```markdown
 See @fig-plot and @fig-scatter.
 Tables [-@tbl-one; -@tbl-two] show...
-````
+```
 
 ## Figures
 
 ### Code-Generated Figures
 
 ````markdown
-```{r}
+```{language}
 #| label: fig-scatter
 #| fig-cap: "Scatter plot of x versus y."
 
-plot(x, y)
+# code that produces a figure
 ```
 ````
 
@@ -107,15 +107,15 @@ Reference: `See @fig-scatter.`
 
 ### Markdown Figures
 
-````markdown
+```markdown
 ![Elephant](elephant.png){#fig-elephant}
 
 See @fig-elephant for the image.
-````
+```
 
 ### Subfigures
 
-````markdown
+```markdown
 ::: {#fig-animals layout-ncol=2}
 
 ![Cat](cat.png){#fig-cat}
@@ -126,18 +126,18 @@ Comparison of animals.
 :::
 
 See @fig-animals, specifically @fig-cat.
-````
+```
 
 ## Tables
 
 ### Code-Generated Tables
 
 ````markdown
-```{r}
+```{language}
 #| label: tbl-summary
 #| tbl-cap: "Summary statistics."
 
-knitr::kable(summary_data)
+# code that produces a table
 ```
 
 Reference: `See @tbl-summary.`
@@ -145,7 +145,7 @@ Reference: `See @tbl-summary.`
 
 ### Markdown Tables
 
-````markdown
+```markdown
 ::: {#tbl-data}
 
 | Col 1 | Col 2 |
@@ -156,11 +156,11 @@ Summary data.
 :::
 
 See @tbl-data for details.
-````
+```
 
 ### Subtables
 
-````markdown
+```markdown
 ::: {#tbl-panel layout-ncol=2}
 
 ::: {#tbl-first}
@@ -185,7 +185,7 @@ Combined tables.
 :::
 
 See @tbl-panel, including @tbl-first.
-````
+```
 
 ## Sections
 
@@ -197,26 +197,26 @@ number-sections: true
 
 Add label to heading:
 
-````markdown
+```markdown
 ## Introduction {#sec-intro}
 
 As discussed in @sec-intro...
-````
+```
 
 ## Equations
 
-````markdown
+```markdown
 $$
 y = mx + b
 $$ {#eq-line}
 
 Equation @eq-line shows...
 $$
-````
+```
 
 ## Theorems and Proofs
 
-````markdown
+```markdown
 ::: {#thm-pythagorean}
 
 ## Pythagorean Theorem
@@ -226,7 +226,7 @@ $$a^2 + b^2 = c^2$$
 :::
 
 By @thm-pythagorean, we know...
-````
+```
 
 Available theorem types: `thm`, `lem`, `cor`, `prp`, `cnj`, `def`, `exm`, `exr`.
 
@@ -245,7 +245,7 @@ See @lst-example for the code.
 
 Make callouts cross-referenceable by adding an ID:
 
-````markdown
+```markdown
 ::: {#nte-important .callout-note}
 
 ## Important Note
@@ -254,7 +254,7 @@ This is cross-referenceable.
 :::
 
 See @nte-important for details.
-````
+```
 
 ## Custom Cross-Reference Types
 
@@ -271,7 +271,7 @@ crossref:
 
 Use:
 
-````markdown
+```markdown
 ::: {#vid-demo}
 <video src="demo.mp4"></video>
 
@@ -279,7 +279,7 @@ Demo video.
 :::
 
 See @vid-demo.
-````
+```
 
 ## Cross-Reference Options
 
@@ -312,4 +312,3 @@ For bookdown migration details, see [conversion-bookdown.md](conversion-bookdown
 - [Quarto Cross-References](https://quarto.org/docs/authoring/cross-references.html)
 - [Figures](https://quarto.org/docs/authoring/figures.html)
 - [Tables](https://quarto.org/docs/authoring/tables.html)
-

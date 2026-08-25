@@ -33,7 +33,8 @@ sidebar(
 | `title` | `NULL` | Title at top |
 | `open` | `"desktop"` | Initial open/closed state — see below |
 | `position` | `"left"` | `"left"` or `"right"` |
-| `width` | `"250px"` | CSS width. Users can resize by dragging the edge |
+| `width` | `"250px"` | CSS width |
+| `resizable` | `TRUE` | Whether users can drag to resize the sidebar on desktop |
 | `id` | `NULL` | For programmatic control via `sidebar_toggle()` |
 | `bg` | | Background color (auto-contrasts `fg`) |
 | `fg` | | Foreground color |

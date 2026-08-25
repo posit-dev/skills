@@ -107,7 +107,7 @@ input_code_editor(
 )
 ```
 
-**Languages:** `"r"`, `"python"`, `"julia"`, `"sql"`, `"javascript"`, `"typescript"`, `"html"`, `"css"`, `"scss"`, `"sass"`, `"json"`, `"markdown"`, `"yaml"`, `"xml"`, `"toml"`, `"ini"`, `"bash"`, `"docker"`, `"latex"`, `"cpp"`, `"rust"`, `"diff"`, `"plain"`.
+**Languages:** r, python, julia, sql, ggsql, javascript, typescript, html, css, scss, sass, json, markdown, yaml, xml, toml, ini, bash, docker, latex, cpp, rust, diff, plain.
 
 ### Configuration
 

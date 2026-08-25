@@ -7,6 +7,8 @@ This reference covers bslib-specific layout patterns, UX tips, and common pitfal
 - [Layout Patterns](#layout-patterns)
 - [Mobile and Responsive Design](#mobile-and-responsive-design)
 - [User Experience with bslib Components](#user-experience-with-bslib-components)
+  - [Add Contextual Help](#add-contextual-help)
+  - [Card Header Controls with Toolbars](#card-header-controls-with-toolbars)
 - [bslib Module Patterns](#bslib-module-patterns)
 - [Common Gotchas](#common-gotchas)
 
@@ -177,6 +179,55 @@ card_header(
   )
 )
 ```
+
+### Card Header Controls with Toolbars
+
+Use `toolbar()` in `card_header()` when a card needs more than one control, or when controls should look compact rather than full-width. The toolbar sits flush with the header's right edge by default.
+
+**Multiple controls on one card:**
+```r
+card(
+  card_header(
+    "Sales Trend",
+    toolbar(
+      toolbar_input_select("period", "Period",
+        choices = c("Daily", "Weekly", "Monthly"),
+        selected = "Monthly"
+      ),
+      toolbar_divider(),
+      toolbar_input_button("download", "Download",
+        icon = bsicons::bs_icon("download")
+      )
+    )
+  ),
+  plotOutput("trend_plot")
+)
+```
+
+**Adding an info icon to an input label** — wrap the label text and a `tooltip()` together in a `toolbar()`:
+```r
+selectInput(
+  "metric",
+  label = toolbar(
+    align = "left",
+    gap = "0.25rem",
+    "Metric",
+    tooltip(
+      bsicons::bs_icon("info-circle", title = "About this metric"),
+      "Revenue includes all recognized sales, net of returns and discounts."
+    )
+  ),
+  choices = c("Revenue", "Units", "Margin")
+)
+```
+
+This pattern works with any Shiny input that takes an HTML `label`. The `title` on `bs_icon()` provides accessible text for screen readers (see the Icons section in the main skill).
+
+**When to use toolbar vs. popover in card headers:**
+- Use `toolbar()` when you have **multiple controls** (select + button, or multiple buttons) — toolbars keep them properly spaced and aligned
+- Use a single `tooltip()` or `popover()` directly in `card_header()` for a **single info/settings icon** — no toolbar needed for one element
+
+See [toolbars.md](toolbars.md) for the full toolbar API.
 
 ### Show Loading States
 

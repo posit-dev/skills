@@ -31,31 +31,31 @@ Comprehensive guidance for Quarto document authoring and R Markdown migration. W
 
 ##### Quarto Features
 
-| Reference                                                             | Description                                      |
-| --------------------------------------------------------------------- | ------------------------------------------------ |
-| [code-cells.md](authoring/references/code-cells.md)                   | Hashpipe syntax, execution options, code display |
-| [cross-references.md](authoring/references/cross-references.md)       | Labels, prefixes, all reference types            |
-| [figures.md](authoring/references/figures.md)                         | Figures, subfigures, layouts, lightbox           |
-| [tables.md](authoring/references/tables.md)                           | Pipe tables, grid tables, styling                |
-| [citations.md](authoring/references/citations.md)                     | Bibliography, CSL, footnotes                     |
-| [callouts.md](authoring/references/callouts.md)                       | Callout types, appearance, collapsible           |
-| [diagrams.md](authoring/references/diagrams.md)                       | Mermaid, Graphviz/DOT diagrams                   |
-| [layout.md](authoring/references/layout.md)                           | Column classes, margin content                   |
-| [shortcodes.md](authoring/references/shortcodes.md)                   | Built-in shortcodes                              |
-| [conditional-content.md](authoring/references/conditional-content.md) | Format-specific content                          |
-| [divs-and-spans.md](authoring/references/divs-and-spans.md)           | Fenced divs, spans, raw blocks                   |
-| [yaml-front-matter.md](authoring/references/yaml-front-matter.md)     | Document and project YAML                        |
-| [extensions.md](authoring/references/extensions.md)                   | Using and finding extensions                     |
+| Reference                                                                    | Description                                      |
+| ---------------------------------------------------------------------------- | ------------------------------------------------ |
+| [code-cells.md](quarto-authoring/references/code-cells.md)                   | Hashpipe syntax, execution options, code display |
+| [cross-references.md](quarto-authoring/references/cross-references.md)       | Labels, prefixes, all reference types            |
+| [figures.md](quarto-authoring/references/figures.md)                         | Figures, subfigures, layouts, lightbox           |
+| [tables.md](quarto-authoring/references/tables.md)                           | Pipe tables, grid tables, styling                |
+| [citations.md](quarto-authoring/references/citations.md)                     | Bibliography, CSL, footnotes                     |
+| [callouts.md](quarto-authoring/references/callouts.md)                       | Callout types, appearance, collapsible           |
+| [diagrams.md](quarto-authoring/references/diagrams.md)                       | Mermaid, Graphviz/DOT diagrams                   |
+| [layout.md](quarto-authoring/references/layout.md)                           | Column classes, margin content                   |
+| [shortcodes.md](quarto-authoring/references/shortcodes.md)                   | Built-in shortcodes                              |
+| [conditional-content.md](quarto-authoring/references/conditional-content.md) | Format-specific content                          |
+| [divs-and-spans.md](quarto-authoring/references/divs-and-spans.md)           | Fenced divs, spans, raw blocks                   |
+| [yaml-front-matter.md](quarto-authoring/references/yaml-front-matter.md)     | Document and project YAML                        |
+| [extensions.md](quarto-authoring/references/extensions.md)                   | Using and finding extensions                     |
 
 ##### Migration Guides
 
-| Reference                                                               | Description                |
-| ----------------------------------------------------------------------- | -------------------------- |
-| [conversion-rmarkdown.md](authoring/references/conversion-rmarkdown.md) | R Markdown to Quarto       |
-| [conversion-bookdown.md](authoring/references/conversion-bookdown.md)   | bookdown to Quarto         |
-| [conversion-xaringan.md](authoring/references/conversion-xaringan.md)   | xaringan to RevealJS       |
-| [conversion-distill.md](authoring/references/conversion-distill.md)     | distill to Quarto          |
-| [conversion-blogdown.md](authoring/references/conversion-blogdown.md)   | blogdown to Quarto website |
+| Reference                                                                      | Description                |
+| ------------------------------------------------------------------------------ | -------------------------- |
+| [conversion-rmarkdown.md](quarto-authoring/references/conversion-rmarkdown.md) | R Markdown to Quarto       |
+| [conversion-bookdown.md](quarto-authoring/references/conversion-bookdown.md)   | bookdown to Quarto         |
+| [conversion-xaringan.md](quarto-authoring/references/conversion-xaringan.md)   | xaringan to RevealJS       |
+| [conversion-distill.md](quarto-authoring/references/conversion-distill.md)     | distill to Quarto          |
+| [conversion-blogdown.md](quarto-authoring/references/conversion-blogdown.md)   | blogdown to Quarto website |
 
 #### Resources
 
@@ -103,14 +103,13 @@ Write Lua shortcodes and filters for Quarto. Covers shortcode handlers, Pandoc A
 
 ---
 
-### `quarto-alt-text`
+### `alt-text`
 
-Generate accessible alt text for data visualizations in Quarto documents. Use when adding, improving, or reviewing `fig-alt` for figures in `.qmd` files, or when making documents more accessible for screen readers.
+Generate and improve accessible alt text for data visualizations and images in Quarto documents and R packages. Use when adding, improving, or auditing `fig-alt` for figures in `.qmd` files, or when making documents more accessible for screen readers.
 
-#### Authors
+**Organization**: Uses progressive disclosure with reference files. The main skill detects the project type (pkgdown vs. Quarto) and loads the relevant reference.
 
-- [Emil Hvitfeldt](https://github.com/emilhvitfeldt)
-
+**Note**: This skill is also registered in the r-lib category since it covers both Quarto documents and pkgdown sites.
 ---
 
 ## Potential Skills

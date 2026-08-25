@@ -16,7 +16,11 @@
       "strict": false,
       "skills": [
         "./posit-dev/critical-code-reviewer",
-        "./posit-dev/describe-design"
+        "./posit-dev/describe-design",
+        "./posit-dev/implement",
+        "./posit-dev/new-work",
+        "./posit-dev/review-testing",
+        "./posit-dev/working-on"
       ]
     },
     {
@@ -52,7 +56,17 @@
         "./r-lib/lifecycle",
         "./r-lib/r-package-development",
         "./r-lib/r-cli-app",
-        "./r-lib/mirai"
+        "./r-lib/mirai",
+        "./alt-text"
+      ]
+    },
+    {
+      "name": "ggsql",
+      "description": "Skills for writing ggsql queries — a grammar of graphics for SQL",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./ggsql/ggsql"
       ]
     },
     {
@@ -74,8 +88,17 @@
       "skills": [
         "./brand-yml",
         "./quarto/quarto-authoring",
-        "./quarto/quarto-alt-text",
+        "./alt-text",
         "./quarto/quarto-lua"
+      ]
+    },
+    {
+      "name": "connect",
+      "description": "Skills for deploying and managing content on Posit Connect",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./connect/deploy-to-connect"
       ]
     }
   ]

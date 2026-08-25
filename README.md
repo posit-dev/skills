@@ -12,6 +12,10 @@ General-purpose developer skills useful across any language, project type, or co
 
 - **[critical-code-reviewer](./posit-dev/critical-code-reviewer/)** - Conduct rigorous, adversarial code reviews identifying security holes, lazy patterns, edge case failures, and bad practices across Python, R, JavaScript/TypeScript, SQL, and front-end code
 - **[describe-design](./posit-dev/describe-design/)** - Research a codebase and create architectural documentation describing how features or systems work, with Mermaid diagrams and stable code references suitable for humans and AI agents
+- **[new-work](./posit-dev/new-work/)** - Create a todo tracking document for a new feature, bug, or task; keeps it updated with decisions, plans, and progress for the rest of the session
+- **[review-testing](./posit-dev/review-testing/)** - Review test code for quality, design, and completeness after implementing a feature or fixing a bug, covering assertion completeness, mocking boundaries, fixture design, test smells, and coverage gaps
+- **[working-on](./posit-dev/working-on/)** - Set an existing tracking document as the source of truth for the current session, keeping it updated with decisions and progress
+
 
 ### GitHub
 
@@ -38,6 +42,13 @@ R package development skills for working with the r-lib ecosystem and modern R p
 - **[lifecycle](./r-lib/lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
 - **[r-package-development](./r-lib/r-package-development/)** - R package development with devtools, testthat, and roxygen2, covering key commands, coding conventions, testing, documentation, and NEWS.md practices
 - **[mirai](./r-lib/mirai/)** - Async, parallel, and distributed computing in R using mirai, covering explicit dependency passing, daemon setup, parallel mapping with `mirai_map()`, Shiny integration, remote/HPC launchers, and migration from future/parallel
+- **[alt-text](./alt-text/)** - Generate and improve accessible alt text for data visualizations and images in pkgdown sites and Quarto documents, covering vignette code chunks (`fig.alt`), static markdown images, and multi-plot chunks
+
+### ggsql
+
+Skills for writing ggsql queries — a grammar of graphics for SQL.
+
+- **[ggsql](./ggsql/ggsql/)** - Write ggsql queries — a grammar of graphics for SQL. Use when the user wants to create, modify, or understand a ggsql visualization query
 
 ### Shiny
 
@@ -53,8 +64,14 @@ Skills for Quarto document creation and publishing.
 
 - **[brand-yml](./brand-yml/)** - Create and apply brand.yml files for consistent styling across Quarto projects, supporting HTML documents, dashboards, RevealJS presentations, Typst PDFs, and websites with automatic brand discovery and theme layering
 - **[authoring](quarto/README.md#quarto-authoring-skill)** - Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions
-- **[quarto-alt-text](./quarto/quarto-alt-text/)** - Generate accessible alt text for figures in Quarto documents using Amy Cesal's three-part formula (chart type, data description, key insight). Supports code-generated plots and static images
+- **[alt-text](./alt-text/)** - Generate and improve accessible alt text for figures in Quarto documents using Amy Cesal's three-part formula (chart type, data description, key insight). Supports code-generated plots and static images
 - **[quarto-lua](./quarto/quarto-lua/)** - Write Lua shortcodes and filters for Quarto, with runtime access to Quarto's LLM-optimised API documentation
+
+### Connect
+
+Skills for deploying and managing content on Posit Connect.
+
+- **[deploy-to-connect](./connect/deploy-to-connect/)** - Deploy or publish Python and R content to a Posit Connect server using rsconnect-python or the R rsconnect package. Covers interactive apps and dashboards, web APIs, rendered documents, and prepared bundles/manifests
 
 ## Installation
 
@@ -96,9 +113,11 @@ Install specific skill categories directly:
 /plugin install posit-dev@posit-dev-skills
 /plugin install github@posit-dev-skills
 /plugin install open-source@posit-dev-skills
+/plugin install ggsql@posit-dev-skills
 /plugin install r-lib@posit-dev-skills
 /plugin install shiny@posit-dev-skills
 /plugin install quarto@posit-dev-skills
+/plugin install connect@posit-dev-skills
 ```
 
 Each command installs all skills in that category.
@@ -156,16 +175,17 @@ This repository organizes skills into categories to make it easier to find and i
 | Category        | Description                                                 |
 | --------------- | ----------------------------------------------------------- |
 | **posit-dev**   | General-purpose developer skills (code review, architecture docs) |
+| **ggsql**     | ggsql query writing — a grammar of graphics for SQL                 |
 | **github**    | GitHub PR workflows (create PRs, address review threads, resolve threads) |
 | **open-source** | Open-source R/Python package workflows (releases, changelogs)     |
 | **r-lib**       | R package development with the r-lib ecosystem              |
 | **shiny**       | Shiny app development and deployment (R and Python)         |
 | **quarto**      | Quarto document creation and publishing                     |
+| **connect**     | Posit Connect deployment and management                     |
 
 <!-- Future category ideas
 
 | **tidyverse** | Tidyverse-specific package development |
-| **connect** | Posit Connect deployment and management |
 -->
 
 ## Contributing
