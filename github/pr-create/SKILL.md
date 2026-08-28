@@ -167,7 +167,7 @@ Summary: Give an overview of the changes in the PR. The target audience is an ex
 
 Write PR descriptions with one physical line per paragraph and list item. Do not hard-wrap Markdown prose. Internal references to list items should be phrased "item N" and not "#N" to avoid creating links to unrelated issues on GitHub.
 
-Verification: include an example that demonstrates the changes in the PR as seen or used by the intended audience. For code packages, include a small, reproducible exmaple. For apps and interfaces, describe the steps required to see the new behavior.
+Verification: include an example that demonstrates the changes in the PR as seen or used by the intended audience. For code packages, include a small, reproducible example. For apps and interfaces, describe the steps required to see the new behavior.
 
 **5c. Preview and get user approval:**
 
