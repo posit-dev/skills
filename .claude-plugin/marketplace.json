@@ -53,6 +53,7 @@
         "./r-lib/testing-r-packages",
         "./r-lib/cli",
         "./r-lib/cran-extrachecks",
+        "./r-lib/r-cmd-check-cpu-time",
         "./r-lib/lifecycle",
         "./r-lib/r-package-development",
         "./r-lib/r-cli-app",
