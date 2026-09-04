@@ -57,6 +57,9 @@ Skills for Shiny app development in both R and Python.
 - **[brand-yml](./brand-yml/)** - Create and apply brand.yml files for consistent styling across Shiny apps, with support for bslib (R) and ui.Theme (Python), including automatic brand discovery and theming functions for plots and tables
 - **[shiny-bslib](./shiny/shiny-bslib/)** - Build modern Shiny dashboards using bslib with Bootstrap 5 layouts, cards, value boxes, navigation, theming, and modern inputs. Includes migration guide from legacy Shiny patterns
 - **[shiny-bslib-theming](./shiny/shiny-bslib-theming/)** - Comprehensive theming for Shiny apps using bslib, covering bs_theme(), Bootswatch themes, custom colors, typography, Bootstrap Sass variables, custom Sass/CSS rules, dark mode, dynamic theming, and R plot theming
+- **[shiny-reactivity](./shiny/shiny-reactivity/)** - Design and debug Shiny's reactive graph in R. Choose between reactive(), observe(), observeEvent(), and eventReactive(); manage state with reactiveValues; control execution with req(), bindEvent(), bindCache(), and debounce(); and debug with reactlog, tracebacks, and profvis
+- **[shiny-testing](./shiny/shiny-testing/)** - Test Shiny apps in R across three layers: pure functions with testthat, reactive logic with shiny::testServer(), and end-to-end with shinytest2 (AppDriver, snapshots)
+- **[shiny-for-agents](./shiny/shiny-for-agents/)** - Drive, inspect, and debug a running Shiny app (R and Python) with a browser tool (Playwright or agent-browser), reading server-side errors the browser can't see and authoring apps to be legible to agents
 
 ### Quarto
 
