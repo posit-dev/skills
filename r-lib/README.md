@@ -62,6 +62,17 @@ Comprehensive guidance for async, parallel, and distributed computing in R using
 - [mirai package documentation](https://mirai.r-lib.org/)
 - [mirai GitHub repository](https://github.com/r-lib/mirai)
 
+### `r-cran-status`
+
+Look up an R package's live status on cran.r-project.org — submission/review state (queue, human review, waiting, archived, past version's fate) or `R CMD check` results (OK/NOTE/WARN/ERROR per platform). Use when asked whether a package/version was accepted, rejected, archived, or is passing CRAN checks.
+
+**Organization**: Single comprehensive SKILL.md file covering both submission-status lookups (incoming queue, reviewer folders, archive) and check-results lookups (per-platform check_results pages).
+
+**Resources**: This skill queries CRAN directly:
+- [cran.r-project.org/incoming](https://cran.r-project.org/incoming/)
+- [cran.r-project.org check results](https://cran.r-project.org/web/checks/)
+- [CRAN Archive](https://cran.r-project.org/src/contrib/Archive/)
+
 ### `alt-text`
 
 Generate and improve accessible alt text for data visualizations and images in R packages and Quarto documents. Use when adding, improving, or auditing alt text for figures in a pkgdown site or `.qmd` files.
