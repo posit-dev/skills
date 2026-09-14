@@ -2,31 +2,21 @@
 name: ggsql
 description: Write ggsql queries — a grammar of graphics for SQL. Use when the user wants to create, modify, or understand a ggsql visualization query.
 allowed-tools: Bash(ggsql:*)
-argument-hint: "[description of desired visualization]"
 metadata:
   author: George Stagg (@georgestagg)
-  version: "1.0"
+  version: "1.1"
 license: MIT
 ---
 
 # ggsql Query Writer
 
-ggsql is a SQL extension for declarative data visualization based on Grammar of Graphics principles. It lets users combine SQL data queries with visualization specifications in a single, composable syntax.
-
-When the user describes a visualization they want, write a valid ggsql query. Use ONLY syntax documented below. NEVER invent clauses, settings, aesthetics, or layer types.
+ggsql is a SQL extension for declarative data visualization based on Grammar of Graphics principles, combining SQL data queries with a visualization spec in one composable syntax. When the user describes a visualization, write a valid query using ONLY the syntax documented below — NEVER invent clauses, settings, aesthetics, or layer types.
 
 ## Query structure
 
-A ggsql query has two parts:
+A query has an optional SQL part and a required VISUALISE part (begins with `VISUALISE`, or `VISUALIZE`).
 
-1. **SQL part** (optional): Standard SQL executed on the backend. Any tables, CTEs, or SELECT results are available to the visualization.
-2. **VISUALISE part** (required): Begins with `VISUALISE` (or `VISUALIZE`). Everything after this is the visualization query.
-
-There are two patterns for combining SQL with VISUALISE:
-
-### Pattern A: SELECT → VISUALISE
-
-The last SQL statement is a SELECT. Data flows from its result set into VISUALISE, which has no `FROM` clause.
+**Pattern A — SELECT → VISUALISE**: the last SQL statement is a SELECT (bare, `WITH...SELECT`, or `UNION`/`INTERSECT`/`EXCEPT`); its result set flows into VISUALISE, which has no `FROM`.
 
 ```ggsql
 SELECT name, score_a, score_b FROM 'dataset.csv' WHERE value > 50
@@ -34,11 +24,7 @@ VISUALISE score_a AS x, score_b AS y
 [DRAW / PLACE / SCALE / FACET / PROJECT / LABEL clauses]
 ```
 
-Works with any SQL that ends in a SELECT: bare SELECT, WITH...SELECT, UNION/INTERSECT/EXCEPT.
-
-### Pattern B: VISUALISE FROM
-
-VISUALISE provides its own data source via `FROM`. Use when referencing a table, file, CTE, or built-in dataset directly without a trailing SELECT.
+**Pattern B — VISUALISE FROM**: VISUALISE supplies its own data source — a table, file, CTE, or built-in dataset — directly, without a trailing SELECT.
 
 ```ggsql
 VISUALISE score_a AS x, score_b AS y FROM 'dataset.csv'
@@ -53,26 +39,25 @@ DRAW bar
 
 ## Data sources
 
-Data sources can appear in `VISUALISE ... FROM` or `DRAW ... MAPPING ... FROM`:
+Usable in `VISUALISE ... FROM` or `DRAW ... MAPPING ... FROM`:
 
-- **Table/CTE name** (unquoted): `FROM sales`, `FROM my_cte`
+- **Table/CTE** (unquoted): `FROM sales`, `FROM my_cte`
 - **File path** (single-quoted string): `FROM 'data.parquet'`, `FROM 'data.csv'`
 - **Built-in datasets**: `FROM ggsql:penguins`, `FROM ggsql:airquality`
 
 ## VISUALISE clause
 
-Marks the start of the visualization. Optionally defines global mappings inherited by all layers.
+Starts the visualization; optionally defines global mappings inherited by every layer.
 
 ```
 VISUALISE <mapping>, ... FROM <data-source>
 ```
 
-### Mapping forms
-
+Mapping forms:
 - **Explicit**: `column AS aesthetic` — e.g. `revenue AS y`
-- **Implicit**: `column` — column name must match aesthetic name, e.g. `x` maps to `x`
-- **Wildcard**: `*` — all columns with names matching aesthetics are mapped
-- **Constants**: `'red' AS fill`, `42 AS size` — literal values mapped to aesthetic
+- **Implicit**: `column` — name must match the aesthetic, e.g. `x` maps to `x`
+- **Wildcard**: `*` — all columns whose names match an aesthetic
+- **Constant**: `'red' AS fill`, `42 AS size`
 
 ```ggsql
 VISUALISE bill_len AS x, bill_dep AS y, species AS fill FROM ggsql:penguins
@@ -82,7 +67,7 @@ VISUALISE FROM ggsql:penguins
 
 ## DRAW clause
 
-Defines a layer. Multiple DRAW clauses stack layers (first = bottom, last = top).
+Defines a layer. Multiple DRAW clauses stack (first = bottom, last = top). All subclauses are optional if VISUALISE already provides global mappings and data.
 
 ```
 DRAW <layer-type>
@@ -94,17 +79,13 @@ DRAW <layer-type>
   ORDER BY <column>, ...
 ```
 
-All subclauses are optional if VISUALISE provides global mappings and data.
-
 ### MAPPING
 
-Same syntax as VISUALISE mappings. Layer mappings merge with global mappings (layer takes precedence). Can include `FROM` for layer-specific data.
-
-- Use `null` to prevent inheriting a global mapping: `MAPPING null AS color`
+Same forms as VISUALISE. Layer mappings merge with global mappings (layer wins) and can add a layer-specific `FROM`. Use `null` to block inheriting a global mapping: `MAPPING null AS color`.
 
 ### REMAPPING
 
-For statistical layers (histogram, density, boxplot, violin, smooth, bar without y). Maps calculated statistics to aesthetics. Each layer documents its available stats and default remapping.
+For statistical layers (`histogram`, `density`, `boxplot`, `violin`, `smooth`, `bar` without y): maps a computed stat to an aesthetic. Each layer documents its own stats and default remapping.
 
 ```ggsql
 DRAW histogram
@@ -114,38 +95,26 @@ DRAW histogram
 
 ### SETTING
 
-Set literal aesthetic values or layer parameters. Aesthetics set here bypass scales.
+Sets literal aesthetic values or layer parameters. Aesthetics set this way bypass scales.
 
 ```ggsql
-DRAW point
-  SETTING size => 5, opacity => 0.7, stroke => 'red'
+DRAW point SETTING size => 5, opacity => 0.7, stroke => 'red'
 ```
 
-**Position adjustment** is a special setting:
-```ggsql
-SETTING position => 'identity'   -- no adjustment (default for most)
-SETTING position => 'stack'      -- stack (default for bar, histogram, area)
-SETTING position => 'dodge'      -- side by side (default for boxplot, violin)
-SETTING position => 'jitter'     -- random offset
-```
+**Position adjustment** (a special setting): `'identity'` (no adjustment, default for most), `'stack'` (default for bar/histogram/area), `'dodge'` (default for boxplot/violin), `'jitter'` (random offset).
 
-**Aggregate** collapses each group to a single row, replacing every numeric mapping in place with its aggregated value. Groups = `PARTITION BY` columns + all discrete mappings. Supported by `point`, `line`, `path`, `bar`, `area`, `ribbon`, `range`, `segment`, `rule`, `text`, `tile`. Not supported by `histogram`, `density`, `smooth`, `boxplot`, `violin` (they have their own stats).
+**Aggregate** collapses each group — `PARTITION BY` columns plus all discrete mappings — to one row, replacing every numeric mapping in place with its aggregated value. Supported by `point`, `line`, `path`, `bar`, `area`, `ribbon`, `range`, `segment`, `rule`, `text`, `tile`; not by layers with their own stats (`histogram`, `density`, `smooth`, `boxplot`, `violin`).
 
 ```ggsql
 SETTING aggregate => '<spec>'                -- single
 SETTING aggregate => ('<spec>', '<spec>', …) -- list
 ```
 
-Each `<spec>` is either:
-- **Untargeted** — `'<func>'`. Applies to every numeric mapping without an explicit target. With two untargeted defaults, the first applies to lower-side aesthetics (`x`/`xmin`/etc.) plus all non-range layers, the second to upper-side (`xend`/`xmax`). More than two untargeted defaults is an error.
-- **Targeted** — `'<aes>:<func>'`. Applies `func` to the named aesthetic only. Overrides any untargeted default for that aesthetic.
+Each `<spec>` is **untargeted** (`'<func>'`, applies to every numeric mapping without an explicit target — at most two untargeted defaults, the first for lower-side aesthetics like `x`/`xmin` plus all non-range layers, the second for upper-side like `xend`/`xmax`) or **targeted** (`'<aes>:<func>'`, applies only to that aesthetic, overriding any untargeted default for it).
 
-Functions:
-- Standard reductions: `count`, `sum`, `prod`, `min`, `max`, `range` (max−min), `mid` ((min+max)/2), `mean`, `median`, `geomean`, `harmean`, `rms`, `sdev`, `var`, `iqr`, `se`, `p05`–`p95`.
-- Positional (rely on upstream `ORDER BY` for deterministic order): `first`, `last`, `diff` (last − first).
-- Band: `<offset>±[<mult>]<expansion>`, e.g. `'mean+1.96sdev'`, `'median-iqr'`. Offsets: `mean`, `median`, `geomean`, `harmean`, `rms`, `sum`, `prod`, `min`, `max`, `mid`, `p05`–`p95`. Expansions: `sdev`, `se`, `var`, `iqr`, `range`.
+Functions: reductions `count, sum, prod, min, max, range (max−min), mid ((min+max)/2), mean, median, geomean, harmean, rms, sdev, var, iqr, se, p05–p95`; positional (rely on an upstream `ORDER BY`) `first, last, diff (last−first)`; band `<offset>±[<mult>]<expansion>`, e.g. `'mean+1.96sdev'`, `'median-iqr'` — offsets `mean/median/geomean/harmean/rms/sum/prod/min/max/mid/p05–p95`, expansions `sdev/se/var/iqr/range`.
 
-**Explosion** — targeting the same aesthetic with multiple functions emits one row per function per group. A synthetic `aggregate` column tags each row with the function name. Use `REMAPPING aggregate AS <aes>` to drive another aesthetic from it. When several aesthetics are exploded with the same length, they explode in lockstep (row 1 = each target's first function, row 2 = second, …); single-function targets are reused on every row. Mixing target lengths > 1 is an error.
+**Explosion** — targeting one aesthetic with multiple functions emits one row per function per group, tagged by a synthetic `aggregate` column (drive another aesthetic from it via `REMAPPING aggregate AS <aes>`). Aesthetics exploded to the same length explode in lockstep (row 1 = each target's first function, etc.); single-function targets repeat on every row. Mixing target lengths > 1 is an error.
 
 ```ggsql
 -- min/max envelope as two lines per group, coloured by function
@@ -156,40 +125,34 @@ DRAW line
   PARTITION BY Year
 ```
 
-**Scale interaction** — for an aesthetic that is *targeted* by aggregate, `SCALE BINNED <aes>` runs **after** aggregation (otherwise the diff/mean/etc. would cancel within a bin). Untargeted `SCALE BINNED` still bins pre-aggregate so the bins can drive grouping. Continuous censoring (`SCALE <aes> FROM (lo, hi)`) and discrete OOB filtering defer to post-aggregate whenever the aesthetic is being aggregated (targeted or untargeted default).
+**Scale interaction** — for an aesthetic *targeted* by aggregate, `SCALE BINNED <aes>` runs after aggregation (otherwise diff/mean etc. would cancel within a bin); untargeted `SCALE BINNED` still bins pre-aggregate so bins can drive grouping. Continuous censoring (`SCALE <aes> FROM (lo, hi)`) and discrete OOB filtering defer to post-aggregate whenever the aesthetic is being aggregated.
 
 ### FILTER
 
-SQL WHERE condition applied to layer data. Content is passed to the database:
+SQL WHERE condition applied to layer data, passed straight to the database:
+
 ```ggsql
-DRAW point
-  FILTER sex = 'female' AND body_mass > 4000
+DRAW point FILTER sex = 'female' AND body_mass > 4000
 ```
 
 ### PARTITION BY
 
-Additional grouping columns beyond mapped discrete aesthetics:
+Extra grouping columns beyond mapped discrete aesthetics:
+
 ```ggsql
-DRAW line
-  MAPPING Day AS x, Temp AS y
-  PARTITION BY Month
+DRAW line MAPPING Day AS x, Temp AS y PARTITION BY Month
 ```
 
 ### ORDER BY
 
-Controls record order (important for path layers):
-```ggsql
-DRAW path
-  ORDER BY timestamp
-```
+Controls record order (matters for `path` layers): `DRAW path ORDER BY timestamp`
 
 ## PLACE clause
 
-Creates annotation layers with literal values only (no data mappings). Supports tuples for multiple annotations.
+Annotation layer with literal values only, no data mapping. Supports tuples for multiple annotations.
 
 ```
-PLACE <layer-type>
-  SETTING <aesthetic/param> => <value>, ...
+PLACE <layer-type> SETTING <aesthetic/param> => <value>, ...
 ```
 
 ```ggsql
@@ -200,7 +163,7 @@ PLACE text SETTING x => (34, 44), y => (66, 49), label => ('Mean = 34', 'Mean = 
 
 ## SCALE clause
 
-Controls how data values are translated to aesthetic values. Sensible defaults are always provided.
+Controls how data values map to aesthetic output. Sensible defaults always apply.
 
 ```
 SCALE <type> <aesthetic> FROM <input-range> TO <output-range> VIA <transform>
@@ -208,42 +171,17 @@ SCALE <type> <aesthetic> FROM <input-range> TO <output-range> VIA <transform>
   RENAMING <value> => <label>, ...
 ```
 
-All parts except `aesthetic` are optional.
+Everything except `aesthetic` is optional.
 
-### Scale types (optional, placed before aesthetic)
+**Types** (placed before the aesthetic; inferred from data if omitted): `CONTINUOUS`, `DISCRETE`, `BINNED` (bin continuous data into discrete groups — never auto-selected), `ORDINAL` (ordered discrete — never auto-selected), `IDENTITY` (pass through unchanged, no legend).
 
-- `CONTINUOUS` — continuous numeric/temporal data
-- `DISCRETE` — categorical/string data
-- `BINNED` — bin continuous data into discrete groups (never auto-selected, must be explicit)
-- `ORDINAL` — ordered discrete data (never auto-selected, must be explicit)
-- `IDENTITY` — pass data through unchanged (no legend created)
+**Aesthetic names** — base name only: `x`, `y`, `fill`, `stroke`, `color` (sets both fill and stroke), `opacity`, `size`, `linewidth`, `linetype`, `shape`, `panel` (facet), `row`, `column`. Position families (xmin/xmax/xend/ymin/ymax/yend) scale via the base name, e.g. `SCALE x ...`.
 
-If omitted, type is inferred from data.
+**FROM** (input range): continuous `FROM (min, max)`, `null` infers from data (`FROM (0, null)`); discrete `FROM ('A', 'B', 'C')` sets order and nulls omitted values, or include null explicitly (`FROM ('Torgersen', 'Biscoe', null)`).
 
-### Aesthetic names
+**TO** (output range): value array (`TO ('red', 'blue', 'green')`, `TO (1, 6)`) or a named palette (`TO viridis`, `TO dark2`, `TO tableau10`).
 
-Use the base name: `x`, `y`, `fill`, `stroke`, `color` (sets both fill and stroke), `opacity`, `size`, `linewidth`, `linetype`, `shape`, `panel` (facet), `row`, `column`.
-
-For position families (xmin/xmax/xend/ymin/ymax/yend), scale with the base name: `SCALE x ...`
-
-### FROM (input range)
-
-- Continuous: `FROM (min, max)` — use `null` to infer from data: `FROM (0, null)`
-- Discrete: `FROM ('A', 'B', 'C')` — controls order, omitted values are nulled
-- Include null explicitly: `FROM ('Torgersen', 'Biscoe', null)`
-
-### TO (output range)
-
-- Array of values: `TO ('red', 'blue', 'green')`, `TO (1, 6)`
-- Named palette: `TO viridis`, `TO dark2`, `TO tableau10`
-
-### VIA (transform)
-
-Continuous transforms: `linear`, `log`, `log2`, `ln`, `exp10`, `exp2`, `exp`, `sqrt`, `square`, `asinh`, `pseudo_log`, `pseudo_log2`, `pseudo_ln`, `integer`
-
-Temporal transforms: `date`, `datetime`, `time` — automatically chosen for date/datetime/time columns.
-
-Discrete transforms: `string`, `bool`
+**VIA** (transform) — continuous: `linear, log, log2, ln, exp10, exp2, exp, sqrt, square, asinh, pseudo_log, pseudo_log2, pseudo_ln, integer`; temporal (auto-chosen for date/datetime/time columns): `date, datetime, time`; discrete: `string, bool`.
 
 ```ggsql
 SCALE x VIA date        -- treat x as temporal
@@ -251,23 +189,7 @@ SCALE y VIA log         -- log transform
 SCALE size VIA square   -- scale by radius not area
 ```
 
-### SETTING
-
-Continuous/binned scales:
-- `expand` — expansion factor, scalar or `(mult, add)`. Default `0.05`. Only for x/y.
-- `oob` — out-of-bounds: `'keep'` (default for x/y), `'censor'` (default for others), `'squish'`
-- `breaks` — integer count, array of values, or interval string for temporal (e.g. `'2 months'`, `'week'`)
-- `pretty` — boolean, default `true`. Use Wilkinson's algorithm for nice breaks.
-- `reverse` — boolean, default `false`. Reverse scale direction.
-
-Continuous scales additionally:
-- `minor_breaks` — unlabelled subdivisions between breaks. Integer count **per interval between two breaks** (`0` removes them), array of values, or interval string for temporal. Defaults to a per-transformation value. Only drawn by writers that support minor breaks; Vega-Lite ignores it.
-
-Binned scales additionally:
-- `closed` — `'left'` (default) or `'right'`
-
-Discrete/ordinal scales:
-- `reverse` — boolean
+**SETTING** — continuous/binned: `expand` (factor, scalar or `(mult, add)`, default `0.05`, x/y only), `oob` (`'keep'` default for x/y, `'censor'` default for others, `'squish'`), `breaks` (count, value array, or interval string like `'2 months'`), `pretty` (bool, default `true`, Wilkinson's algorithm), `reverse` (bool, default `false`). Continuous only: `minor_breaks` (unlabelled subdivisions per interval — count, `0` to remove, value array, or interval string; Vega-Lite ignores it). Binned only: `closed` (`'left'` default / `'right'`). Discrete/ordinal: `reverse` (bool).
 
 ```ggsql
 SCALE x SETTING breaks => '2 months'
@@ -275,9 +197,7 @@ SCALE y FROM (0, 100) SETTING oob => 'squish'
 SCALE BINNED x SETTING breaks => 10, pretty => false
 ```
 
-### RENAMING
-
-Rename break labels. Direct renaming, wildcard formatting, or both (direct takes priority):
+**RENAMING** — direct renaming, wildcard formatting, or both (direct wins):
 
 ```ggsql
 RENAMING 'Adelie' => 'Pygoscelis adeliae', 'adelie' => null  -- direct / suppress
@@ -287,34 +207,24 @@ RENAMING * => '{:Title}'             -- formatters: Title, UPPER, lower, time %B
 
 ## FACET clause
 
-Split data into small multiples.
+Splits data into small multiples.
 
 ```
 FACET <column> BY <column>
   SETTING <param> => <value>, ...
 ```
 
-- 1D: `FACET region` — wrap layout, aesthetic name is `panel`
-- 2D: `FACET region BY category` — grid layout, aesthetics are `row` and `column`
+1D `FACET region` (wrap layout, aesthetic `panel`); 2D `FACET region BY category` (grid layout, aesthetics `row`/`column`).
 
-### Settings
+Settings: `free` (`null` default/fixed, `'x'`, `'y'`, or `('x', 'y')`), `missing` (`'repeat'` default, or `'null'`), `ncol`/`nrow` (1D layout, only one allowed).
 
-- `free` — `null` (default/fixed), `'x'`, `'y'`, or `('x', 'y')` for independent scales
-- `missing` — `'repeat'` (default, show layer in all panels) or `'null'` (only show in null panel)
-- `ncol`/`nrow` — layout dimensions for 1D faceting (only one allowed)
+Customize strip labels or filter panels via SCALE on the facet aesthetic:
 
-### Customizing strip labels
-
-Use SCALE on the facet aesthetic:
 ```ggsql
 FACET region
-SCALE panel
-  RENAMING 'N' => 'North', 'S' => 'South'
+SCALE panel RENAMING 'N' => 'North', 'S' => 'South'
 ```
 
-### Filtering panels
-
-Use SCALE FROM to select which panels to show:
 ```ggsql
 FACET island
 SCALE panel FROM ('Biscoe', 'Dream')
@@ -329,46 +239,32 @@ PROJECT <aesthetic>, ... TO <coord-type>
   SETTING <param> => <value>, ...
 ```
 
-### Coordinate types
+**cartesian** (default) — aesthetics `x`, `y`; settings `clip` (bool, default true), `ratio` (aspect ratio or null).
 
-**cartesian** (default) — horizontal x, vertical y
-- Settings: `clip` (boolean, default true), `ratio` (aspect ratio number or null)
-- Default aesthetics: `x`, `y`
+**polar** — aesthetics `radius` (primary), `angle` (secondary); settings `clip`, `start`/`end` (degrees, default `0`/`start+360`), `inner` (0-1 donut hole, default `0`).
 
-**polar** — angle + radius from center
-- Settings: `clip`, `start` (degrees, default 0 = 12 o'clock), `end` (degrees, default start+360), `inner` (0-1 proportion for donut hole, default 0)
-- Default aesthetics: `radius` (primary), `angle` (secondary)
-
-Swap aesthetic order to flip axes: `PROJECT y, x TO cartesian`. If no PROJECT clause, coordinate type is inferred from mappings (x/y = cartesian, radius/angle = polar).
+Swap aesthetic order to flip axes (`PROJECT y, x TO cartesian`). Without PROJECT, coordinate type is inferred from mappings (x/y → cartesian, radius/angle → polar).
 
 ```ggsql
-PROJECT TO polar SETTING inner => 0.5  -- donut chart
-PROJECT TO polar SETTING start => -90, end => 90  -- half-circle gauge
+PROJECT TO polar SETTING inner => 0.5              -- donut chart
+PROJECT TO polar SETTING start => -90, end => 90   -- half-circle gauge
 ```
 
 ## LABEL clause
 
-Override default axis/legend labels and add titles.
+Overrides default axis/legend labels and adds titles.
 
 ```
-LABEL
-  <aesthetic/title> => <string>, ...
+LABEL <aesthetic/title> => <string>, ...
 ```
 
-Available labels:
-- `title` — main title
-- `subtitle` — subtitle below title
-- `caption` — text below the plot
-- Any aesthetic name — axis/legend title: `x`, `y`, `fill`, `color`, etc.
-- Use `null` to suppress a label: `fill => null`
+Labels: `title`, `subtitle`, `caption`, or any aesthetic name (axis/legend title). `null` suppresses a label: `fill => null`.
 
 ```ggsql
 LABEL
   title => 'Sales by Region',
   subtitle => 'Q4 2024 data',
-  x => 'Date',
-  y => 'Revenue (USD)',
-  fill => 'Region',
+  x => 'Date', y => 'Revenue (USD)', fill => 'Region',
   caption => 'Source: internal sales database'
 ```
 
@@ -380,13 +276,13 @@ LABEL
 Scatterplot. Required: x, y. Optional: size, colour, stroke, fill, opacity, shape.
 
 ### line
-Line plot sorted along primary axis. Required: x, y. Optional: colour/stroke, opacity, linewidth, linetype. Settings: `position`, `orientation` (`'aligned'`/`'transposed'`).
+Line plot sorted along the primary axis. Required: x, y. Optional: colour/stroke, opacity, linewidth, linetype. Settings: `position`, `orientation` (`'aligned'`/`'transposed'`).
 
 ### path
 Like line but connects points in data order (not sorted). Same aesthetics as line.
 
 ### bar
-Bar chart. Auto-counts if y not provided. Optional: x (categories), y (height), fill, colour, stroke. Stats: `count`, `proportion`. Properties: `weight`. Settings: `position` (default `'stack'`), `width` (0-1). Orientation inferred from mapping (categories on x = vertical, on y = horizontal).
+Bar chart, auto-counts if y not provided. Optional: x (categories), y (height), fill, colour, stroke. Stats: `count`, `proportion`. Properties: `weight`. Settings: `position` (default `'stack'`), `width` (0-1). Orientation inferred from mapping (categories on x = vertical, on y = horizontal).
 
 ```ggsql
 DRAW bar MAPPING species AS x                              -- auto-count
@@ -455,13 +351,10 @@ All layers accept common optional aesthetics (colour/stroke, fill, opacity, line
 ## Common patterns
 
 ```ggsql
--- Pie chart
+-- Pie chart: bar layer projected to polar coordinates
 VISUALISE species AS fill FROM ggsql:penguins
 DRAW bar
 PROJECT TO polar
-
--- Horizontal bar chart
-DRAW bar MAPPING species AS y
 
 -- Multi-series line chart
 VISUALISE Date AS x
@@ -514,11 +407,11 @@ DRAW ribbon
 
 ## CLI
 
-The `ggsql` CLI should be on the PATH. Subcommands: `exec <QUERY>`, `run <FILE>`, `validate <QUERY>`, `parse <QUERY>`, `view <QUERY>` (native window, blocks until closed). Common options: `--reader <URI>` (default `duckdb://memory`), `--writer <FORMAT>` (default `vegalite`), `--output <PATH>` (its extension picks the writer when `--writer` is omitted), `-D key=value` (writer settings), `-v` (verbose). Writers: `vegalite`, `svg`, `pdf`, `hep` (no GPU needed) and `png`, `jpeg`, `tiff`, `webp` (rasterise on the GPU, not in every build).
+The `ggsql` CLI should be on the PATH. Subcommands: `exec <QUERY>`, `run <FILE>`, `validate <QUERY>`, `parse <QUERY>`, `view <QUERY>` (native window, blocks until closed). Common options: `--reader <URI>` (default `duckdb://memory`), `--writer <FORMAT>` (default `vegalite`), `--output <PATH>` (extension picks the writer when `--writer` is omitted), `-D key=value` (writer settings), `-v` (verbose). Writers: `vegalite`, `svg`, `pdf`, `hep` (no GPU needed) and `png`, `jpeg`, `tiff`, `webp` (rasterise on the GPU, not in every build).
 
-**Do not run `ggsql view` unless the user asked for a window.** It blocks until a person closes the window, and you cannot close it yourself. Write a file with `--output` and look at that instead.
+**Do not run `ggsql view` unless the user asked for a window** — it blocks until a person closes it, and you cannot close it yourself. Write a file with `--output` and look at that instead.
 
-**Prefer `svg` or `pdf` when you need a picture**, since they need no GPU adapter. The raster writers do, and discover it only at render time. `ggsql exec --help` lists the writers this build has and names the feature that would add a missing one; it cannot tell you whether an adapter is present.
+**Prefer `svg` or `pdf` when you need a picture**, since they need no GPU adapter (the raster writers do, and discover it only at render time). `ggsql exec --help` lists the writers this build has and names the feature that would add a missing one; it cannot tell you whether an adapter is present.
 
 ```bash
 ggsql validate "VISUALISE x, y FROM data DRAW point"
@@ -543,7 +436,6 @@ ggsql exec "VISUALISE species AS fill FROM ggsql:penguins DRAW bar" -o chart.svg
 4. Include SCALE clauses when the defaults are insufficient (e.g. date formatting, custom palettes, range limits).
 5. Include LABEL for titles when the context warrants it.
 6. Briefly explain your choices after the query.
-7. NEVER invent syntax, settings, aesthetics, layer types, or palette names not documented above.
-8. If unsure whether a feature exists, say so rather than guessing.
-9. Use `ggsql:penguins` or `ggsql:airquality` as example data when no specific data is mentioned.
-10. When the user wants to validate a query, use `ggsql validate "<query>"`. When the user wants to see the output, use `ggsql exec "<query>" -v`.
+7. NEVER invent syntax, settings, aesthetics, layer types, or palette names not documented above — if unsure whether a feature exists, say so rather than guessing.
+8. Use `ggsql:penguins` or `ggsql:airquality` as example data when no specific data is mentioned.
+9. When the user wants to validate a query, use `ggsql validate "<query>"`. When the user wants to see the output, use `ggsql exec "<query>" -v`.
