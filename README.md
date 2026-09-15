@@ -65,6 +65,7 @@ Skills for Quarto document creation and publishing.
 - **[brand-yml](./brand-yml/)** - Create and apply brand.yml files for consistent styling across Quarto projects, supporting HTML documents, dashboards, RevealJS presentations, Typst PDFs, and websites with automatic brand discovery and theme layering
 - **[authoring](quarto/README.md#quarto-authoring-skill)** - Comprehensive guidance for Quarto document authoring and R Markdown migration. Write new Quarto documents with best practices, convert R Markdown files, migrate bookdown/blogdown/xaringan/distill projects, and use Quarto-specific features like hashpipe syntax, cross-references, callouts, and extensions
 - **[alt-text](./alt-text/)** - Generate and improve accessible alt text for figures in Quarto documents using Amy Cesal's three-part formula (chart type, data description, key insight). Supports code-generated plots and static images
+- **[quarto-lua](./quarto/quarto-lua/)** - Write Lua shortcodes and filters for Quarto, with runtime access to Quarto's LLM-optimised API documentation
 
 ### Connect
 
