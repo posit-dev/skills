@@ -19,12 +19,14 @@ Downstream copies are overwritten by the sync workflow.
 
 # Deploying to Posit Connect
 
-This guide covers Python and R content on a Posit Connect server. Work through the stages in order.
+This guide covers Python and R content on a Connect server.
+It also covers static HTML content when the target server exposes Model Context Protocol (MCP) tools.
 
-Two toolchains do the work:
+Choose the deployment route that matches the content and available tools:
 
 - Python — [rsconnect-python](https://github.com/posit-dev/rsconnect-python), which provides the `rsconnect` CLI and is published on PyPI.
 - R — the R [`rsconnect`](https://rstudio.github.io/rsconnect/) package, pointed at a Connect server.
+- Static HTML, when the target server exposes MCP tools: the Connect content and bundle APIs, using MCP plus `curl`.
 
 If the user asks a question ("how do I…", "what is the command…") rather than asking for a deploy, answer from this guide and stop.
 
@@ -44,6 +46,7 @@ Infer the language and framework from the files in the project directory. Common
 | `*.qmd` | Quarto document |
 | `*.Rmd` | R Markdown |
 | `*.ipynb` | Jupyter notebook / Voila |
+| `index.html`, or a directory containing HTML, CSS, JavaScript, or image files | Static HTML site |
 | `manifest.json` | Prebuilt bundle — deploy it directly, no framework guess needed |
 | A bare `.py` or `.R` — no framework import, no `ui.R`/`server.R`/`plumber.R`/`entrypoint.R` alongside | Script — a batch/ETL job that Quarto renders and Connect can schedule |
 
@@ -77,6 +80,8 @@ command -v Rscript                                   # R present
 Rscript -e 'cat(requireNamespace("rsconnect", quietly=TRUE))' 2>/dev/null   # R rsconnect package
 command -v quarto                                     # quarto CLI
 command -v git                                        # git
+command -v curl                                       # Connect bundle API
+command -v node                                       # JSON parsing for a Bash-only upload
 ```
 
 With `uv` present, Python content needs no install step. `uv tool run --from rsconnect-python rsconnect ...` fetches and runs the CLI on demand.
@@ -86,6 +91,51 @@ With `uv` present, Python content needs no install step. `uv tool run --from rsc
 ## Stage 3 — Pick a route
 
 Cross the detected content (Stage 1) with your capabilities (Stage 2).
+
+### Static HTML content when MCP is available
+
+Use this route only when the target server exposes the `publish_static_content`
+MCP tool.
+If that tool is unavailable, report that static HTML publishing is not
+supported by the target server and stop.
+When the tool is available, use the Connect content and bundle APIs when the
+environment has `curl` but no deployment-specific CLI.
+Content creation remains separate from bundle upload and activation.
+
+For one text artifact, call the `publish_static_content` MCP tool with
+`file_name`, `content`, and either a new-content `name` or an existing `guid`.
+It creates content when needed, uploads the generated bundle, starts its
+deployment, and returns the content GUID, bundle ID, and task ID. Call
+`get_deployment_status` with both the task ID and content GUID; once deployment
+finishes it returns the content and dashboard URLs, or the deployment error.
+HTML is published as
+`static`; Markdown, Quarto, and R Markdown extensions are published as
+`quarto-static`. Text is limited to 4 MiB by UTF-8 byte length. The MCP
+specification does not define one universal argument-size limit. Connect
+leaves bounded room for the request envelope; do not put an entire site or
+binary assets in that argument.
+
+For an existing content item with a prepared `.tar.gz` bundle, use
+`request_bundle_upload` and send the archive once to the returned URL:
+
+```{.bash filename="Terminal"}
+set -euo pipefail
+
+guid="${1:?existing content GUID is required}"
+bundle="${2:?path to a gzip bundle is required}"
+
+# Call request_bundle_upload through an MCP client, then use its result:
+upload_url="<upload_url for ${guid}>"
+token="<single-use token>"
+curl --silent --show-error --fail \
+	-H "X-Posit-Bundle-Upload-Token: ${token}" \
+	--data-binary "@${bundle}" \
+	"${upload_url}"
+```
+
+`request_bundle_upload` only mints the upload capability.
+No MCP `deploy_bundle` tool exists, so use the REST deploy endpoint after the
+upload when a prepared archive needs to be activated.
 
 ### Python content
 
