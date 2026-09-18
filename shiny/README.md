@@ -76,15 +76,44 @@ Comprehensive theming for Shiny apps using bslib and Bootstrap 5. Use when custo
 - [Bootswatch themes](https://bootswatch.com/)
 - [thematic package](https://rstudio.github.io/thematic/)
 
+### `shiny-reactivity`
+
+Design and debug Shiny's reactive graph in R. Use when choosing between `reactive()`, `observe()`, `observeEvent()`, and `eventReactive()`; managing state with `reactiveValues`; controlling when things run with `req()`, `bindEvent()`, `bindCache()`, or `debounce()`; or debugging reactivity with reactlog, tracebacks, and profvis.
+
+**Organization**: Single self-contained SKILL.md covering reactive-graph design patterns, common anti-patterns (the observer-writes-reactiveValues trap), and a debugging workflow.
+
+**Resources**:
+- [Mastering Shiny: Reactivity](https://mastering-shiny.org/reactivity-intro.html)
+- [reactlog package](https://rstudio.github.io/reactlog/)
+
+### `shiny-testing`
+
+Test Shiny apps in R across three layers — pure functions with testthat, reactive logic with `shiny::testServer()`, and end-to-end with shinytest2 (`AppDriver`, snapshots). Use when writing or fixing tests for a Shiny app or module, testing reactives without a browser, setting up shinytest2, or deciding what to test where.
+
+**Organization**: Single self-contained SKILL.md organized by the three testing layers, cheapest first, with guidance on what to test where.
+
+**Resources**:
+- [shinytest2 package](https://rstudio.github.io/shinytest2/)
+- [Mastering Shiny: Testing](https://mastering-shiny.org/scaling-testing.html)
+
+### `shiny-for-agents`
+
+Drive, inspect, and debug a running Shiny app (R and Python) with a browser tool (Playwright or agent-browser). Use when launching a Shiny app for inspection, driving its UI without flaky sleeps, reading server-side errors the browser can't see, or authoring an app to be legible to agents.
+
+**Organization**: SKILL.md explains Shiny's split-runtime model and agent-driving workflow, plus helper scripts:
+- `scripts/launch_app_dev.R` - Launch a Shiny app in a dev-friendly mode for inspection
+- `scripts/wait_for_shiny_idle.js` - Wait on `shiny:busy`/`shiny:idle` events instead of fixed sleeps
+
+**Resources**:
+- [Shiny JavaScript events](https://shiny.posit.co/r/articles/build/js-events/)
+
 ## Potential Skills
 
 This category could include skills for:
 
 - Shiny app architecture and best practices
-- Reactive programming patterns
 - UI/UX design for Shiny apps
 - Performance optimization
-- Testing Shiny applications
 - Deployment strategies
 - Module development
 - Extension creation

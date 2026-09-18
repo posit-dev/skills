@@ -78,7 +78,10 @@
       "skills": [
         "./brand-yml",
         "./shiny/shiny-bslib",
-        "./shiny/shiny-bslib-theming"
+        "./shiny/shiny-bslib-theming",
+        "./shiny/shiny-reactivity",
+        "./shiny/shiny-testing",
+        "./shiny/shiny-for-agents"
       ]
     },
     {
