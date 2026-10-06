@@ -25,6 +25,8 @@ Determine which category your skill belongs to:
 
 **Prefer a category-based name prefix**: When a category has a natural short prefix, name your skill with it so skills are self-describing and unambiguous across categories. The prefix should echo the category (e.g., `r-lib` skills use `r-*` like `r-cli`, `r-testthat`; `shiny` skills could use `shiny-*`; `quarto` skills could use `quarto-*`; `connect` skills could use `connect-*`). This matters most when the bare name would be generic or ambiguous — a skill named `cli` or `lifecycle` doesn't signal that it's about an R package. If the category name already says it all or no clean prefix exists (e.g., `posit-dev`, `open-source`), a plain descriptive name is fine.
 
+**When renaming a skill**, update every reference: the `name:` frontmatter, `marketplace.json`, the category and root READMEs, and cross-references in other skills. Then run `./find-stale-references.py` (see the repo root) to catch any stragglers — pass `--rename old=new` for renames not already in its default set, and note in the PR how users should migrate (plugin updates, or removing/reinstalling with `npx skills`).
+
 Other ideas for categories include:
 
 | Category | Description |

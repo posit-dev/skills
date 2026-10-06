@@ -6,9 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A collection of Claude Skills published by Posit PBC. Skills are structured markdown files that teach Claude specialized workflows (e.g., Shiny app development, R package testing, GitHub PR workflows). There is no application code to build, compile, or deploy — the primary artifacts are Markdown files consumed directly by Claude's skill system.
 
-## Utility Script
+## Utility Scripts
 
-The only runnable utility is `count-skill-tokens.py`, which reports line and token counts for a skill:
+Two runnable utilities live at the repo root.
+
+`count-skill-tokens.py` reports line and token counts for a skill:
 
 ```bash
 # Requires uv
@@ -18,6 +20,21 @@ uv run count-skill-tokens.py r-lib/r-cli
 ```
 
 Warns when `SKILL.md` exceeds **5,000 tokens / 500 lines**, or when the skill `description` frontmatter exceeds **100 tokens**.
+
+`find-stale-references.py` finds references to old skill names after a rename, so stale mentions don't linger in the repo or in users' projects:
+
+```bash
+# Check the default r-lib r-* prefix renames
+./find-stale-references.py [paths...]
+
+# High-confidence path references only (e.g. "r-lib/cli/SKILL.md")
+./find-stale-references.py --kinds path
+
+# Check a custom rename
+./find-stale-references.py --rename old-name=new-name ~/my-project
+```
+
+Bare name mentions are also reported but need review: the old name may refer to an R package (`cli`), a website (`cli.r-lib.org`), or an ordinary word (`lifecycle`) rather than the skill. Exits non-zero when matches are found, so it can gate CI.
 
 ## Directory Structure
 
