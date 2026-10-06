@@ -36,6 +36,7 @@ Skills for open-source R and Python package developers, streamlining common work
 
 R package development skills for working with the r-lib ecosystem and modern R package workflows.
 
+- **[r-tidyverse-style](./r-lib/r-tidyverse-style/)** - Review and clean up R package code using the tidyverse style guide, separating mechanical style changes from behavior-sensitive refactors
 - **[testing-r-packages](./r-lib/testing-r-packages/)** - Best practices for writing R package tests using testthat 3+, including test structure, expectations, fixtures, snapshots, mocking, and BDD-style testing
 - **[cli](./r-lib/cli/)** - Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication with inline markup, progress indicators, and theming
 - **[cran-extrachecks](./r-lib/cran-extrachecks/)** - Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`, including documentation standards, DESCRIPTION field formatting, and URL validation

@@ -4,6 +4,12 @@ Skills for R package developers working with the r-lib ecosystem and modern R pa
 
 ## Available Skills
 
+### `r-tidyverse-style`
+
+Review and clean up R package code using the [tidyverse style guide](https://style.tidyverse.org/), with a focus on code largely written by LLMs. Separates mechanical formatting from behavior-sensitive refactors, checks against the package's existing conventions, and includes concise, chapter-cited rules for syntax, functions, files, documentation, and errors. Recommends optional [Air](https://posit-dev.github.io/air/) for scoped formatting, with `jarl` and `ry` as optional lint and type checks.
+
+**Resources**: [Tidyverse style guide](https://github.com/tidyverse/style) (summarized, not copied).
+
 ### `testing-r-packages`
 
 Best practices for writing R package tests using testthat version 3+. Use when writing or modifying tests for R packages, organizing test files and fixtures, creating snapshot tests, mocking external dependencies, or following BDD patterns with describe/it.
