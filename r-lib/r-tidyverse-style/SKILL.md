@@ -82,4 +82,4 @@ Use `air format R/file.R` for scoped formatting (or `air format --check R/file.R
 - Reviewing `R/import.R`: flag a comment that merely narrates the next line as style noise. Treat `tryCatch(..., error = function(e) NULL)` as a *possible bug* to investigate, not something to delete during a review.
 - Cleaning a package that supports R 4.0: format the requested file, but leave `%>%` and exported names alone. Propose any base-pipe migration or public rename separately, with compatibility analysis and tests.
 
-Use `testing-r-packages` for test design and `r-package-development` for package infrastructure rather than expanding this style pass into either task.
+Use `r-testthat` for test design and `r-package-development` for package infrastructure rather than expanding this style pass into either task.

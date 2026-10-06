@@ -50,14 +50,14 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./r-lib/testing-r-packages",
+        "./r-lib/r-testthat",
         "./r-lib/r-tidyverse-style",
-        "./r-lib/cli",
-        "./r-lib/cran-extrachecks",
-        "./r-lib/lifecycle",
+        "./r-lib/r-cli",
+        "./r-lib/r-cran-extrachecks",
+        "./r-lib/r-lifecycle",
         "./r-lib/r-package-development",
         "./r-lib/r-cli-app",
-        "./r-lib/mirai",
+        "./r-lib/r-mirai",
         "./alt-text",
         "./r-lib/r-cran-status"
       ]

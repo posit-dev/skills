@@ -4,13 +4,19 @@ Skills for R package developers working with the r-lib ecosystem and modern R pa
 
 ## Available Skills
 
+### `r-package-development`
+
+R package development with devtools, testthat, and roxygen2. Use when the user is working on an R package, running tests, writing documentation, or building package infrastructure. Covers key commands, coding conventions, testing, documentation, and NEWS.md practices.
+
+**Organization**: Single comprehensive SKILL.md file.
+
 ### `r-tidyverse-style`
 
 Review and clean up R package code using the [tidyverse style guide](https://style.tidyverse.org/), with a focus on code largely written by LLMs. Separates mechanical formatting from behavior-sensitive refactors, checks against the package's existing conventions, and includes concise, chapter-cited rules for syntax, functions, files, documentation, and errors. Recommends optional [Air](https://posit-dev.github.io/air/) for scoped formatting, with `jarl` and `ry` as optional lint and type checks.
 
 **Resources**: [Tidyverse style guide](https://github.com/tidyverse/style) (summarized, not copied).
 
-### `testing-r-packages`
+### `r-testthat`
 
 Best practices for writing R package tests using testthat version 3+. Use when writing or modifying tests for R packages, organizing test files and fixtures, creating snapshot tests, mocking external dependencies, or following BDD patterns with describe/it.
 
@@ -26,7 +32,7 @@ Best practices for writing R package tests using testthat version 3+. Use when w
 - [testthat 3.3.0 release notes](https://tidyverse.org/blog/2025/11/testthat-3-3-0/)
 - testthat package documentation
 
-### `cli`
+### `r-cli`
 
 Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication. Use when formatting console output with inline markup, displaying errors/warnings/messages with `cli_abort()`/`cli_warn()`/`cli_inform()`, showing progress indicators, creating semantic CLI elements, applying themes, handling pluralization, or working with ANSI strings and hyperlinks.
 
@@ -36,7 +42,13 @@ Comprehensive guidance for using the cli R package for command-line interface st
 - [cli package documentation](https://cli.r-lib.org/)
 - cli vignettes and function reference
 
-### `cran-extrachecks`
+### `r-cli-app`
+
+Build command-line apps in R using the Rapp package. Use when creating a CLI tool in R, adding argument parsing to an R script, turning an R script into a command-line app, or shipping CLIs in an R package. Also covers shebang scripts, the `exec/` directory in R packages, and subcommand-based R tools.
+
+**Organization**: Uses progressive disclosure with reference files. Core workflows load from SKILL.md, while advanced topics load only when needed from the `references/` directory.
+
+### `r-cran-extrachecks`
 
 Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`. Use when preparing a package for first CRAN release, preparing updates for resubmission, reviewing packages for CRAN compliance, or responding to CRAN reviewer feedback.
 
@@ -47,7 +59,7 @@ Prepare R packages for CRAN submission by checking for common ad-hoc requirement
 - `usethis::use_release_issue()` checklist
 - Common CRAN rejection reasons
 
-### `lifecycle`
+### `r-lifecycle`
 
 Guidance for managing R package lifecycle according to tidyverse principles using the lifecycle package. Use when setting up lifecycle infrastructure in a package, deprecating functions or arguments, renaming functions/arguments, superseding functions, or marking functions as experimental.
 
@@ -58,7 +70,7 @@ Guidance for managing R package lifecycle according to tidyverse principles usin
 - lifecycle vignettes: "Stages", "Communicate", and "Manage"
 - [R Packages: Lifecycle](https://r-pkgs.org/lifecycle.html)
 
-### `mirai`
+### `r-mirai`
 
 Comprehensive guidance for async, parallel, and distributed computing in R using the mirai package. Use when running R code asynchronously or in parallel, fixing dependency-passing mistakes, setting up local or remote daemon pools, converting code from future or parallel, using `mirai_map()` for parallel mapping, integrating async tasks with Shiny via `ExtendedTask`, or configuring cluster/HPC computing.
 
@@ -85,18 +97,17 @@ Generate and improve accessible alt text for data visualizations and images in R
 
 **Organization**: Uses progressive disclosure with reference files. The main skill detects the project type (pkgdown vs. Quarto) and loads the relevant reference. References cover pkgdown-specific workflows and Quarto-specific workflows separately.
 
-**Note**: This skill is also registered in the quarto category since it covers both pkgdown sites and Quarto documents.
+**Note**: This skill lives at the repo root (`alt-text/`) and is shared: it is registered under both the `r-lib` and `quarto` plugins since it covers both pkgdown sites and Quarto documents.
 
 ## Potential Skills
 
 This category could include skills for:
 
-- Package development workflows (usethis, devtools)
 - Package structure and organization
 - Dependencies and NAMESPACE management
-- R CMD check and CRAN submission
 - Continuous integration setup
 - Version control workflows for packages
+- Documentation websites (pkgdown)
 
 ## Contributing
 

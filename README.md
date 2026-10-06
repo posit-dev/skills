@@ -37,12 +37,12 @@ Skills for open-source R and Python package developers, streamlining common work
 R package development skills for working with the r-lib ecosystem and modern R package workflows.
 
 - **[r-tidyverse-style](./r-lib/r-tidyverse-style/)** - Review and clean up R package code using the tidyverse style guide, separating mechanical style changes from behavior-sensitive refactors
-- **[testing-r-packages](./r-lib/testing-r-packages/)** - Best practices for writing R package tests using testthat 3+, including test structure, expectations, fixtures, snapshots, mocking, and BDD-style testing
-- **[cli](./r-lib/cli/)** - Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication with inline markup, progress indicators, and theming
-- **[cran-extrachecks](./r-lib/cran-extrachecks/)** - Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`, including documentation standards, DESCRIPTION field formatting, and URL validation
-- **[lifecycle](./r-lib/lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
+- **[r-testthat](./r-lib/r-testthat/)** - Best practices for writing R package tests using testthat 3+, including test structure, expectations, fixtures, snapshots, mocking, and BDD-style testing
+- **[r-cli](./r-lib/r-cli/)** - Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication with inline markup, progress indicators, and theming
+- **[r-cran-extrachecks](./r-lib/r-cran-extrachecks/)** - Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`, including documentation standards, DESCRIPTION field formatting, and URL validation
+- **[r-lifecycle](./r-lib/r-lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
 - **[r-package-development](./r-lib/r-package-development/)** - R package development with devtools, testthat, and roxygen2, covering key commands, coding conventions, testing, documentation, and NEWS.md practices
-- **[mirai](./r-lib/mirai/)** - Async, parallel, and distributed computing in R using mirai, covering explicit dependency passing, daemon setup, parallel mapping with `mirai_map()`, Shiny integration, remote/HPC launchers, and migration from future/parallel
+- **[r-mirai](./r-lib/r-mirai/)** - Async, parallel, and distributed computing in R using mirai, covering explicit dependency passing, daemon setup, parallel mapping with `mirai_map()`, Shiny integration, remote/HPC launchers, and migration from future/parallel
 - **[alt-text](./alt-text/)** - Generate and improve accessible alt text for data visualizations and images in pkgdown sites and Quarto documents, covering vignette code chunks (`fig.alt`), static markdown images, and multi-plot chunks
 
 ### ggsql

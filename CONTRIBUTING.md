@@ -23,6 +23,8 @@ Determine which category your skill belongs to:
 | **quarto** | Quarto document creation and publishing |
 | **connect** | Posit Connect deployment and management |
 
+**Prefer a category-based name prefix**: When a category has a natural short prefix, name your skill with it so skills are self-describing and unambiguous across categories. The prefix should echo the category (e.g., `r-lib` skills use `r-*` like `r-cli`, `r-testthat`; `shiny` skills could use `shiny-*`; `quarto` skills could use `quarto-*`; `connect` skills could use `connect-*`). This matters most when the bare name would be generic or ambiguous — a skill named `cli` or `lifecycle` doesn't signal that it's about an R package. If the category name already says it all or no clean prefix exists (e.g., `posit-dev`, `open-source`), a plain descriptive name is fine.
+
 Other ideas for categories include:
 
 | Category | Description |
@@ -146,7 +148,7 @@ See `references/formatting-guide.md` for detailed formatting requirements.
 - **Keep it focused**: One skill should do one thing well. If you find yourself adding many unrelated features, consider splitting into multiple skills
 - **Provide comprehensive documentation**: Write clear Claude-facing instructions in SKILL.md. Optionally document organization, design principles, or resources in your skill group's README.md (e.g., `{category-name}/README.md`)
 - **Test across platforms**: Verify your skill works in Claude.ai, Claude Code, and via API
-- **Use clear naming**: Skill names should be descriptive and use kebab-case
+- **Use clear naming**: Skill names should be descriptive and use kebab-case. When reasonable, include a category-based prefix (e.g., `r-*` for `r-lib`, `shiny-*`, `quarto-*`, `connect-*`) — see [Choose the Right Category](#1-choose-the-right-category)
 - **Document dependencies**: If your skill requires specific tools or packages, document them clearly
 - **Include error handling**: Guide Claude on how to handle common errors
 

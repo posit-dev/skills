@@ -14,7 +14,7 @@ The only runnable utility is `count-skill-tokens.py`, which reports line and tok
 # Requires uv
 ./count-skill-tokens.py shiny/shiny-bslib
 # or
-uv run count-skill-tokens.py r-lib/cli
+uv run count-skill-tokens.py r-lib/r-cli
 ```
 
 Warns when `SKILL.md` exceeds **5,000 tokens / 500 lines**, or when the skill `description` frontmatter exceeds **100 tokens**.
