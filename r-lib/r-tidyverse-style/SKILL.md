@@ -7,6 +7,10 @@ description: >
   R package code if the user requests tidyverse style or the package already
   follows it. Not for routine small edits or general correctness, security,
   or test-quality reviews.
+metadata:
+  author: Garrick Aden-Buie (@gadenbuie)
+  version: "1.0"
+license: MIT
 ---
 
 # Tidyverse style for R package code
