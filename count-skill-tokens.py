@@ -16,6 +16,7 @@ Finds SKILL.md and references/**/*.md, counts lines and tokens (cl100k_base),
 and outputs a Markdown summary table.
 """
 
+import re
 import sys
 from pathlib import Path
 
@@ -58,8 +59,18 @@ def main() -> None:
     total_lines = 0
     total_tokens = 0
 
-    for f in files:
+    for i, f in enumerate(files):
         text = f.read_text()
+        if i == 0:
+            # Count only the SKILL.md body: frontmatter (name, description,
+            # author/version/license metadata) is administrative and the
+            # description is reported separately, so it does not count
+            # toward the skill budget. Strip only the frontmatter block;
+            # keep the body byte-for-byte intact (python-frontmatter's
+            # .content drops the leading blank line and trailing newline).
+            m = re.match(r"\A---\n.*?\n(?:---|\.\.\.)\n", text, re.DOTALL)
+            if m:
+                text = text[m.end():]
         n_lines = text.count("\n")
         # Match wc -l: count newlines (trailing newline = last line counted)
         if text and not text.endswith("\n"):
