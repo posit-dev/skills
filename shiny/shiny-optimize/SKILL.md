@@ -9,7 +9,7 @@ description: >
   app; or when preparing a prototyped app for real-world traffic.
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
-  version: "0.1"
+  version: "1.0"
 license: MIT
 ---
 
