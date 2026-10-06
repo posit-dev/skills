@@ -51,6 +51,7 @@
       "strict": false,
       "skills": [
         "./r-lib/testing-r-packages",
+        "./r-lib/r-tidyverse-style",
         "./r-lib/cli",
         "./r-lib/cran-extrachecks",
         "./r-lib/lifecycle",
