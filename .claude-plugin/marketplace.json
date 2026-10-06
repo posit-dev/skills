@@ -79,7 +79,8 @@
       "skills": [
         "./brand-yml",
         "./shiny/shiny-bslib",
-        "./shiny/shiny-bslib-theming"
+        "./shiny/shiny-bslib-theming",
+        "./shiny/shiny-optimize"
       ]
     },
     {
