@@ -83,6 +83,10 @@ Semantics worth knowing cold:
   consuming output on failure. **Don't wrap `result()` in
   `observeEvent`/`bindEvent`/`isolate()`** — its invalidations are the
   mechanism.
+- The expensive work runs **once per `$invoke()`**, no matter how many
+  consumers there are. Route all downstream readers through one shared
+  reactive that reads `$result()` (its value is cached per state); consumers
+  must never re-trigger the task by calling `$invoke()` themselves.
 - Declare the task at **server top level** → one instance per session. Declare
   at `app.R` top level → shared across all visitors (rarely what you want).
 - Multiple distinct ExtendedTasks run concurrently with each other and with
