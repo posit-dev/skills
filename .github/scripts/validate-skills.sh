@@ -56,8 +56,17 @@ for skill in "${changed_skills[@]}"; do
     continue
   fi
 
+  # skill-validator exit codes: 0 = pass, 1 = errors, 2 = warnings only.
+  # Warnings are advisory (reported to the job summary); only errors fail CI.
+  status=0
   skill-validator check --emit-annotations -o markdown "$skill/" \
-    | tee >(grep -v '^::' >> "${GITHUB_STEP_SUMMARY:-/dev/null}") || FAILED=1
+    | tee >(grep -v '^::' >> "${GITHUB_STEP_SUMMARY:-/dev/null}") || status=$?
+  if [ "$status" -eq 1 ]; then
+    FAILED=1
+  elif [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+    echo "Unexpected exit code $status from skill-validator for: $skill"
+    FAILED=1
+  fi
 done
 
 if [ $FAILED -ne 0 ]; then
