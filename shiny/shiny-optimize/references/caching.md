@@ -5,6 +5,16 @@ state and the computation runs again. Caching is the highest-leverage fix for
 repeated identical work (dashboards where many users view the same data, one
 user toggling between a few views) and often yields 10–100×.
 
+## Which caching tool?
+
+- **No reactive reads at all** (a constant dataset, an expensive one-time
+  fetch): hoist to global scope, or `memoise()` if it's already a function —
+  `bindCache()` adds nothing when there are no dependencies to key on.
+- **A reactive computation repeated across sessions** (same inputs, many
+  users): `bindCache()` — the key rules in the next section apply.
+- **A plain function** (DB query, model fit) called with stable arguments:
+  `memoise()`.
+
 ## `bindCache()`: cache any reactive or renderer
 
 Shiny ≥ 1.6.0; works on `reactive()` and on `renderPlot`, `renderTable`,

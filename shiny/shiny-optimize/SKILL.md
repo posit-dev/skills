@@ -154,14 +154,25 @@ fast enough. Every rung preserves app behavior.
 
 Re-measure after each change, one change at a time, and compare against your
 baseline numbers. Keep observable behavior identical — a "faster" app that
-dropped a feature is not faster.
+dropped a feature is not faster. Before finishing, recompute one
+representative output's value from the original and modified apps (or from
+the raw data) and confirm they match — this catches silent behavior drift
+cheaply.
+
+Report integrity: save every measurement you cite (script output, timing log)
+under `outputs/measurements/`, and check each number and mechanism claimed in
+the final report against those saved artifacts. If a claim can't be verified
+against an artifact, say so in the report instead of asserting it.
 
 ## Ground rules
 
 - **One change at a time, then re-measure.** Batching makes it impossible to
   know what helped.
 - **Preserve behavior.** UI changes are limited to perceived-performance aids
-  (spinners, task buttons, tabs) and must be flagged to the user.
+  (spinners, task buttons, tabs) and must be flagged to the user — as must
+  changes that alter *timing semantics* even when outputs are identical
+  (`debounce()` adds intentional latency; `bindCache()`/`memoise()` share
+  results across sessions).
 - **Prefer modern APIs**: `bindCache()`/`bindEvent()` over `renderCachedPlot()`
   and raw `eventReactive` composition; `ExtendedTask` over hand-rolled
   promises. Mention legacy equivalents only when the app already uses them.
