@@ -81,13 +81,12 @@ Comprehensive theming for Shiny apps using bslib and Bootstrap 5. Use when custo
 Diagnose and fix performance problems in existing Shiny for R apps — slow startup, sluggish interactions, blocking operations, and apps that need to support more users. Use when an app is slow, hangs, recomputes too much, or must scale beyond prototyping.
 
 **Organization**: SKILL.md provides the diagnostic workflow (understand the complaint → read the app → measure → classify the bottleneck → fix cheapest-first → verify), a quick-wins triage scan, and a symptom-to-fix table. Reference files provide the depth:
-- `diagnosis.md` - Profiling with profvis, reactive-graph inspection with reactlog, micro-benchmarks (bench), and load testing (shinyloadtest/shinycannon)
+- `diagnosis.md` - Profiling with profvis, reactive-graph inspection with reactlog, micro-benchmarks (bench), load testing (shinyloadtest/shinycannon), the multi-process model, and Connect/shinyapps.io scheduler knobs
 - `reactive-graph.md` - Narrowing reactive dependencies: shared reactives, req(), isolate(), bindEvent(), freezeReactiveValue(), debounce()/throttle(), timers
 - `caching.md` - bindCache() keys and scopes, caching data vs. plots, memoise(), cachem backends, deployment caveats
 - `async-tasks.md` - The flush cycle, ExtendedTask, future_promise/mirai/crew, and the hard rules for worker code
 - `data-loading.md` - Load-once patterns, fast file formats (fread/feather/parquet/DuckDB), pool + dbplyr, downloads and uploads
 - `rendering-ui.md` - Output suspension via tabs, gating with req(), renderUI alternatives, plot/table rendering costs, perceived performance
-- `scaling-users.md` - Brief multi-process model overview, Connect and shinyapps.io scheduler knobs
 
 **Resources**:
 - [Shiny performance articles](https://shiny.posit.co/r/articles/improve/)
