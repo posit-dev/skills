@@ -127,7 +127,9 @@ fast enough. Every rung preserves app behavior.
 2. Shared `@reactive.calc`s — each derived value computed once per change.
 3. Narrow dependencies: `@reactive.event()`, `reactive.isolate()`,
    `reactive.value.freeze()` for update loops.
-4. Debounce chatty inputs (helper — not built in as of Shiny 1.8).
+4. Debounce chatty inputs (helper — not built in as of Shiny 1.8); when
+   updates compound, gate the batch behind `ui.input_task_button()` (drop-in
+   for `ui.input_action_button()`).
 5. Fix timers: `invalidate_later()` scheduled **last**, `@reactive.poll()`
    with a cheap check function.
 
@@ -170,9 +172,18 @@ the raw data) and confirm they match — this catches silent behavior drift
 cheaply.
 
 Report integrity: save every measurement you cite (trace output, timing log)
-under `outputs/measurements/`, and check each number and mechanism claimed
-in the final report against those saved artifacts. If a claim can't be
-verified against an artifact, say so in the report instead of asserting it.
+under `outputs/measurements/` in the app's project — create the folder if it
+doesn't exist — and check each number and mechanism claimed in the final
+report against those saved artifacts. If a claim can't be verified against
+an artifact, say so in the report instead of asserting it.
+
+```
+<app-project>/
+  outputs/
+    measurements/    # the audit trail for the final report: one file per
+                     # measurement (trace output, py-spy profile, timings),
+                     # named for the fix or code path it measured
+```
 
 ## Ground rules
 
