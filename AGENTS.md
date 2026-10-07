@@ -1,10 +1,10 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to coding agents (e.g., Posit Assistant, Claude Code, Codex, Cursor) when working with code in this repository.
 
 ## What This Repository Is
 
-A collection of Claude Skills published by Posit PBC. Skills are structured markdown files that teach Claude specialized workflows (e.g., Shiny app development, R package testing, GitHub PR workflows). There is no application code to build, compile, or deploy — the primary artifacts are Markdown files consumed directly by Claude's skill system.
+A collection of Agent Skills published by Posit PBC. Skills are structured markdown files, following the [Agent Skills specification](https://agentskills.io), that teach coding agents specialized workflows (e.g., Shiny app development, R package testing, GitHub PR workflows). There is no application code to build, compile, or deploy — the primary artifacts are Markdown files consumed directly by coding agents that support the Agent Skills format.
 
 ## Utility Scripts
 
@@ -58,13 +58,13 @@ Every skill requires YAML frontmatter at minimum:
 ```yaml
 ---
 name: your-skill-name        # kebab-case, matches directory name
-description: >               # Claude reads this to decide when to activate the skill
+description: >               # The agent reads this to decide when to activate the skill
   Clear description of what this skill does and when to trigger it.
   Keep under 100 tokens.
 ---
 ```
 
-The body is instructions written **for Claude**, not end users — imperative, step-by-step, covering edge cases.
+The body is instructions written **for the agent**, not end users — imperative, step-by-step, covering edge cases.
 
 ## Registering a New Skill
 
@@ -99,6 +99,7 @@ When adding a new plugin to `marketplace.json`, also update the root `README.md`
 
 ## Key Conventions
 
-- **Progressive disclosure**: Put specialized or large reference content in `references/*.md` and instruct Claude to read those files only when needed. This keeps the main `SKILL.md` within token limits.
+- **Progressive disclosure**: Put specialized or large reference content in `references/*.md` and instruct the agent to read those files only when needed. This keeps the main `SKILL.md` within token limits.
+- **Harness assumptions**: If a skill assumes a specific coding harness or tools, say so in the `compatibility` frontmatter field and in the skill's README description. Where possible, prefer harness-agnostic instructions or separate harness-specific reference files (see `posit-dev/implement/references/`).
 - **R scripts**: Use a shebang (`#!/usr/bin/env Rscript`), include inline usage docs, check for required packages at startup, and exit non-zero on error.
-- **Testing**: Install locally via `cp -r <category>/<skill> ~/.config/claude-code/skills/` and verify Claude activates the skill in Claude Code.
+- **Testing**: Install locally via `cp -r <category>/<skill> ~/.agents/skills/` (or `~/.posit/assistant/skills/` for Posit Assistant) and verify your coding harness activates the skill.

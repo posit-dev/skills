@@ -5,7 +5,7 @@
     "email": "garrick@posit.co"
   },
   "metadata": {
-    "description": "A collection of Claude Skills for Posit development teams, and open-source users including tools for tidyverse workflows.",
+    "description": "A collection of Agent Skills for Posit development teams, and open-source users including tools for tidyverse workflows.",
     "version": "0.1.0"
   },
   "plugins": [

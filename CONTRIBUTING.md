@@ -1,6 +1,6 @@
-# Contributing to Posit Claude Skills
+# Contributing to Posit Agent Skills
 
-Thank you for your interest in contributing to the Posit Claude Skills repository! This document provides guidelines for creating and submitting new skills.
+Thank you for your interest in contributing to the Posit Agent Skills repository! This document provides guidelines for creating and submitting new skills.
 
 ## Quick Start
 
@@ -100,13 +100,13 @@ The `SKILL.md` file is the core of your skill. It must include YAML frontmatter:
 name: your-skill-name
 description: >
   A clear, concise description of what this skill does and when to use it.
-  Focus on the use cases and capabilities. Claude will read this to decide
+  Focus on the use cases and capabilities. The agent will read this to decide
   when to activate your skill.
 ---
 
 # Skill Name
 
-[Detailed instructions for Claude on how to execute this skill]
+[Detailed instructions for the agent on how to execute this skill]
 
 ## When to Use This Skill
 
@@ -116,7 +116,7 @@ description: >
 
 ## Instructions
 
-[Step-by-step instructions Claude should follow]
+[Step-by-step instructions the agent should follow]
 
 ## Examples
 
@@ -131,13 +131,13 @@ description: >
 
 ### 4. Writing Effective Skill Instructions
 
-**For Claude, not end users**: Write instructions for Claude to follow, not for human users. Think of it as teaching Claude how to help users.
+**For the agent, not end users**: Write instructions for the agent to follow, not for human users. Think of it as teaching the agent how to help users.
 
-**Be specific and actionable**: Provide clear, step-by-step instructions that Claude can follow autonomously.
+**Be specific and actionable**: Provide clear, step-by-step instructions that the agent can follow autonomously.
 
 **Include examples**: Show concrete examples of inputs, outputs, and workflows.
 
-**Handle edge cases**: Document how Claude should handle errors, ambiguity, and special situations.
+**Handle edge cases**: Document how the agent should handle errors, ambiguity, and special situations.
 
 **Reference supporting files**: Use relative paths to reference other files in your skill directory:
 ```markdown
@@ -148,11 +148,12 @@ See `references/formatting-guide.md` for detailed formatting requirements.
 
 - **Focus on real use cases**: Base your skill on actual needs, not hypothetical scenarios
 - **Keep it focused**: One skill should do one thing well. If you find yourself adding many unrelated features, consider splitting into multiple skills
-- **Provide comprehensive documentation**: Write clear Claude-facing instructions in SKILL.md. Optionally document organization, design principles, or resources in your skill group's README.md (e.g., `{category-name}/README.md`)
-- **Test across platforms**: Verify your skill works in Claude.ai, Claude Code, and via API
+- **Provide comprehensive documentation**: Write clear agent-facing instructions in SKILL.md. Optionally document organization, design principles, or resources in your skill group's README.md (e.g., `{category-name}/README.md`)
+- **Test across harnesses**: Verify your skill works in the harnesses you target — e.g., Posit Assistant and Claude Code
 - **Use clear naming**: Skill names should be descriptive and use kebab-case. When reasonable, include a category-based prefix (e.g., `r-*` for `r-lib`, `shiny-*`, `quarto-*`, `connect-*`) — see [Choose the Right Category](#1-choose-the-right-category)
 - **Document dependencies**: If your skill requires specific tools or packages, document them clearly
-- **Include error handling**: Guide Claude on how to handle common errors
+- **Include error handling**: Guide the agent on how to handle common errors
+- **Declare harness assumptions**: If your skill assumes a specific coding harness or tools, note it in the `compatibility` frontmatter field and in the skill's description in the root README. Where possible, prefer harness-agnostic instructions; when a skill genuinely needs harness-specific behavior, put those instructions in a separate reference file and select it at runtime based on tool availability (see `posit-dev/implement/references/` for an example of this pattern)
 
 ### 6. Using the skill-creator Skill
 
@@ -166,8 +167,8 @@ We **strongly recommend** using [Anthropic's skill-creator skill](https://github
 To use the skill-creator:
 
 1. Install the skill from Anthropic's repository
-2. Start a conversation with Claude about creating your skill
-3. Claude will guide you through the process using skill-creator's expertise
+2. Start a conversation with your coding assistant about creating your skill
+3. The agent will guide you through the process using skill-creator's expertise
 
 ## Adding Your Skill to the Repository
 
@@ -272,10 +273,12 @@ Before submitting:
 
 1. **Install locally**:
    ```bash
-   cp -r category-name/your-skill-name ~/.config/claude-code/skills/
+   cp -r category-name/your-skill-name ~/.agents/skills/
+   # or, for Posit Assistant specifically:
+   cp -r category-name/your-skill-name ~/.posit/assistant/skills/
    ```
 
-2. **Test with Claude Code**: Verify Claude activates your skill appropriately
+2. **Test with your coding harness**: Verify the agent activates your skill appropriately (e.g., in Posit Assistant or Claude Code)
 
 3. **Test edge cases**: Try various inputs and scenarios
 
@@ -308,7 +311,7 @@ Your PR description should include:
 - **Use cases**: When would someone use this skill?
 - **Testing**: How did you test it? What scenarios did you try?
 - **Dependencies**: Does it require any specific tools, packages, or configurations?
-- **Documentation**: Is the skill well-documented for both Claude and users?
+- **Documentation**: Is the skill well-documented for both the agent and users?
 - **Token count**: Paste the full output of `count-skill-tokens.py` for your skill. This confirms the skill is within size limits and helps reviewers assess its footprint.
 
 
@@ -326,15 +329,15 @@ This project follows Posit's Code of Conduct. By participating, you agree to:
 
 If you have questions about contributing:
 
-1. Check the [documentation](https://support.claude.com/en/articles/12512198-creating-custom-skills)
+1. Check the [Agent Skills specification](https://agentskills.io/specification.md)
 2. Look at existing skills for examples
 3. Open an issue to discuss your idea
 4. Use the skill-creator skill for guidance
 
 ## Resources
 
-- [Claude Skills Documentation](https://support.claude.com/en/articles/12512180-using-skills-in-claude)
-- [Creating Custom Skills Guide](https://support.claude.com/en/articles/12512198-creating-custom-skills)
+- [Agent Skills specification](https://agentskills.io/specification.md)
+- [Posit Assistant skills documentation](https://assistant.posit.co/docs/features/skills.md)
 - [Anthropic's skill-creator](https://github.com/anthropics/skills)
-- [Skills API Documentation](https://docs.claude.com/en/api/skills-guide)
+- [Creating Custom Skills Guide](https://support.claude.com/en/articles/12512198-creating-custom-skills)
 

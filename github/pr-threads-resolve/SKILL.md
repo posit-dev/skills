@@ -1,7 +1,7 @@
 ---
 name: pr-threads-resolve
 description: Bulk resolve unresolved PR review threads on the current branch’s PR — typically after threads have been addressed manually or via /pr-threads-address
-compatibility: Designed for Claude Code; requires gh CLI and gh-pr-review extension
+compatibility: Requires gh CLI and the gh-pr-review extension
 metadata:
   author: Barret Schloerke (@schloerke)
   version: "1.0"

@@ -241,7 +241,7 @@ At the end of an interactive review, offer the applicable options:
 
 Ask interactively when the host supports it; otherwise present the numbered options in the response. You can offer additional context-specific options, but do not combine preparing, creating a pending review, and submitting into one ambiguous action.
 
-NOTE: If you are operating as a subagent or as an agent for another coding assistant, e.g. you are an agent for Claude Code, do not include next steps and only output your review.
+NOTE: If you are operating as a subagent or as an agent for another coding assistant, do not include next steps and only output your review.
 
 ## Response Format
 
