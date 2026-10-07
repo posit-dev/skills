@@ -84,7 +84,7 @@ Diagnose and fix performance problems in existing Shiny for R apps — slow star
 - `diagnosis.md` - Profiling with profvis/debrief, reactive-graph inspection with reactlog, micro-benchmarks (bench), load testing (shinyloadtest/shinycannon), the multi-process model, and Connect/Posit Connect Cloud capacity knobs
 - `reactive-graph.md` - Narrowing reactive dependencies: shared reactives, req(), isolate(), bindEvent(), freezeReactiveValue(), debounce()/throttle(), timers
 - `caching.md` - bindCache() keys and scopes, caching data vs. plots, memoise(), cachem backends, deployment caveats
-- `async-tasks.md` - The flush cycle, ExtendedTask, future_promise/mirai/crew, and the hard rules for worker code
+- `async-tasks.md` - The flush cycle, ExtendedTask, mirai/future_promise/crew, and the hard rules for worker code
 - `data-loading.md` - Load-once patterns, fast file formats (fread/feather/parquet/DuckDB), pool + dbplyr, downloads and uploads
 - `rendering-ui.md` - Output suspension via tabs, gating with req(), renderUI alternatives, plot/table rendering costs, perceived performance
 

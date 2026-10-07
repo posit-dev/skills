@@ -52,7 +52,7 @@ Classic R-level findings that show up constantly:
   over columns.
 
 **Limitations:** unreliable below ~5 ms; **cannot see inside async workers
-(futures/mirai)** — profile synchronous code *before* converting it to async.
+(mirai/futures)** — profile synchronous code *before* converting it to async.
 
 ## reactlog — inspect the reactive graph
 

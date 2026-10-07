@@ -80,8 +80,9 @@ entirely.
 
 - **`bslib::useBusyIndicators()`** — automatic spinners while Shiny
   recalculates; customize with `busyIndicatorOptions()`.
-- **`input_task_button()`** for triggered long operations (pairs with
-  ExtendedTask, async-tasks.md).
+- **`input_task_button()`** for triggered long operations — pairs with
+  ExtendedTask (async-tasks.md), which runs the work off the R process so a
+  slow-to-compute output no longer blocks the rest of the app.
 - **`withProgress()` / `Progress`** for multi-step operations — progress bars
   make operations feel faster.
 - **Let the UI render first**: render the shell immediately and stream results
@@ -98,3 +99,4 @@ entirely.
 | `DT` server-side + `replaceData()` | Browser holds one page; no full redraws | Small refactor |
 | WebGL/bundles/proxies for plotly | Big-data interactive plots stay usable | Small refactor |
 | Busy indicators/task buttons/progress | Waiting feels shorter | Trivial |
+| Task button + `ExtendedTask` | Slow compute no longer blocks the rest of the app | Medium refactor (async-tasks.md) |
