@@ -48,6 +48,7 @@ Benchmarks for a 338 MB CSV:
 | `data.table::fread()` | 338 MB | ~3× faster than read_csv | drop-in for most CSVs |
 | `vroom::vroom()` | 338 MB | lazy, columns on demand | great when only some columns are used |
 | `arrow::read_feather()` | — | very fast for data frames | columnar, cross-language |
+| `arrow::read_parquet()` | — | very fast for data frames | columnar, cross-language, compressed on disk; the best long-term storage format |
 | `qs::qread()` | — | ~3–5× faster than readRDS | general R objects |
 | `fst` | — | 457 ms vs 1577 ms readRDS (10M rows) | also ~3× smaller |
 | DuckDB over CSV | 338 MB | **~51 ms** (lazy `tbl_file`) | 52 KB allocated |
@@ -65,13 +66,25 @@ Practical ladder for a slow-loading file:
    # better: write once to parquet, then
    scorecard <- dplyr::tbl(con, "read_parquet('scorecard.parquet')")
    ```
-   Normal dplyr verbs run **lazily** — `filter()`/`summarise()` compile to SQL
-   and only the small result crosses into R, and every session against the
-   same `con` shares the work.
+   Normal dplyr verbs run **lazily** via **dbplyr** — `filter()`/`summarise()`
+   compile to SQL and only the small result crosses into R, and every session
+   against the same `con` shares the work.
+
+   Decide deliberately **where to `collect()`** the query into R memory. If
+   several outputs reuse the same heavy query, realize it once into a shared
+   (ideally cached) reactive — the download happens once and the small
+   downstream calculations run in memory. If each consumer needs only a small
+   slice, keep the whole pipeline lazy and collect at the very end. Time the
+   query either way: a lazy pipeline that compiles to an expensive query can
+   be slower than one smart `collect()`.
+
 3. Precompute the exact analysis artifact offline (Rule 4).
 
 Ask before adding heavy dependencies — but for large-data apps, DuckDB+parquet
-is usually the single biggest win.
+is usually the single biggest win. Parquet also pairs well with object
+storage: with DuckDB's `httpfs` extension, parquet files can be queried
+directly from S3 (`read_parquet('s3://bucket/data.parquet')`) without copying
+them to the app server first.
 
 ## Rule 4: Precompute offline what doesn't need computing online
 
@@ -83,7 +96,10 @@ for the first user after each restart" problem.
 ## Databases: `pool` + `dbplyr`
 
 ```r
-pool <- pool::dbPool(RSQLite::SQLite(), dbname = "app.db")
+# Use pool for real database servers (Postgres, MySQL, SQL Server, ...)
+pool <- pool::dbPool(RPostgres::Postgres(),
+                     dbname = "appdb", host = "db.internal",
+                     user = "app", password = Sys.getenv("DB_PWD"))
 onStop(function() pool::poolClose(pool))    # clean shutdown
 
 output$tbl <- renderTable({
@@ -91,10 +107,18 @@ output$tbl <- renderTable({
     dplyr::filter(cyl == .env$input$cyl) |>
     dplyr::head(input$nrows)
 })
+
+# File-backed local databases (SQLite file, in-memory DuckDB) need no pool:
+# one connection, opened once, is simpler and equivalent
+con <- DBI::dbConnect(duckdb(), ":memory:")
 ```
 
-- **Why pool**: opens/returns connections per query, preventing the leaked
-  connections that crash long-running apps; works transparently with `tbl()`.
+- **Use `pool` only for databases with a server**: pool exists to open and
+  return connections per query across sessions, preventing the leaked
+  connections that crash long-running apps with server databases. A SQLite
+  file or in-memory DuckDB connection has nothing to pool — open a single
+  connection once and share it. Either way it works transparently with
+  `tbl()`.
 - **Push filtering/aggregation to the database**: keep verbs lazy (no
   `collect()` until the end) so only the small result crosses into R.
 - Cache frequent identical queries with `memoise()` or `bindCache()`.

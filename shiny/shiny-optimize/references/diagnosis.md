@@ -20,6 +20,15 @@ profvis::profvis(
 )
 ```
 
+Read the profile with **debrief** rather than eyeballing the flame graph — its
+`pv_*` functions turn the profile into text summaries made for terminal and
+agent consumption: `pv_print_debrief(p)` for the overview (top functions by
+self/total time, hot lines, call paths, memory), then `pv_focus(p, "fn")` to
+drill into a function, `pv_hot_lines(p)` for exact lines, `pv_suggestions(p)`
+for recommendations, and `pv_print_compare(before, after)` to verify an
+optimization. The flame-graph reading guide below still explains what the
+views mean.
+
 Interact to reproduce the slowness, then close the app. Reading the graph:
 
 - **Bar width = time**, height = stack depth. Your code appears under
@@ -46,6 +55,12 @@ Classic R-level findings that show up constantly:
 (futures/mirai)** — profile synchronous code *before* converting it to async.
 
 ## reactlog — inspect the reactive graph
+
+Primarily a tool for the **user**: they interact with their own app and explore
+the reactive-graph visualization to understand how their reactives interact.
+As the agent, reconstructing the graph by reading the code is usually just as
+effective — reach for reactlog when the user wants to see it themselves or
+when the dependency structure is genuinely hard to reason about from source.
 
 Use when outputs recompute more than they should or a small input change
 causes a storm.
@@ -149,10 +164,13 @@ processes (workers), each with its own memory, globals, and caches. Implications
 
 Capacity ≈ Max processes × Max connections per process.
 
-**shinyapps.io**: instance RAM 256 MB–8 GB (1 GB default); tunables include
-workers per instance, max/min instances, idle timeout, max connections per
-worker (default 50), and load factors. **OOM shows up as a grey screen and
-"killed" in logs** — fix with a bigger instance or *fewer* workers.
+**Posit Connect Cloud** (<https://connect.posit.cloud>): shinyapps.io is being
+sunset, and Connect Cloud is its successor — sizing there combines the two knob
+families above: per-instance resources (RAM 256 MB–8 GB, 1 GB default) plus
+run choices (workers per instance, max/min instances, idle timeout, max
+connections per worker (default 50), and load factors). **OOM shows up as a
+grey screen and "killed" in logs** — fix with a bigger instance or *fewer*
+workers.
 
 More processes is the easy, costly fix; code optimization is the durable one.
 When recommending infrastructure changes, hand the user the load-test numbers
@@ -160,6 +178,7 @@ that justify them.
 
 ## Further reading
 
+- debrief: <https://r-lib.github.io/debrief/>
 - profvis: <https://rstudio.github.io/profvis/>
 - reactlog: <https://rstudio.github.io/reactlog/>
 - shinyloadtest: <https://rstudio.github.io/shinyloadtest/>
