@@ -4,7 +4,7 @@
     {
       "id": 0,
       "eval_name": "dashboard-broad-slowness",
-      "prompt": "hey, my sales dashboard (app.R, with sales.csv) is driving me crazy \u2014 it takes like 15+ seconds to be usable when I open it, and then every time I move the year slider everything flashes and takes forever again. a coworker mentioned something about 'the reactive graph' but I have no idea. Can you figure out what's making it slow and fix it? Please don't change what the app does \u2014 same charts, same filters, just faster.",
+      "prompt": "hey, my sales dashboard has been driving me crazy \u2014 it takes forever before I can actually use it when I open it, and clicking around is sluggish. I already tried restarting and even a newer laptop, so I don't think it's my machine. Can you figure out what's making it slow and fix it? Please don't change what the app does \u2014 same charts, same filters, just faster.",
       "expected_output": "A diagnosis that identifies the planted problems (per-session CSV read, duplicate filtering across outputs, no req() gating, renderUI churn, all outputs computing at startup, uncached slow reactive, no debounce) and targeted fixes that preserve app behavior. The agent should measure before/after (profvis or timing) rather than blindly refactoring, and should not rewrite the app from scratch.",
       "files": [
         "apps/sales-dashboard/app.R",
@@ -25,7 +25,7 @@
           "text": "single-shared-filter: the duplicated per-output filtering is consolidated so the expensive derivation is computed once per change (shared reactive consumed by multiple outputs)"
         },
         {
-          "text": "req-gating-added: expensive outputs are guarded with req() (or equivalent) so they do not compute before inputs are ready/valid"
+          "text": "outputs-gate-invalid-inputs: outputs do not compute on NULL/empty/invalid input states where doing so would error or waste significant work (judge from startup behavior and code, not from whether req() specifically is present)"
         },
         {
           "text": "renderui-replaced-or-justified: the city filter no longer rebuilds via renderUI/selectInput-in-uiOutput, OR the report explicitly justifies keeping it"
@@ -35,16 +35,13 @@
         },
         {
           "text": "behavior-preserved: all seven original outputs still exist (revenue_plot, revenue_summary, top_products, category_mix, store_scatter, benchmark_plot, detail_table) with the same UI structure and filters; any user-visible change is explicitly flagged in report.md"
-        },
-        {
-          "text": "measurement-evidence-with-artifacts: report.md cites concrete before/after measurements AND the measurement artifacts (scripts, profvis output, timed logs) are saved under outputs/ (e.g. outputs/measurements/), not only in /tmp"
         }
       ]
     },
     {
       "id": 1,
       "eval_name": "multiuser-blocking-freeze",
-      "prompt": "We rolled our model explorer app out to the team (about 10 people use it at various times, sometimes 4-5 at once) and it's been a disaster. When someone clicks 'Fit model' the entire app freezes for everyone \u2014 even the little clock in the corner stops updating. It was totally fine when just I used it during development. We can't get more server resources; what can we change in the app itself?",
+      "prompt": "We put our model explorer app on a shared server for the team a few weeks ago and people keep complaining it's slow, especially when several of us are using it around the same time. It always seemed fine when I was testing it on my own before the rollout. IT won't give us any more resources, so whatever the fix is, it has to happen in the app itself. Can you take a look?",
       "expected_output": "The agent should recognize the multi-user blocking symptom (long synchronous eventReactive blocking the R process), and fix it with ExtendedTask + future_promise (or mirai) + the existing task button, moving data loading out of server(), and de-duplicating the outputs that each call fit() independently. The clock output should keep ticking during fits. Should not reach for async before noting the duplicated-computation fixes.",
       "files": [
         "apps/model-explorer/app.R",
@@ -77,16 +74,13 @@
         },
         {
           "text": "clock-keeps-ticking: the clock output continues updating while a fit runs (demonstrated by a test or argued correctly from the async semantics)"
-        },
-        {
-          "text": "measurement-evidence-with-artifacts: report.md cites concrete evidence for the diagnosis and expected effect of changes AND measurement/verification artifacts are saved under outputs/, not only in /tmp"
         }
       ]
     },
     {
       "id": 2,
       "eval_name": "profile-first-top3",
-      "prompt": "I've been told my dashboard is 'doing too much work' but I can't tell where the time actually goes. Can you profile it properly, tell me the top 3 things making it slow, and fix the ones that can be fixed without changing the app's behavior or its design? I want to see before/after numbers.",
+      "prompt": "A colleague reviewed our dashboard and said it 'does too much work', but I honestly can't tell where the time actually goes. Can you dig into it, tell me what's actually making it slow, and fix whatever can be fixed without changing what the app does or how it looks?",
       "expected_output": "The agent should run an actual profile (profvis and/or reactlog, plus bench::mark for A/B comparisons), report a prioritized diagnosis with concrete evidence, then apply a small number of targeted fixes, and report before/after measurements for at least the headline problem.",
       "files": [
         "apps/sales-dashboard/app.R",
@@ -98,7 +92,7 @@
           "text": "profiling-tool-actually-used: report shows evidence a real profiling/measurement tool ran (profvis summary, reactlog observations, bench::mark output, or timed measurements) \u2014 not purely static reasoning"
         },
         {
-          "text": "ranked-top3-with-evidence: report explicitly ranks the top 3 performance problems with supporting evidence for each"
+          "text": "prioritized-diagnosis-with-evidence: the report identifies multiple performance problems and prioritizes them by impact with supporting evidence for each (an explicit ranked list is one acceptable form)"
         },
         {
           "text": "diagnosis-matches-ground-truth: the diagnosis gets the reactive semantics right \u2014 the benchmark reactive (Sys.sleep 1.5s) reads NO reactive values so it runs once per session and blocks the first flush, NOT 're-runs on every input change'; and duplicate per-output filtering is correctly identified as repeated work"
@@ -108,9 +102,6 @@
         },
         {
           "text": "before-after-numbers-consistent: at least one concrete before/after measurement for the headline problem, with units, internally consistent (the arithmetic reconciles; claimed deltas match the cited before/after values)"
-        },
-        {
-          "text": "measurement-artifacts-saved: the measurement artifacts (scripts, profvis/bench output, timing logs) are saved under outputs/ (e.g. outputs/measurements/), not only in /tmp"
         },
         {
           "text": "app-boots-and-renders: app.R parses, the app starts and serves HTTP 200, and at least one output renders without a server-side error (verify via shinytest2/chromote page visit or error-free boot log while a client loads; an index-page curl alone is NOT sufficient)"
@@ -123,6 +114,7 @@
   ],
   "iterations": [
     "iteration-1",
-    "iteration-2"
+    "iteration-2",
+    "iteration-3"
   ]
 }

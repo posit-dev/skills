@@ -1,7 +1,5 @@
 # Model Explorer
 
-Fixture app for shiny-optimize evals.
+Fit a response-time model to customer survey data.
 
-`survey.csv` is committed directly (small enough); there is no
-`generate-data.R` in this directory.
-Grader notes: `../../evals/GRADING.md`.
+The dataset, `survey.csv`, is included in this directory.
