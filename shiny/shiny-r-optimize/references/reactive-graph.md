@@ -134,11 +134,19 @@ TRUE)` or a `reactiveVal` "initialized" flag.
 
 ## Rate-limit chatty inputs: `debounce()` / `throttle()`
 
-Sliders and text boxes fire dozens of invalidations per interaction.
+Shiny already debounces slider and text-input updates internally, so most
+changes arrive as a single invalidation. But bursts still happen — a slow drag
+or a long edit can outlast the internal debounce window, and they're
+guaranteed to pile up when each invalidation's downstream computation takes
+longer than the gaps between changes. High-frequency client events are the
+clear-cut case:
 
 ```r
-search_term <- reactive(input$search) |> debounce(500)   # 500 ms after typing stops
-cursor      <- reactive(input$hover)  |> throttle(250)   # at most every 250 ms
+# plotly brushing fires continuously while the user drags a selection box
+brush <- reactive(plotly::event_data("plotly_brushing")) |>
+  debounce(500)   # wait for quiet — compute once when dragging stops
+# hover/pointer positions: emit at most every 250 ms
+cursor <- reactive(input$hover) |> throttle(250)
 ```
 
 Semantics that matter (easy to get wrong):
@@ -147,11 +155,15 @@ Semantics that matter (easy to get wrong):
   reactive still runs on every change. Wrap only a **cheap** reactive (usually
   a direct input read) when the *downstream* work is expensive. Debouncing an
   expensive reactive does nothing.
-- `debounce()` waits for quiet — text search, dragged sliders.
-  `throttle()` emits at a steady rate — hover/pointer positions.
+- `debounce()` waits for quiet — text search, brushing. `throttle()` emits at
+  a steady rate — hover/pointer positions.
 - Single-threaded R makes timings **minimums, not guarantees**; if one
   downstream computation exceeds the window, use a button or `ExtendedTask`
   instead.
+- These matter most for high-frequency client events (plotly brushing/hover
+  today, more as client-driven patterns like shinyreact catch on) — for
+  ordinary sliders and text inputs, rely on Shiny's built-in debouncing first
+  and add these only when profiling shows a storm.
 
 ## Timers
 

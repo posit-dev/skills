@@ -93,6 +93,11 @@ summaries — should be computed **before the app runs** (a script, a scheduled
 job), with the app reading the finished artifact. This also removes the "slow
 for the first user after each restart" problem.
 
+For artifacts that aren't tidy data frames — fitted models, nested lists, any
+kind of R object — serialize with `saveRDS()` and load with `readRDS()` rather
+than forcing a CSV round-trip (`qs::qsave()`/`qread()` are the faster
+equivalents, and plain `readRDS()` works fine for data frames too).
+
 ## Databases: `pool` + `dbplyr`
 
 ```r

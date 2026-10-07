@@ -1,4 +1,4 @@
-# Non-Blocking Operations: ExtendedTask, future, mirai
+# Non-Blocking Operations: ExtendedTask, mirai, future
 
 Async is the **last** tool to reach for. It doesn't make any computation
 faster — it changes *who waits*: the R process keeps serving **other
@@ -39,9 +39,12 @@ fix. The complete pattern:
 ```r
 library(shiny)
 library(bslib)
-library(future)      # or library(mirai) — see backends below
+library(mirai)
 
-future::plan(multisession)    # REQUIRED: promises without workers still block
+mirai::daemons(4)    # persistent worker pool, top of app.R.
+                     # Without daemons, every task spawns a fresh R process:
+                     # still async, but you pay process startup each time.
+onStop(function() mirai::daemons(0))    # clean shutdown
 
 ui <- page_fluid(
   input_task_button("fetch", "Fetch data"),
@@ -52,9 +55,10 @@ server <- function(input, output, session) {
   # 1. Declare the task: a function that RETURNS a promise.
   #    Nothing reactive can happen inside the worker body!
   task_fetch <- ExtendedTask$new(function(data_type) {
-    future_promise({
-      fetch_from_slow_api(data_type)     # runs in a worker process
-    })
+    mirai(
+      { fetch_from_slow_api(data_type) },   # runs in a worker process
+      data_type = data_type
+    )
   }) |>
     bind_task_button("fetch")            # 3. bind to the task button
 
@@ -97,16 +101,11 @@ Semantics worth knowing cold:
 - Multiple distinct ExtendedTasks run concurrently with each other and with
   reactive code.
 
-## Worker backends: `future` and `mirai`
+## Worker backends: `mirai` and `future`
 
-- **future + promises** (classic): `future::plan(multisession)` spawns worker
-  R processes; `future_promise({...})` runs the body there. Worker count =
-  concurrent long tasks; each worker is a full R process (RAM!). The default
-  `plan(sequential)` runs tasks synchronously — fake async, everything still
-  blocks.
-- **mirai** (recommended for new work): event-driven promises resolve
+- **mirai** (recommended): event-driven promises resolve
   immediately on completion instead of being polled — lower latency, much
-  higher scalability. Drop-in where `future_promise()` is accepted:
+  higher scalability. Drop-in anywhere a promise is expected:
   ```r
   library(mirai)
   daemons(4)                              # 4 local workers, top of app.R
@@ -123,6 +122,11 @@ Semantics worth knowing cold:
   [posit-dev/skills](https://github.com/posit-dev/skills/tree/main/r-lib/r-mirai)
   — it covers daemon configuration, remote daemons, and error handling in more
   depth than this reference.
+- **future + promises** (classic alternative): `future::plan(multisession)`
+  spawns worker R processes; `future_promise({...})` runs the body there.
+  Worker count = concurrent long tasks; each worker is a full R process
+  (RAM!). The default `plan(sequential)` runs tasks synchronously — fake
+  async, everything still blocks.
 
 ## Hard rules for worker code
 
@@ -130,10 +134,10 @@ Semantics worth knowing cold:
    process; pass values as named arguments:
    ```r
    # Wrong: reactive reads can't cross processes
-   future_promise({ filter(data(), state == input$state) })
-   # Right
-   st <- input$state
-   future_promise({ filter(data(), state == st) }, st = st, data = data)
+   mirai({ filter(data(), state == input$state) })
+   # Right: mirai evaluates named arguments eagerly, in the main process,
+   # so feed in the executed values — never call reactives inside the expr
+   mirai({ filter(dt, state == st) }, st = input$state, dt = data())
    ```
 2. **`session` is off-limits in workers** for the same reason.
 3. **Plotting/printing happens in the main process**, in a `then()` handler —
@@ -155,9 +159,10 @@ Semantics worth knowing cold:
 
 ## Raw async reactives (pre-ExtendedTask style)
 
-`reactive({ future_promise({...}) |> then(...) })` (Shiny ≥ 1.1.0) unblocks
-**other sessions** but not the current one — the session's flush still waits
-for its dependent outputs. ExtendedTask is the better default; use raw
+`reactive({ mirai({...}) |> then(...) })` — or, classically,
+`future_promise({...}) |> then(...)` (Shiny ≥ 1.1.0) — unblocks **other
+sessions** but not the current one — the session's flush still waits for
+its dependent outputs. ExtendedTask is the better default; use raw
 promises only when ExtendedTask can't express the flow.
 
 ## UI expectations

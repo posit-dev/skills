@@ -141,15 +141,16 @@ fast enough. Every rung preserves app behavior.
 
 **Blocking operations** → [async-tasks.md](references/async-tasks.md)
 1. Only after elimination/caching are exhausted: `ExtendedTask` with
-   `future_promise()` (or `mirai`), plus `bind_task_button()`.
-2. `future::plan(multisession)` (or mirai daemons) is **required** — a promise
-   without workers still blocks.
+   `mirai()` (or `future_promise()`), plus `bind_task_button()`.
+2. Worker backends are **required** — set up mirai `daemons()` or
+   `future::plan(multisession)`; with future's default `plan(sequential)`
+   everything still blocks.
 3. No reactive reads inside the worker; pass values via `invoke()`.
 
 **Data access** → [data-loading.md](references/data-loading.md)
 1. Loads to global scope; never read data in render functions.
-2. `fread`/`vroom` over `read.csv`; `feather`/`qs`/`fst` over CSV/RDS
-   round-trips.
+2. `fread`/`read_csv` (vroom-powered) over `read.csv`; `feather`/`qs`/`fst`
+   over CSV/RDS round-trips.
 3. DuckDB + parquet, or `pool` + `dbplyr` push-down, when data outgrows RAM
    or only slices are needed.
 
@@ -169,9 +170,18 @@ the raw data) and confirm they match — this catches silent behavior drift
 cheaply.
 
 Report integrity: save every measurement you cite (script output, timing log)
-under `outputs/measurements/`, and check each number and mechanism claimed in
-the final report against those saved artifacts. If a claim can't be verified
-against an artifact, say so in the report instead of asserting it.
+under `outputs/measurements/` in the app's project — create the folder if it
+doesn't exist — and check each number and mechanism claimed in the final
+report against those saved artifacts. If a claim can't be verified against an
+artifact, say so in the report instead of asserting it.
+
+```
+<app-project>/
+  outputs/
+    measurements/    # the audit trail for the final report: one file per
+                     # measurement (profvis output, bench results, timings),
+                     # named for the fix or code path it measured
+```
 
 ## Ground rules
 
@@ -207,7 +217,7 @@ not read all of them up front.
 - [caching.md](references/caching.md) — `bindCache()` key rules and scopes,
   cache backends, `memoise()`, pre-cache checklist.
 - [async-tasks.md](references/async-tasks.md) — why blocking hurts, the
-  `ExtendedTask`/`future_promise`/`mirai` pattern and its hard rules.
+  `ExtendedTask`/`mirai`/`future_promise` pattern and its hard rules.
 - [data-loading.md](references/data-loading.md) — load-once patterns, file
   format benchmarks, DuckDB/parquet, `pool`/`dbplyr`, downloads and uploads.
 - [rendering-ui.md](references/rendering-ui.md) — output suspension via tabs,
