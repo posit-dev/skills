@@ -26,7 +26,10 @@ and, because reactives are lazy, its entire upstream chain stays unevaluated.
 - `req()` at the top keeps outputs silent until inputs are meaningful
   (reactive-graph.md).
 - For expensive results users only sometimes want, require an explicit
-  trigger: `actionButton` + `bindEvent(input$go)`.
+  trigger: `actionButton` + `bindEvent(input$go)`. Swap in
+  `bslib::input_task_button()` for automatic busy feedback — a direct
+  drop-in, no server-side changes and no ExtendedTask needed
+  (reactive-graph.md).
 - **Remove dead outputs**: an `output$` nothing displays still costs server
   execution and websocket traffic per flush.
 

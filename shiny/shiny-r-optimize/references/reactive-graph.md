@@ -165,6 +165,22 @@ Semantics that matter (easy to get wrong):
   ordinary sliders and text inputs, rely on Shiny's built-in debouncing first
   and add these only when profiling shows a storm.
 
+### When smoothing isn't enough: gate behind a button
+
+Rate-limiting loses once changes compound — cascading `update*Input()` chains,
+a long batch of settings, or downstream compute that outlasts every window.
+Then stop smoothing the stream and make the expensive update wait for a
+deliberate trigger:
+
+- Gate the heavy work with `bindEvent(input$go)` and use
+  **`bslib::input_task_button()`** in place of `actionButton()`: same click
+  semantics, a **direct drop-in with no server-side changes and no
+  `ExtendedTask` required**. On click it disables itself and shows a busy
+  state until the server finishes dealing with the triggered reactivity, then
+  reverts on its own — exactly the feedback a long or compounding update
+  cycle needs (the shorter the cycle, the less it has to show). Users batch
+  their input changes, click once, and the expensive update runs once.
+
 ## Timers
 
 - **`invalidateLater()` at the *start* of a slow reactive is an infinite
