@@ -33,7 +33,7 @@ Work through these items systematically:
    - Does the README clearly explain the package purpose and functionality?
    - **Important**: If README.Rmd exists, edit ONLY README.Rmd (README.md will be overwritten), then run `devtools::build_readme()` to re-render README.md
 4. **Proofread DESCRIPTION**: Carefully review `Title:` and `Description:` fields (see detailed guidance below)
-5. **Check function documentation**: Verify all exported functions have `@return` and `@examples` (see detailed guidance below)
+5. **Check function documentation**: Verify all exported functions have `@return` and `@examples` (see detailed guidance below). Note the exemption for S3 methods documented only with `#' @export`: they produce no `.Rd` file and are not required to have either tag
 6. **Verify copyright holder**: Check that `Authors@R:` includes a copyright holder with role `[cph]`
 7. **Review bundled file licensing**: Check licensing of any included third-party files
 8. **Run URL checks**: Use `urlchecker::url_check()` and fix any issues
@@ -49,6 +49,22 @@ CRAN now strictly requires `@return` documentation for all exported functions. U
 - Required even for functions marked `@keywords internal`
 - Required even if function returns nothing - document as `@return None` or similar
 - Must be present for every exported function
+
+These rules apply only to functions with an `.Rd` file. Roxygen2 creates an `.Rd` file only when a block contains documentation content (a title or description). A block that contains nothing but `#' @export` adds the function to the `NAMESPACE` without generating an `.Rd` file, so there is nothing for CRAN's documentation checks to inspect. This is the conventional pattern for S3 methods:
+
+```r
+#' @export
+print.my_class <- function(x, ...) {
+  cat("my_class object\n")
+  invisible(x)
+}
+```
+
+Such methods do **not** need `@return` or `@examples`, and `R CMD check` does not flag them as undocumented (registered S3 methods are excluded from the undocumented-objects check).
+
+- The exemption holds only while the block contains *nothing but* `@export` (or `@exportS3Method`). Adding a title, `@param`, `@rdname`, `@describeIn`, or any other documentation makes roxygen2 generate an `.Rd` file, and the function must then satisfy all documentation rules including `@return`.
+- Do not confuse these with the S3 *generic* itself (e.g., `my_print <- function(x, ...) UseMethod("my_print")`). A newly exported generic is an ordinary exported function with documentation, so it still needs `@return` and `@examples`.
+- Methods sharing a page with their generic via `@rdname` or `@describeIn` follow the same rules as the generic: the combined `.Rd` needs the required tags once, not once per method.
 
 Example:
 ```r
@@ -86,6 +102,7 @@ If your exported function has a meaningful return value, it will almost definite
 - Required even for functions marked `@keywords internal`
 - Exceptions exist for functions used purely for side effects (e.g., creating directories)
 - Examples must be executable
+- S3 methods with `@export`-only roxygen blocks have no `.Rd` file and need no examples (see above)
 
 **Un-exported Functions with Examples**
 
@@ -446,8 +463,10 @@ Use this checklist to ensure nothing is missed before submission:
 - [ ] LICENSE year matches current submission year
 
 ### Function Documentation
-- [ ] All exported functions have `@return` documentation
-- [ ] All exported functions with meaningful returns have `@examples`
+- [ ] All exported functions with `.Rd` files have `@return` documentation
+- [ ] All documented exported functions with meaningful returns have `@examples`
+- [ ] S3 methods with `@export`-only roxygen blocks are correctly exempt (no `.Rd` file, no `@return`/`@examples` needed)
+- [ ] S3 generics added by the package have full documentation (`@return`, `@examples`) since they are ordinary exported functions
 - [ ] No example sections use commented-out code
 - [ ] Examples avoid `\dontrun{}` unless truly necessary
 - [ ] Examples requiring suggested packages use `@examplesIf` or `if` guards
