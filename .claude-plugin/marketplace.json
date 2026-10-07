@@ -90,7 +90,8 @@
       "skills": [
         "./brand-yml",
         "./quarto/quarto-authoring",
-        "./alt-text"
+        "./alt-text",
+        "./quarto/quarto-lua"
       ]
     },
     {
