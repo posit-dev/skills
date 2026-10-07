@@ -1,7 +1,7 @@
 ---
 name: pr-threads-address
 description: "Address PR review feedback by systematically working through every unresolved PR review thread on the current branch's PR - analyze each comment, make the requested code changes (with tests where useful), commit, and optionally reply and resolve."
-compatibility: Designed for Claude Code; requires gh CLI and gh-pr-review extension
+compatibility: Requires gh CLI and the gh-pr-review extension
 metadata:
   author: Barret Schloerke (@schloerke)
   version: "1.0"

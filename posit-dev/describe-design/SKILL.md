@@ -26,7 +26,7 @@ Understand what to document before exploring:
 ### Stage 2: Initial Exploration
 
 Explore the codebase broadly to build a mental model. Use lightweight, fast exploration
-methods when available (in Claude Code, for example, use a Haiku Explore subagent):
+methods when available (for example, use a fast Explore subagent if your harness supports subagents):
 
 1. Scan directory structure and identify key entry points.
 2. Read README, config files, and existing documentation.

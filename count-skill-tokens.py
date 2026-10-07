@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""Count lines and estimate tokens for a Claude Code skill directory.
+"""Count lines and estimate tokens for an Agent Skill directory.
 
 Usage:
     ./count-skill-tokens.py <skill-directory>
