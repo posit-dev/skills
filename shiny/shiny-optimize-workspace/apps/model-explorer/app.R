@@ -1,5 +1,4 @@
 # Model Explorer — fit a response model to survey data
-# NOTE: this is the *before* fixture for a performance exercise.
 library(shiny)
 library(bslib)
 library(ggplot2)
@@ -23,9 +22,7 @@ ui <- page_fixed(
 server <- function(input, output, session) {
   survey <- read.csv("survey.csv", stringsAsFactors = FALSE)
 
-  # Fit the response-time model. The estimation backend is slow.
   fit <- eventReactive(input$fit, {
-    # ... estimation happens through a slow external service ...
     Sys.sleep(4)
     lm(response_time ~ age + channel + prior_purchases + satisfaction,
        data = survey)
@@ -61,7 +58,7 @@ server <- function(input, output, session) {
                 s$r.squared, s$sigma, s$df[2] + s$df[1]))
   })
 
-  # Live clock so you can tell whether the app is responsive
+  # Live clock
   output$clock <- renderText({
     invalidateLater(1000)
     format(Sys.time(), "%H:%M:%S")

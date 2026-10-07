@@ -1,5 +1,4 @@
 # Sales Dashboard — regional revenue explorer
-# NOTE: this is the *before* fixture for a performance exercise.
 library(shiny)
 library(bslib)
 library(dplyr)
@@ -27,7 +26,6 @@ ui <- page_sidebar(
 )
 
 server <- function(input, output, session) {
-  # Load the data (once per session is fine for now, right?)
   sales <- read.csv("sales.csv", stringsAsFactors = FALSE)
 
   # Some prep work
@@ -95,7 +93,7 @@ server <- function(input, output, session) {
 
   # Compare with competitor benchmark data from our market research API
   benchmark_data <- reactive({
-    Sys.sleep(1.5)  # the market research API is slow
+    Sys.sleep(1.5)
     data.frame(
       product = c("Widget", "Gadget", "Doohickey", "Contraption", "Gizmo", "Thingamajig"),
       competitor_avg = c(120000, 95000, 88000, 61000, 45000, 31000)
