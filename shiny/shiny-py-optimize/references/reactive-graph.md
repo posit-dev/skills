@@ -162,9 +162,16 @@ recompute with the *intermediate* state: new country, old city. Two options:
 
 ## Rate-limit chatty inputs: debounce
 
-Sliders and text boxes fire dozens of invalidations per interaction. Shiny for
-Python has **no built-in debounce/throttle** (as of Shiny 1.8 — the feature is
-tracked in py-shiny issues #564 and #1814). Options, best first:
+Shiny for Python already debounces slider and text-input updates on the
+client — those input bindings carry a built-in 250 ms rate policy — so an
+ordinary drag or typing burst usually arrives as a single invalidation.
+Bursts still happen: a slow drag or a long edit can outlast the client
+window, and they're guaranteed to pile up when each change's downstream
+computation takes longer than the gaps between changes. High-frequency
+client events (continuous brush/hover streams from Plotly-style widgets)
+are the clear-cut case. When you need explicit server-side rate limiting,
+Shiny for Python has **no built-in debounce/throttle** (as of Shiny 1.8 — the
+feature is tracked in py-shiny issues #564 and #1814). Options, best first:
 
 1. **Gate on a button** — `@reactive.event(input.go)` (above). Simplest and
    most predictable.
@@ -227,8 +234,27 @@ tracked in py-shiny issues #564 and #1814). Options, best first:
    not execution — wrap only a cheap read (a direct input read) when the
    *downstream* work is expensive. Timings are **minimums**: reactive code
    runs serially, so a slow downstream computation can exceed the window.
+   Rely on the built-in client-side debouncing for ordinary sliders and text
+   inputs; add the helper only when profiling shows an invalidation storm.
 
 Source: <https://gist.github.com/jcheng5/427de09573816c4ce3a8c6ec1839e7c0>.
+
+### When smoothing isn't enough: gate behind a button
+
+Rate-limiting loses once changes compound — cascading `ui.update_*()` chains,
+a long batch of settings, or downstream compute that outlasts every window.
+Then stop smoothing the stream and make the expensive update wait for a
+deliberate trigger:
+
+- Gate the heavy work with `@reactive.event(input.go)` and use
+  **`ui.input_task_button()`** in place of `ui.input_action_button()`: same
+  click semantics, a **direct drop-in with no server-side changes and no
+  `@reactive.extended_task` required**. On click it disables itself and shows
+  a busy label until the server finishes dealing with the triggered
+  reactivity, then reverts on its own — exactly the feedback a long or
+  compounding update cycle needs (the shorter the cycle, the less it has
+  to show). Users batch their input changes, click once, and the expensive
+  update runs once.
 
 ## Timers
 

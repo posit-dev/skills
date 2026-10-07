@@ -130,6 +130,11 @@ summaries — should be computed **before the app runs** (a script, a scheduled
 job), with the app reading the finished artifact. This also removes the "slow
 for the first user after each restart" problem.
 
+For artifacts that aren't data frames — fitted models, nested dicts, any
+kind of Python object — serialize with `pickle` or `joblib` rather than
+forcing a CSV round-trip (parquet remains the right format for tabular
+data).
+
 ## Databases
 
 ```python

@@ -26,6 +26,9 @@ upstream chain stays unevaluated.
   (reactive-graph.md).
 - For expensive results users only sometimes want, require an explicit
   trigger: `ui.input_action_button("go", "Compute")` + `@reactive.event(input.go)`.
+  Swap in `ui.input_task_button()` for automatic busy feedback — a direct
+  drop-in, no server-side changes and no `@reactive.extended_task` needed
+  (reactive-graph.md).
 - **Remove dead outputs**: a `@render.*` with no visible placeholder still
   costs server execution and websocket traffic per flush.
 
@@ -87,8 +90,10 @@ entirely.
 - **`ui.busy_indicators.use()` / `.options()`** — automatic spinners on
   recalculating outputs and a busy pulse banner; on by default, configurable
   in the UI (not the server).
-- **`ui.input_task_button`** for triggered long operations (pairs with
-  `@reactive.extended_task`, async-tasks.md).
+- **`ui.input_task_button`** for triggered long operations — pairs with
+  `@reactive.extended_task` (async-tasks.md), which runs the work off the
+  event loop so a slow-to-compute output no longer blocks the rest of the
+  app.
 - **`ui.Progress`** for multi-step operations — progress bars make
   operations feel faster.
 - **Let the UI render first**: render the shell immediately and stream
@@ -108,3 +113,4 @@ entirely.
 | `@render.data_frame` over `@render.table` | Virtualized rows, lighter payloads | Small refactor |
 | WebGL + pre-aggregation for Plotly | Big interactive plots stay usable | Small refactor |
 | Busy indicators/task buttons/progress | Waiting feels shorter | Trivial |
+| Task button + `@reactive.extended_task` | Slow compute no longer blocks the rest of the app | Medium refactor (async-tasks.md) |
