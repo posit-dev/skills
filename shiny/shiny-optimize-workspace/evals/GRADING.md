@@ -1,7 +1,9 @@
 # Grader notes: planted problems in the eval fixture apps
 
-**For graders and reviewers only — do not place this file (or its contents)
-inside `apps/`, which is given wholesale to the agent under test.**
+**For graders and reviewers only — never place this file (or its contents)
+inside `apps/` or in any directory given to the agent under test.** Reads
+`RUNNING.md` in this directory for the isolation protocol that keeps it that
+way.
 
 ## `apps/sales-dashboard` (eval 0: dashboard-broad-slowness)
 

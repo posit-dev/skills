@@ -1,6 +1,5 @@
 # Sales Dashboard
 
-Fixture app for shiny-optimize evals.
+Regional revenue explorer for sales data.
 
-Regenerate the data with: `Rscript generate-data.R` (deterministic seed).
-Grader notes: `../../evals/GRADING.md`.
+Regenerate the sample data with: `Rscript generate-data.R`.
