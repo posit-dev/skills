@@ -88,11 +88,19 @@ Diagnose and fix performance problems in existing Shiny for R apps — slow star
 - `data-loading.md` - Load-once patterns, fast file formats (fread/feather/parquet/DuckDB), pool + dbplyr, downloads and uploads
 - `rendering-ui.md` - Output suspension via tabs, gating with req(), renderUI alternatives, plot/table rendering costs, perceived performance
 
-**Resources**:
+**Resources** (sources used in developing this skill — useful starting points for optimization work):
 - [Shiny performance articles](https://shiny.posit.co/r/articles/improve/)
-- [Mastering Shiny: Performance](https://mastering-shiny.org/performance.html)
+- [Shiny: Non-blocking operations (async)](https://shiny.posit.co/r/articles/improve/nonblocking/)
+- [Shiny: Caching with bindCache](https://shiny.posit.co/r/articles/improve/caching/)
+- [Mastering Shiny: Performance](https://mastering-shiny.org/performance.html) and [Scaling](https://mastering-shiny.org/scaling-general.html)
 - [promises documentation](https://rstudio.github.io/promises/)
-- [shinyloadtest](https://rstudio.github.io/shinyloadtest/)
+- [profvis](https://rstudio.github.io/profvis/) and [debrief](https://r-lib.github.io/debrief/) for profiling
+- [reactlog](https://rstudio.github.io/reactlog/) for reactive-graph inspection
+- [shinyloadtest](https://rstudio.github.io/shinyloadtest/) and [shinycannon](https://github.com/rstudio/shinycannon) for load testing
+- [mirai](https://mirai.r-lib.org/) and [crew](https://wlandau.github.io/crew/) for async worker backends
+- [DuckDB R client](https://r.duckdb.org/) and [pool](https://rstudio.github.io/pool/) for data access
+- [Posit Connect scheduler settings](https://docs.posit.co/connect/admin/appendix/off-host-scheduler/)
+- [Managing long-running operations in Shiny (Joe Cheng, 2024)](https://opensource.posit.co/resources/videos/2024-05-15_joe-cheng-managing-long-running-operations-in-shiny-posit/)
 
 ## Potential Skills
 
