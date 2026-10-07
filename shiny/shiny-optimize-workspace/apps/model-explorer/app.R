@@ -22,7 +22,9 @@ ui <- page_fixed(
 server <- function(input, output, session) {
   survey <- read.csv("survey.csv", stringsAsFactors = FALSE)
 
+  # Fit the response-time model. The estimation backend is slow.
   fit <- eventReactive(input$fit, {
+    # ... estimation happens through a slow external service ...
     Sys.sleep(4)
     lm(response_time ~ age + channel + prior_purchases + satisfaction,
        data = survey)
