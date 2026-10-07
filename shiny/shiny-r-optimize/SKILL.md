@@ -126,7 +126,9 @@ fast enough. Every rung preserves app behavior.
 2. Shared `reactive()`s — each derived value computed once.
 3. Narrow dependencies: `bindEvent()`/`eventReactive()`, `isolate()`,
    `freezeReactiveValue()` for update loops.
-4. `debounce()`/`throttle()` chatty inputs.
+4. `debounce()`/`throttle()` chatty inputs; when updates compound, gate
+   the batch behind `bslib::input_task_button()` (drop-in for
+   `actionButton()`).
 5. Fix timers: `on.exit(invalidateLater(...))`, `reactivePoll()` with a cheap
    `checkFunc`.
 
