@@ -93,7 +93,7 @@ server <- function(input, output, session) {
 
   # Compare with competitor benchmark data from our market research API
   benchmark_data <- reactive({
-    Sys.sleep(1.5)
+    Sys.sleep(1.5)  # the market research API is slow
     data.frame(
       product = c("Widget", "Gadget", "Doohickey", "Contraption", "Gizmo", "Thingamajig"),
       competitor_avg = c(120000, 95000, 88000, 61000, 45000, 31000)
