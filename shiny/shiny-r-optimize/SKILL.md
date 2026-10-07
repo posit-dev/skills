@@ -1,5 +1,5 @@
 ---
-name: shiny-optimize
+name: shiny-r-optimize
 description: >
   Diagnose and fix performance problems in Shiny for R apps — slow startup,
   sluggish interactions, long-running blocking operations, and apps that
