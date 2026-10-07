@@ -1,4 +1,4 @@
-# Running the shiny-optimize evals
+# Running the shiny-r-optimize evals
 
 Protocol for running eval iterations against the fixture apps. The goal is
 that the agent under test sees **only** what a real user would have: the app
@@ -17,7 +17,7 @@ assertions, or the existence of an eval.
 
    ```sh
    TMPRUN=$(mktemp -d)
-   git -C <repo-root> archive HEAD shiny/shiny-optimize-workspace/apps/sales-dashboard \
+   git -C <repo-root> archive HEAD shiny/shiny-r-optimize-workspace/apps/sales-dashboard \
      | tar -x -C "$TMPRUN" --strip-components=4
    ```
 

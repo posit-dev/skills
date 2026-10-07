@@ -76,12 +76,12 @@ Comprehensive theming for Shiny apps using bslib and Bootstrap 5. Use when custo
 - [Bootswatch themes](https://bootswatch.com/)
 - [thematic package](https://rstudio.github.io/thematic/)
 
-### `shiny-optimize`
+### `shiny-r-optimize`
 
 Diagnose and fix performance problems in existing Shiny for R apps — slow startup, sluggish interactions, blocking operations, and apps that need to support more users. Use when an app is slow, hangs, recomputes too much, or must scale beyond prototyping.
 
 **Organization**: SKILL.md provides the diagnostic workflow (understand the complaint → read the app → measure → classify the bottleneck → fix cheapest-first → verify), a quick-wins triage scan, and a symptom-to-fix table. Reference files provide the depth:
-- `diagnosis.md` - Profiling with profvis, reactive-graph inspection with reactlog, micro-benchmarks (bench), load testing (shinyloadtest/shinycannon), the multi-process model, and Connect/shinyapps.io scheduler knobs
+- `diagnosis.md` - Profiling with profvis/debrief, reactive-graph inspection with reactlog, micro-benchmarks (bench), load testing (shinyloadtest/shinycannon), the multi-process model, and Connect/Posit Connect Cloud capacity knobs
 - `reactive-graph.md` - Narrowing reactive dependencies: shared reactives, req(), isolate(), bindEvent(), freezeReactiveValue(), debounce()/throttle(), timers
 - `caching.md` - bindCache() keys and scopes, caching data vs. plots, memoise(), cachem backends, deployment caveats
 - `async-tasks.md` - The flush cycle, ExtendedTask, future_promise/mirai/crew, and the hard rules for worker code
@@ -101,7 +101,7 @@ This category could include skills for:
 - Shiny app architecture and best practices
 - Reactive programming patterns
 - UI/UX design for Shiny apps
-- ~~Performance optimization~~ (covered by `shiny-optimize`)
+- ~~Performance optimization~~ (covered by `shiny-r-optimize`)
 - Testing Shiny applications
 - Deployment strategies
 - Module development
