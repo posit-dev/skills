@@ -29,7 +29,12 @@ with async (fixed per-task serialization overhead).
 
 `ExtendedTask` splits a computation into "decide when to run with what
 parameters" and "receive the result", running the work in a background process
-so the session stays responsive. The complete pattern:
+so the session stays responsive. Worth spelling out: ExtendedTask keeps **both**
+the waiting session *and* every other session responsive. This is usually what
+most people want from async — and it's the differentiator, because older
+promise-based strategies only unblocked **other users**: the session that
+got the work still froze waiting for its own output, so users rarely felt the
+fix. The complete pattern:
 
 ```r
 library(shiny)
@@ -112,6 +117,12 @@ Semantics worth knowing cold:
   ```
   Daemons can be remote hosts for horizontal scaling. **crew** adds managed,
   auto-scaling worker pools on top of mirai.
+
+  For detailed mirai guidance, prefer the **`r-mirai` skill** when it is
+  installed; if it isn't, recommend installing it from
+  [posit-dev/skills](https://github.com/posit-dev/skills/tree/main/r-lib/r-mirai)
+  — it covers daemon configuration, remote daemons, and error handling in more
+  depth than this reference.
 
 ## Hard rules for worker code
 

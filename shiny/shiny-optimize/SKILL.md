@@ -9,7 +9,7 @@ description: >
   app; or when preparing a prototyped app for real-world traffic.
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
-  version: "1.0"
+  version: "1.1"
 license: MIT
 ---
 
@@ -38,7 +38,8 @@ Pin down what "slow" means and write it as a benchmark to beat:
 - **What feels slow?** First page load? Every interaction? One specific
   action? Only when several people use it at once?
 - **How many concurrent users** must it support? (1–5, ~20, hundreds?)
-- **Where does it run?** Locally, shinyapps.io, Posit Connect, Shiny Server?
+- **Where does it run?** Locally, Posit Connect, Posit Connect Cloud, Shiny
+  Server?
 - **How big is the data**, where does it live, and how often does it change?
 
 ### 2. Scan the source for smells — and fix them now
@@ -77,23 +78,31 @@ couldn't be verified.
 
 ```r
 # Where does the time go? (CPU/memory profile)
-profvis::profvis(shiny::runApp("app.R"))
-
-# Why do outputs keep recomputing? (reactive graph)
-reactlog::reactlog_enable()
-shiny::runApp("app.R")   # interact, then shiny::reactlogShow()
+p <- profvis::profvis(shiny::runApp("app.R"))
+debrief::pv_print_debrief(p)   # debrief turns the profvis output into text
+                               # summaries — hot functions/lines, call paths,
+                               # memory, suggestions — much easier to act on
+                               # than the interactive flame graph. Follow up
+                               # with pv_focus(), pv_hot_lines(),
+                               # pv_suggestions(); compare before/after runs
+                               # with pv_print_compare().
 
 # Is implementation A faster than B?
 bench::mark(A(x), B(x), check = FALSE)
-
-# Does it hold up with N simultaneous users?
-shinyloadtest::record_session("http://localhost:8100/")  # replay with shinycannon
 ```
 
+Two tools in the ecosystem are for the **user**, not for you to run: **reactlog**
+has the user interact with their own app and explore the reactive-graph
+visualization to understand how their reactives interact — you can usually get
+the same insight (and more cheaply) by reading the code and reconstructing the
+reactive graph yourself. **shinyloadtest** is a load test of a *deployed* app,
+run at the end of an optimization when the user wants to verify their
+infrastructure will handle the number of users they intend to support.
+
 Tool selection, how to read each tool's output, and load-test interpretation:
-[diagnosis.md](references/diagnosis.md). Use profvis for "which code is slow",
-reactlog for "why does so much code run", bench to compare two implementations,
-shinyloadtest only for multi-user capacity.
+[diagnosis.md](references/diagnosis.md). Use profvis/debrief for "which code is
+slow" and bench to compare two implementations; leave reactlog to the user,
+and shinyloadtest for deployed-app capacity.
 
 ### 4. Diagnose what the scan didn't catch
 
@@ -166,8 +175,12 @@ against an artifact, say so in the report instead of asserting it.
 
 ## Ground rules
 
-- **One change at a time, then re-measure.** Batching makes it impossible to
-  know what helped.
+- **Batch the obvious; isolate the uncertain.** Safe fixes with predictable
+  effects — moving a data load to global scope, consolidating duplicated
+  filtering, replacing a `renderUI` — can be applied together and re-measured
+  once. Reach for one-change-at-a-time only when it's genuinely unclear which
+  change helped, or a change didn't deliver its expected effect; that's the
+  only situation where attribution is worth the extra measurement rounds.
 - **Preserve behavior.** UI changes are limited to perceived-performance aids
   (spinners, task buttons, tabs) and must be flagged to the user — as must
   changes that alter *timing semantics* even when outputs are identical
@@ -185,9 +198,9 @@ against an artifact, say so in the report instead of asserting it.
 Read **only** the reference your diagnosis points to, when you need it — do
 not read all of them up front.
 
-- [diagnosis.md](references/diagnosis.md) — profvis, reactlog, bench, and
+- [diagnosis.md](references/diagnosis.md) — profvis/debrief, bench, and
   load testing (shinyloadtest/shinycannon) with reading guides; multi-user
-  process model; Connect and shinyapps.io capacity knobs.
+  process model; Connect and Posit Connect Cloud capacity knobs.
 - [reactive-graph.md](references/reactive-graph.md) — shared reactives,
   `req()`, `isolate()`, `bindEvent()`, `freezeReactiveValue()`,
   `debounce()`/`throttle()`, timers, and dependency-storm fixes.
@@ -199,10 +212,3 @@ not read all of them up front.
   format benchmarks, DuckDB/parquet, `pool`/`dbplyr`, downloads and uploads.
 - [rendering-ui.md](references/rendering-ui.md) — output suspension via tabs,
   `renderUI` alternatives, plot/table rendering costs, perceived performance.
-
-**Shiny for Python:** this skill targets Shiny for R. For Python apps,
-translate concepts rather than code: `@reactive.extended_task` ≈
-`ExtendedTask`, `@reactive.event` ≈ `bindEvent`, `reactive.isolate()` ≈
-`isolate()`, `functools.lru_cache` ≈ `memoise()`. There is no `bindCache()` in
-Python, and `async def` reactives do **not** make apps faster — use extended
-tasks for background work.
