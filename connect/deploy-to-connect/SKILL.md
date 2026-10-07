@@ -19,12 +19,14 @@ Downstream copies are overwritten by the sync workflow.
 
 # Deploying to Posit Connect
 
-This guide covers Python and R content on a Posit Connect server. Work through the stages in order.
+This guide covers Python, R, and static content on a Connect server.
+A registered Connect Model Context Protocol (MCP) server can also provide publishing tools.
 
-Two toolchains do the work:
+Choose the deployment route that matches the content and available tools:
 
 - Python — [rsconnect-python](https://github.com/posit-dev/rsconnect-python), which provides the `rsconnect` CLI and is published on PyPI.
 - R — the R [`rsconnect`](https://rstudio.github.io/rsconnect/) package, pointed at a Connect server.
+- A registered Connect MCP server — use its publishing tools when they support the content.
 
 If the user asks a question ("how do I…", "what is the command…") rather than asking for a deploy, answer from this guide and stop.
 
@@ -44,6 +46,7 @@ Infer the language and framework from the files in the project directory. Common
 | `*.qmd` | Quarto document |
 | `*.Rmd` | R Markdown |
 | `*.ipynb` | Jupyter notebook / Voila |
+| `index.html`, or a directory containing HTML, CSS, JavaScript, or image files | Static HTML site |
 | `manifest.json` | Prebuilt bundle — deploy it directly, no framework guess needed |
 | A bare `.py` or `.R` — no framework import, no `ui.R`/`server.R`/`plumber.R`/`entrypoint.R` alongside | Script — a batch/ETL job that Quarto renders and Connect can schedule |
 
@@ -80,12 +83,18 @@ command -v git                                        # git
 ```
 
 With `uv` present, Python content needs no install step. `uv tool run --from rsconnect-python rsconnect ...` fetches and runs the CLI on demand.
+If an authenticated Connect MCP server is registered, include its publishing tools in the capability set.
 
 ---
 
 ## Stage 3 — Pick a route
 
 Cross the detected content (Stage 1) with your capabilities (Stage 2).
+
+### Registered Connect MCP server
+
+If a registered Connect MCP server offers publishing tools for this content, follow the guidance provided by that server.
+Otherwise, use a publishing client below.
 
 ### Python content
 
@@ -154,9 +163,15 @@ A script deploys like a Quarto document but is a different content type: a `.qmd
 
 Now that the tool is known, find out which server to deploy to and whether the tool can already reach it. This is a check, not a login.
 
+If using publishing MCP tools, the authenticated MCP connection identifies the target.
+Confirm that it matches the server the user named.
+If the user named no server, ask which target to use.
+Do not inspect CLI accounts or register a server for the MCP route.
+Follow that server's publishing guidance when the target is clear.
+
 **Do not search the environment for API keys.** Do not read `CONNECT_API_KEY`, `CONNECT_SERVER`, a `.env` file, a keychain entry, or any other stored secret to pick a target or to register a server. Do this only when the user explicitly asks for it. An environment variable is not a request to use it.
 
-List the accounts the tool already has. This is the only credential check you need.
+For CLI routes, list the accounts the tool already has. This is the only CLI credential check you need.
 
 ```console
 rsconnect list                                   # Python: saved servers, stored tokens, and the default server on 1.30.0+
@@ -250,7 +265,7 @@ R:
 #' ---
 ```
 
-**No account for the target.** Register it now with a browser login: `rsconnect login` for Python, or `rsconnect::addServer()` and `rsconnect::connectUser()` for R. The [credentials reference](#credentials-reference) has the details and the pitfalls. Do not fall back to an API key from the environment. If the browser flow is not available, report that and stop.
+**No CLI account for the target.** Register it now with a browser login: `rsconnect login` for Python, or `rsconnect::addServer()` and `rsconnect::connectUser()` for R. The [credentials reference](#credentials-reference) has the details and the pitfalls. Do not fall back to an API key from the environment. If the browser flow is not available, report that and stop.
 
 **Dependencies.** rsconnect and rsconnect-python scan the code and snapshot the required package versions for you, so hand-listing them is rarely necessary. Python content needs a `requirements.txt`. For R, the content's own packages must be installed locally for rsconnect to detect them — `plumber` for a Plumber API, `shiny` for a Shiny app. Install any that are missing from the same P3M repo shown above.
 
