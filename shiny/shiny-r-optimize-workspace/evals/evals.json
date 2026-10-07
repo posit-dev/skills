@@ -1,0 +1,115 @@
+{
+  "skill_name": "shiny-r-optimize",
+  "evals": [
+    {
+      "id": 0,
+      "eval_name": "dashboard-broad-slowness",
+      "prompt": "hey, my sales dashboard has been driving me crazy \u2014 it takes forever before I can actually use it when I open it, and clicking around is sluggish. I already tried restarting and even a newer laptop, so I don't think it's my machine. Can you figure out what's making it slow and fix it? Please don't change what the app does \u2014 same charts, same filters, just faster.",
+      "expected_output": "A diagnosis that identifies the planted problems (per-session CSV read, duplicate filtering across outputs, no req() gating, renderUI churn, all outputs computing at startup, uncached slow reactive, no debounce) and targeted fixes that preserve app behavior. The agent should measure before/after (profvis or timing) rather than blindly refactoring, and should not rewrite the app from scratch.",
+      "files": [
+        "apps/sales-dashboard/app.R",
+        "apps/sales-dashboard/sales.csv",
+        "apps/sales-dashboard/generate-data.R"
+      ],
+      "assertions": [
+        {
+          "text": "changes-actually-applied: outputs/app/app.R differs meaningfully from the original fixture app.R (a real diff with performance edits), not just a copy"
+        },
+        {
+          "text": "app-boots-and-renders: app.R parses, the app starts and serves HTTP 200, and at least one output renders without a server-side error (verify via shinytest2/chromote page visit or error-free boot log while a client loads; an index-page curl alone is NOT sufficient)"
+        },
+        {
+          "text": "data-loaded-outside-server: sales.csv is no longer read inside server() \u2014 loading moved to global scope (a faster reader is acceptable if used at global scope)"
+        },
+        {
+          "text": "single-shared-filter: the duplicated per-output filtering is consolidated so the expensive derivation is computed once per change (shared reactive consumed by multiple outputs)"
+        },
+        {
+          "text": "outputs-gate-invalid-inputs: outputs do not compute on NULL/empty/invalid input states where doing so would error or waste significant work (judge from startup behavior and code, not from whether req() specifically is present)"
+        },
+        {
+          "text": "renderui-replaced-or-justified: the city filter no longer rebuilds via renderUI/selectInput-in-uiOutput, OR the report explicitly justifies keeping it"
+        },
+        {
+          "text": "slow-reactive-no-longer-refires: the Sys.sleep(1.5) benchmark reactive is no longer re-executed on every filter/slider change (cached, hoisted to constant data, or made event-driven)"
+        },
+        {
+          "text": "behavior-preserved: all seven original outputs still exist (revenue_plot, revenue_summary, top_products, category_mix, store_scatter, benchmark_plot, detail_table) with the same UI structure and filters; any user-visible change is explicitly flagged in report.md"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "eval_name": "multiuser-blocking-freeze",
+      "prompt": "We put our model explorer app on a shared server for the team a few weeks ago and people keep complaining it's slow, especially when several of us are using it around the same time. It always seemed fine when I was testing it on my own before the rollout. IT won't give us any more resources, so whatever the fix is, it has to happen in the app itself. Can you take a look?",
+      "expected_output": "The agent should recognize the multi-user blocking symptom (long synchronous eventReactive blocking the R process), and fix it with ExtendedTask + future_promise (or mirai) + the existing task button, moving data loading out of server(), and de-duplicating the outputs that each call fit() independently. The clock output should keep ticking during fits. Should not reach for async before noting the duplicated-computation fixes.",
+      "files": [
+        "apps/model-explorer/app.R",
+        "apps/model-explorer/survey.csv"
+      ],
+      "assertions": [
+        {
+          "text": "changes-actually-applied: outputs/app/app.R differs meaningfully from the original fixture app.R (a real diff with performance edits), not just a copy"
+        },
+        {
+          "text": "app-boots-and-renders: app.R parses, the app starts and serves HTTP 200, and at least one output renders without a server-side error (verify via shinytest2/chromote page visit or error-free boot log while a client loads; an index-page curl alone is NOT sufficient)"
+        },
+        {
+          "text": "blocking-fit-moved-off-main-process: the simulated 4-second fit no longer runs synchronously in an eventReactive on the main R process \u2014 converted to ExtendedTask with future_promise/mirai (or an equivalent promises-based pattern); a body that runs synchronously inside ExtendedTask$new without a promise FAILS this"
+        },
+        {
+          "text": "worker-backend-declared-at-top-level: future::plan(multisession) (or mirai::daemons) is configured at app top level, not omitted or set to sequential"
+        },
+        {
+          "text": "no-reactive-reads-inside-worker: the task function receives values as arguments; no input$ or reactive reads inside the promise/worker body"
+        },
+        {
+          "text": "task-button-still-wired: the existing input_task_button remains functional and wired to task state (bind_task_button or equivalent)"
+        },
+        {
+          "text": "data-loaded-outside-server: survey.csv is no longer read inside server()"
+        },
+        {
+          "text": "fit-consumed-once: the four outputs no longer each trigger/consume the fit independently in a way that re-runs work (a single shared consumer of the task result)"
+        },
+        {
+          "text": "clock-keeps-ticking: the clock output continues updating while a fit runs (demonstrated by a test or argued correctly from the async semantics)"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "profile-first-top3",
+      "prompt": "A colleague reviewed our dashboard and said it 'does too much work', but I honestly can't tell where the time actually goes. Can you dig into it, tell me what's actually making it slow, and fix whatever can be fixed without changing what the app does or how it looks?",
+      "expected_output": "The agent should run an actual profile (profvis and/or reactlog, plus bench::mark for A/B comparisons), report a prioritized diagnosis with concrete evidence, then apply a small number of targeted fixes, and report before/after measurements for at least the headline problem.",
+      "files": [
+        "apps/sales-dashboard/app.R",
+        "apps/sales-dashboard/sales.csv",
+        "apps/sales-dashboard/generate-data.R"
+      ],
+      "assertions": [
+        {
+          "text": "profiling-tool-actually-used: report shows evidence a real profiling/measurement tool ran (profvis summary, reactlog observations, bench::mark output, or timed measurements) \u2014 not purely static reasoning"
+        },
+        {
+          "text": "prioritized-diagnosis-with-evidence: the report identifies multiple performance problems and prioritizes them by impact with supporting evidence for each (an explicit ranked list is one acceptable form)"
+        },
+        {
+          "text": "diagnosis-matches-ground-truth: the diagnosis gets the reactive semantics right \u2014 the benchmark reactive (Sys.sleep 1.5s) reads NO reactive values so it runs once per session and blocks the first flush, NOT 're-runs on every input change'; and duplicate per-output filtering is correctly identified as repeated work"
+        },
+        {
+          "text": "fixes-target-diagnosed-problems: applied fixes correspond to the diagnosed top problems; no wholesale rewrite (changes stay targeted and behavior-preserving)"
+        },
+        {
+          "text": "before-after-numbers-consistent: at least one concrete before/after measurement for the headline problem, with units, internally consistent (the arithmetic reconciles; claimed deltas match the cited before/after values)"
+        },
+        {
+          "text": "app-boots-and-renders: app.R parses, the app starts and serves HTTP 200, and at least one output renders without a server-side error (verify via shinytest2/chromote page visit or error-free boot log while a client loads; an index-page curl alone is NOT sufficient)"
+        },
+        {
+          "text": "behavior-preserved: all seven original outputs still exist (revenue_plot, revenue_summary, top_products, category_mix, store_scatter, benchmark_plot, detail_table) with the same UI structure and filters; any user-visible change is explicitly flagged in report.md"
+        }
+      ]
+    }
+  ]
+}
