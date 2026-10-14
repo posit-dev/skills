@@ -80,7 +80,8 @@
         "./brand-yml",
         "./shiny/shiny-bslib",
         "./shiny/shiny-bslib-theming",
-        "./shiny/shiny-r-optimize"
+        "./shiny/shiny-r-optimize",
+        "./shiny/shiny-py-optimize"
       ]
     },
     {
