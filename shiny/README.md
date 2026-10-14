@@ -76,6 +76,32 @@ Comprehensive theming for Shiny apps using bslib and Bootstrap 5. Use when custo
 - [Bootswatch themes](https://bootswatch.com/)
 - [thematic package](https://rstudio.github.io/thematic/)
 
+### `shiny-r-optimize`
+
+Diagnose and fix performance problems in existing Shiny for R apps — slow startup, sluggish interactions, blocking operations, and apps that need to support more users. Use when an app is slow, hangs, recomputes too much, or must scale beyond prototyping.
+
+**Organization**: SKILL.md provides the diagnostic workflow (understand the complaint → read the app → measure → classify the bottleneck → fix cheapest-first → verify), a quick-wins triage scan, and a symptom-to-fix table. Reference files provide the depth:
+- `diagnosis.md` - Profiling with profvis/debrief, reactive-graph inspection with reactlog, micro-benchmarks (bench), load testing (shinyloadtest/shinycannon), the multi-process model, and Connect/Posit Connect Cloud capacity knobs
+- `reactive-graph.md` - Narrowing reactive dependencies: shared reactives, req(), isolate(), bindEvent(), freezeReactiveValue(), debounce()/throttle(), timers
+- `caching.md` - bindCache() keys and scopes, caching data vs. plots, memoise(), cachem backends, deployment caveats
+- `async-tasks.md` - The flush cycle, ExtendedTask, mirai/future_promise/crew, and the hard rules for worker code
+- `data-loading.md` - Load-once patterns, fast file formats (fread/feather/parquet/DuckDB), pool + dbplyr, downloads and uploads
+- `rendering-ui.md` - Output suspension via tabs, gating with req(), renderUI alternatives, plot/table rendering costs, perceived performance
+
+**Resources** (sources used in developing this skill — useful starting points for optimization work):
+- [Shiny performance articles](https://shiny.posit.co/r/articles/improve/)
+- [Shiny: Non-blocking operations (async)](https://shiny.posit.co/r/articles/improve/nonblocking/)
+- [Shiny: Caching with bindCache](https://shiny.posit.co/r/articles/improve/caching/)
+- [Mastering Shiny: Performance](https://mastering-shiny.org/performance.html) and [Scaling](https://mastering-shiny.org/scaling-general.html)
+- [promises documentation](https://rstudio.github.io/promises/)
+- [profvis](https://rstudio.github.io/profvis/) and [debrief](https://r-lib.github.io/debrief/) for profiling
+- [reactlog](https://rstudio.github.io/reactlog/) for reactive-graph inspection
+- [shinyloadtest](https://rstudio.github.io/shinyloadtest/) and [shinycannon](https://github.com/rstudio/shinycannon) for load testing
+- [mirai](https://mirai.r-lib.org/) and [crew](https://wlandau.github.io/crew/) for async worker backends
+- [DuckDB R client](https://r.duckdb.org/) and [pool](https://rstudio.github.io/pool/) for data access
+- [Posit Connect scheduler settings](https://docs.posit.co/connect/admin/appendix/off-host-scheduler/)
+- [Managing long-running operations in Shiny (Joe Cheng, 2024)](https://opensource.posit.co/resources/videos/2024-05-15_joe-cheng-managing-long-running-operations-in-shiny-posit/)
+
 ## Potential Skills
 
 This category could include skills for:
@@ -83,7 +109,7 @@ This category could include skills for:
 - Shiny app architecture and best practices
 - Reactive programming patterns
 - UI/UX design for Shiny apps
-- Performance optimization
+- ~~Performance optimization~~ (covered by `shiny-r-optimize`)
 - Testing Shiny applications
 - Deployment strategies
 - Module development

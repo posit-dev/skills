@@ -1,0 +1,14 @@
+# Iteration results from the skill-creator eval loop (skill-creator convention:
+# results live in <skill-name>-workspace/iteration-N/). Too bulky and too
+# regenerable to commit; re-run evals to reproduce.
+iteration-*/
+
+# Empty scratch dir
+measurements/
+
+# Generated fixture data — reproduce with: Rscript generate-data.R
+# (deterministic, set.seed(42))
+apps/sales-dashboard/sales.csv
+
+# Stray plotting artifact, not a fixture
+apps/sales-dashboard/Rplots.pdf
