@@ -3,7 +3,7 @@ name: r-cran-status
 description: Look up an R package's live status on cran.r-project.org - submission/review state (queue, human review, waiting, archived, past version's fate) or R CMD check results (OK/NOTE/WARN/ERROR per platform). Use for "what's the CRAN status of X", "did X get accepted/rejected", "is X passing CRAN checks", "when was version Y archived", "did win-builder get my package", "is win-builder processing my submission".
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
-  version: "1.0.1"
+  version: "1.1"
 license: MIT
 ---
 
