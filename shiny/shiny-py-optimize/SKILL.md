@@ -29,11 +29,14 @@ Order of preference for every fix:
 4. **Relocate** work that blocks (`@reactive.extended_task`) — last resort; it
    buys concurrency, not raw speed.
 
-One fact drives most Python-specific advice: **Shiny runs reactive functions
-serially on a single asyncio event loop — never concurrently, even when they
-are `async def`, even across sessions in the same process.** One blocking call
-in any reactive function freezes every session in the process. `async`/
-`await` alone never fixes this; only `@reactive.extended_task` does.
+One fact drives most Python-specific advice: **Shiny runs every session in a
+process on a single asyncio event loop.** One synchronous blocking call in any
+reactive function freezes every session in the process. Since py-shiny X.Y.Z,
+an `await` in an `async def` reactive frees the loop for other sessions, but
+the session that started it still waits for all of its effects before it
+handles new input or sends outputs. Only `@reactive.extended_task` keeps that
+session responsive. Before X.Y.Z, reactive functions ran serially across all
+sessions even when `async`, so `await` alone helped no one.
 
 ## Workflow
 
@@ -68,7 +71,7 @@ of slow Shiny for Python apps.
 | Identical expensive work repeated across sessions | Every user re-pays the same cost | Module-level cache (`functools.lru_cache`, `diskcache`) — there is no built-in `bindCache` equivalent → [caching.md](references/caching.md) |
 | Sliders/text inputs feeding expensive chains directly | One drag = dozens of recomputations | `@reactive.event()` button gating; debounce helper → [reactive-graph.md](references/reactive-graph.md) |
 | `time.sleep`, sync `requests`, heavy pandas/DuckDB calls inline in calcs/effects/renders | Blocks the event loop for **every user in the process** | `@reactive.extended_task` → [async-tasks.md](references/async-tasks.md) |
-| `async def` reactives added expecting a speedup | Shiny runs reactive code serially even when async | Async only for async-only APIs; `ExtendedTask` for non-blocking → [async-tasks.md](references/async-tasks.md) |
+| `async def` reactives added expecting a speedup | An `await` frees only *other* sessions (py-shiny ≥ X.Y.Z; earlier versions run async reactives serially); the triggering session still waits for all of its effects | `ExtendedTask` to keep the session itself responsive → [async-tasks.md](references/async-tasks.md) |
 | `@render.ui` used for routine value updates | DOM rebuild + input re-binding per update | `ui.update_*()` → [rendering-ui.md](references/rendering-ui.md) |
 | `@render.table` on large data frames | pandas Styler → full HTML serialization | `@render.data_frame` with `render.DataGrid` → [rendering-ui.md](references/rendering-ui.md) |
 
@@ -199,9 +202,10 @@ an artifact, say so in the report instead of asserting it.
   changes that alter *timing semantics* even when outputs are identical
   (debouncing adds intentional latency; caches share results across
   sessions).
-- **`async` is not a performance fix.** `async def` reactives exist so you can
-  call async-only APIs. They do not run concurrently and do not make the app
-  responsive. Non-blocking means `@reactive.extended_task`.
+- **`async` is not a performance fix.** An `await` in an `async def` reactive
+  lets other sessions run (py-shiny ≥ X.Y.Z), but the user who triggered it
+  still waits for the result. To keep that session responsive, use
+  `@reactive.extended_task`.
 - **Caching before async.** Caching often yields 10–100×; async only adds
   concurrency and carries serialization and debugging costs.
 - **Never scale with multi-worker servers.** `uvicorn --workers >1`, the
