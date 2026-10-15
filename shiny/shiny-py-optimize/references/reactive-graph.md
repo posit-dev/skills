@@ -232,8 +232,8 @@ feature is tracked in py-shiny issues #564 and #1814). Options, best first:
    ```
    Semantics that matter: debounce rate-limits the **invalidation signal**,
    not execution — wrap only a cheap read (a direct input read) when the
-   *downstream* work is expensive. Timings are **minimums**: reactive code
-   runs serially, so a slow downstream computation can exceed the window.
+   *downstream* work is expensive. Timings are **minimums**: a slow
+   downstream computation can exceed the window.
    Rely on the built-in client-side debouncing for ordinary sliders and text
    inputs; add the helper only when profiling shows an invalidation storm.
 

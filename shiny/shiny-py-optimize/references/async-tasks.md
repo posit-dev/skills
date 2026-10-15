@@ -5,25 +5,34 @@ faster — it changes *who waits*. Exhaust elimination (reactive-graph.md) and
 caching (caching.md) first: caching gives 10–100×; async gives concurrency at
 the cost of serialization overhead and harder debugging.
 
-## Why blocking hurts — and why `async def` doesn't help
+## Why blocking hurts — and what `async def` does and doesn't fix
 
-Shiny for Python runs on a single asyncio event loop per process, and it
-deliberately runs **reactive functions serially, never concurrently — even
-when they are `async def`, even across sessions in the same process**. Two
-`async` effects that each `await asyncio.sleep(1)` run one after the other;
-one user's blocking call freezes every session in the process.
+Shiny for Python runs every session in a process on a single asyncio event
+loop. Since py-shiny X.Y.Z, Shiny starts reactive effects without waiting for
+the awaited parts of `async` ones. Check the app's py-shiny version before
+applying this section; older versions behave as described at the end.
 
-Consequences:
-
-- `async def` on a calc/effect/renderer exists so you can call async-only
-  APIs (an async HTTP client, `session.send_custom_message`). **It does not
-  make the app faster or more responsive.** Replacing `time.sleep(5)` with
-  `await asyncio.sleep(5)` changes nothing for your users.
 - A *synchronous* call in any reactive function (`time.sleep`, `requests`,
   a sync DuckDB/pandas query) blocks the event loop itself — nothing in the
   process gets served until it returns. This is the single most destructive
   pattern in a Shiny for Python app, and it's invisible in development with
   one user.
+- An `await` in an `async def` calc/effect/renderer frees the event loop, so
+  **other sessions** keep running. The session that started it does not: it
+  holds new input changes and sends no outputs until all of its effects
+  finish, so for that user the app still looks frozen. Replacing
+  `time.sleep(5)` with `await asyncio.sleep(5)` stops one user's wait from
+  freezing everyone else, but doesn't shorten that user's wait.
+- `async` effects in the same session interleave at each `await` instead of
+  running one after another. `priority` orders when effects start, not when
+  they finish.
+- Only `@reactive.extended_task` keeps the **same session** interactive while
+  the work runs (next sections).
+
+Before py-shiny X.Y.Z, Shiny ran reactive functions serially across every
+session, even `async def` ones. One user's `await` froze every session in the
+process, and `async def` was useful only for calling async-only APIs (an
+async HTTP client, `session.send_custom_message`).
 
 ## The decision path
 
@@ -101,8 +110,8 @@ Semantics worth knowing cold:
 
 ## Offloading synchronous and CPU-bound work
 
-`@reactive.extended_task` removes you from the reactive flush, but the body
-still runs on the event loop. Match the offload to the work:
+`@reactive.extended_task` lets the session's reactive cycle finish without
+waiting for the task, but the body still runs on the event loop. Match the offload to the work:
 
 | Work | Offload |
 |---|---|
@@ -155,7 +164,7 @@ app.on_shutdown(pool.shutdown)                   # clean shutdown — don't skip
    renderer.
 4. **Don't mutate shared module-level objects** in the worker (they may be
    pickled copies, or shared between sessions — either way it's wrong).
-5. **Debugging is harder off the flush.** Errors re-raise in the consuming
+5. **Debugging is harder outside the reactive cycle.** Errors re-raise in the consuming
    output; py-spy and cProfile see less inside pools — profile the
    synchronous version first, convert only the proven hotspot.
 

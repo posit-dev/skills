@@ -37,7 +37,7 @@ session_start
 - **Widest repeated spans** are the bottleneck; one-time towers at session
   start are per-session setup work (data-loading.md, Rule 1).
 - `SHINY_OTEL_COLLECT` levels, least to most detail: `none`, `session`,
-  `reactive_update` (one span per flush — a good production level),
+  `reactive_update` (one span per reactive cycle — a good production level),
   `reactivity` (a span per calc/effect/output — the development level),
   `all` (currently same as `reactivity`).
 - Production overhead control: lower the level, sample
@@ -145,9 +145,10 @@ async-tasks.md come before the infrastructure knobs below.
 
 One Shiny for Python process = one asyncio event loop = one Python thread:
 
-- **Reactive functions run serially, never concurrently — even async ones,
-  even across sessions.** One blocking call ties up every session on the
-  process. This is why code fixes come first (async-tasks.md).
+- **Synchronous code blocks every session.** One blocking call ties up every
+  session on the process. An `await` in an `async def` reactive frees the
+  loop for other sessions (py-shiny ≥ X.Y.Z; earlier versions run reactive
+  functions serially across sessions, even async ones). This is why code fixes come first (async-tasks.md).
 - **Sessions hold state in memory**, so a browser must keep talking to the
   *same* process: sticky-session load balancing is mandatory whenever more
   than one app process serves a URL. This rules out `uvicorn --workers >1`,
