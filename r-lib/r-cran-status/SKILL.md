@@ -1,9 +1,9 @@
 ---
 name: r-cran-status
-description: Look up an R package's live status on cran.r-project.org - submission/review state (queue, human review, waiting, archived, past version's fate) or R CMD check results (OK/NOTE/WARN/ERROR per platform). Use for "what's the CRAN status of X", "did X get accepted/rejected", "is X passing CRAN checks", "when was version Y archived".
+description: Look up an R package's live status on cran.r-project.org - submission/review state (queue, human review, waiting, archived, past version's fate) or R CMD check results (OK/NOTE/WARN/ERROR per platform). Use for "what's the CRAN status of X", "did X get accepted/rejected", "is X passing CRAN checks", "when was version Y archived", "did win-builder get my package", "is win-builder processing my submission".
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)
-  version: "1.0"
+  version: "1.1"
 license: MIT
 ---
 
@@ -35,6 +35,8 @@ page you've already checked in this session.
      rejection/archival → **Submission Status**.
    - Request mentions checks, `R CMD check`, WARN/ERROR/NOTE, or
      platforms/flavors → **Check Results**.
+   - Request mentions win-builder, `check_win_devel()`, or whether a
+     submission arrived → **Win-Builder**.
    - If genuinely ambiguous (e.g. just "check the CRAN status of x"), ask
      which is meant, or check both and report both.
 3. Follow the relevant section below and report the result.
@@ -191,3 +193,49 @@ submission status instead.
   persistent WARN/ERROR can lead to archival.
 - Page 404s: report no check results exist; check/report submission status
   instead.
+
+## Win-Builder
+
+Win-builder (win-builder.r-project.org) runs `R CMD check` on Windows for
+packages submitted via `devtools::check_win_devel()` (or
+`check_win_release()` / `check_win_oldrelease()`): the tarball is uploaded
+by anonymous FTP to `ftp://win-builder.r-project.org/<flavor>/` (`R-devel`,
+`R-release`, or `R-oldrelease`), and results are emailed to the maintainer
+address in `DESCRIPTION`, usually within 15-30 minutes. A local success
+message only means the upload command finished — verify receipt on the
+server.
+
+1. **Upload receipt (authoritative).** The tarball should be listed in the
+   flavor's FTP folder:
+
+   ```sh
+   curl ftp://win-builder.r-project.org/R-devel/
+   ```
+
+   Listed = uploaded and queued. Server timestamps are European time
+   (CEST/CET) — offset them when comparing to local submission time.
+
+2. **Progress.** Once win-builder picks the file up, it appears in the
+   pretest listing:
+
+   ```sh
+   curl -Ls https://win-builder.r-project.org/incoming_pretest/ |
+     grep -i {package}
+   ```
+
+   Entries look like `{package}_{version}_{yyyymmdd}_{hhmmss}` and appear
+   only once checking starts; logs live inside each entry (e.g.
+   `00check.log`). Entries linger for months — match version and date,
+   not just the package name.
+
+Gotchas:
+
+- A missing `incoming_pretest` entry ≠ failed upload — entries lag behind
+  the FTP listing, which is the authoritative arrival check; queues can
+  jam for hours, and the listing's backlog shows it.
+- Don't advise resubmitting while the tarball is still listed — it's
+  queued, and a duplicate won't speed it up.
+- Tarball gone but no email? The run likely finished; check the
+  maintainer's spam folder and `incoming_pretest/` for a recent entry
+  matching the version. Nothing after several hours → ask R-package-devel
+  rather than resubmit.
