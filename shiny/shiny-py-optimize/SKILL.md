@@ -29,11 +29,20 @@ Order of preference for every fix:
 4. **Relocate** work that blocks (`@reactive.extended_task`) — last resort; it
    buys concurrency, not raw speed.
 
-One fact drives most Python-specific advice: **Shiny runs reactive functions
-serially on a single asyncio event loop — never concurrently, even when they
-are `async def`, even across sessions in the same process.** One blocking call
-in any reactive function freezes every session in the process. `async`/
-`await` alone never fixes this; only `@reactive.extended_task` does.
+One fact drives most Python-specific advice: **every session in a process
+shares one asyncio event loop.** A *synchronous* blocking call in any reactive
+function freezes every session in the process. What a slow `async def`
+reactive blocks depends on the shiny version (check with
+`python -c "import shiny; print(shiny.__version__)"`):
+
+- **shiny ≤ 1.8.0:** reactive functions run serially across the whole
+  process, so a slow `async` reactive also freezes every session.
+- **shiny > 1.8.0:** effects run concurrently, so a slow `async` reactive
+  holds only *its own* session (no input updates, no outputs until it
+  finishes); other sessions keep running.
+
+Either way, `async`/`await` alone never keeps the *same* session responsive;
+only `@reactive.extended_task` does.
 
 ## Workflow
 
@@ -68,7 +77,7 @@ of slow Shiny for Python apps.
 | Identical expensive work repeated across sessions | Every user re-pays the same cost | Module-level cache (`functools.lru_cache`, `diskcache`) — there is no built-in `bindCache` equivalent → [caching.md](references/caching.md) |
 | Sliders/text inputs feeding expensive chains directly | One drag = dozens of recomputations | `@reactive.event()` button gating; debounce helper → [reactive-graph.md](references/reactive-graph.md) |
 | `time.sleep`, sync `requests`, heavy pandas/DuckDB calls inline in calcs/effects/renders | Blocks the event loop for **every user in the process** | `@reactive.extended_task` → [async-tasks.md](references/async-tasks.md) |
-| `async def` reactives added expecting a speedup | Shiny runs reactive code serially even when async | Async only for async-only APIs; `ExtendedTask` for non-blocking → [async-tasks.md](references/async-tasks.md) |
+| `async def` reactives added expecting a speedup | A slow async reactive still holds its session (and, on shiny ≤ 1.8.0, every session) | Async only for async-only APIs; `ExtendedTask` for non-blocking → [async-tasks.md](references/async-tasks.md) |
 | `@render.ui` used for routine value updates | DOM rebuild + input re-binding per update | `ui.update_*()` → [rendering-ui.md](references/rendering-ui.md) |
 | `@render.table` on large data frames | pandas Styler → full HTML serialization | `@render.data_frame` with `render.DataGrid` → [rendering-ui.md](references/rendering-ui.md) |
 
@@ -111,7 +120,8 @@ replay with N workers → report). Tool selection and reading guides:
 |---|---|---|
 | First page load is slow (every session) | Per-session data loading (especially Express top-level); outputs computing at startup on empty inputs; heavy per-session setup | [data-loading.md](references/data-loading.md), [reactive-graph.md](references/reactive-graph.md) |
 | One interaction recomputes far too much | Over-broad dependencies; duplicate computation; chatty inputs | [reactive-graph.md](references/reactive-graph.md), [caching.md](references/caching.md) |
-| A specific action takes seconds and the app freezes — for **everyone** | Blocking operation on the shared event loop | [async-tasks.md](references/async-tasks.md) |
+| A specific action takes seconds and the app freezes — for **everyone** | Sync blocking operation on the shared event loop (or any slow reactive, on shiny ≤ 1.8.0) | [async-tasks.md](references/async-tasks.md) |
+| A specific action takes seconds and the app freezes — only for **that user** | Slow `async` reactive holding its session (shiny > 1.8.0) | [async-tasks.md](references/async-tasks.md) |
 | Fast for one user, degrades with several | Blocking operations; repeated identical computation; per-user reloads; too few processes | [caching.md](references/caching.md), [async-tasks.md](references/async-tasks.md), [diagnosis.md](references/diagnosis.md) |
 | Plots/tables slow to appear or update | Heavy rendering; `@render.table`; full redraws; un-aggregated Plotly | [rendering-ui.md](references/rendering-ui.md) |
 | Downloads/uploads misbehave or recompute | Download handler recomputing per click; uploads parsed in renderers | [data-loading.md](references/data-loading.md) |
@@ -200,8 +210,8 @@ an artifact, say so in the report instead of asserting it.
   (debouncing adds intentional latency; caches share results across
   sessions).
 - **`async` is not a performance fix.** `async def` reactives exist so you can
-  call async-only APIs. They do not run concurrently and do not make the app
-  responsive. Non-blocking means `@reactive.extended_task`.
+  call async-only APIs. They do not make the computation faster or keep the
+  session responsive. Non-blocking means `@reactive.extended_task`.
 - **Caching before async.** Caching often yields 10–100×; async only adds
   concurrency and carries serialization and debugging costs.
 - **Never scale with multi-worker servers.** `uvicorn --workers >1`, the

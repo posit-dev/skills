@@ -98,7 +98,7 @@ entirely.
   operations feel faster.
 - **Let the UI render first**: render the shell immediately and stream
   results in, rather than blocking on data before first paint.
-- One slow output holds up the flush that delivers *all* outputs of an
+- One slow output holds up the session cycle that delivers *all* outputs of an
   interaction — gate slow computes behind buttons or extended tasks so fast
   outputs aren't held hostage.
 
