@@ -7,23 +7,36 @@ the cost of serialization overhead and harder debugging.
 
 ## Why blocking hurts — and why `async def` doesn't help
 
-Shiny for Python runs on a single asyncio event loop per process, and it
-deliberately runs **reactive functions serially, never concurrently — even
-when they are `async def`, even across sessions in the same process**. Two
-`async` effects that each `await asyncio.sleep(1)` run one after the other;
-one user's blocking call freezes every session in the process.
+Shiny for Python runs every session in a process on a single asyncio event
+loop. How `async def` reactives behave depends on the shiny version:
+
+- **shiny ≤ 1.8.0:** reactive functions run **serially, never concurrently —
+  even when they are `async def`, even across sessions**. Two `async` effects
+  that each `await asyncio.sleep(1)` run one after the other, and one user's
+  slow async effect freezes every session in the process.
+- **shiny > 1.8.0:** effects run concurrently. `async` effects interleave at
+  each `await`, and other sessions keep running while one awaits. But a
+  session stays **busy** until all of its effects finish: it applies no input
+  changes and sends no outputs until then.
 
 Consequences:
 
 - `async def` on a calc/effect/renderer exists so you can call async-only
   APIs (an async HTTP client, `session.send_custom_message`). **It does not
-  make the app faster or more responsive.** Replacing `time.sleep(5)` with
-  `await asyncio.sleep(5)` changes nothing for your users.
+  make the computation faster or keep the user's session responsive.**
+  Replacing `time.sleep(5)` with `await asyncio.sleep(5)` changes nothing on
+  shiny ≤ 1.8.0; on shiny > 1.8.0 it stops blocking *other* sessions, but
+  that user still waits 5 s with a frozen app.
 - A *synchronous* call in any reactive function (`time.sleep`, `requests`,
   a sync DuckDB/pandas query) blocks the event loop itself — nothing in the
-  process gets served until it returns. This is the single most destructive
-  pattern in a Shiny for Python app, and it's invisible in development with
-  one user.
+  process gets served until it returns, on any version. This is the single
+  most destructive pattern in a Shiny for Python app, and it's invisible in
+  development with one user.
+- `async with reactive.lock():` around a `.set()` followed by
+  `await reactive.flush()` (common in background-task code) is obsolete on
+  shiny > 1.8.0: `reactive.lock()` is deprecated and does nothing, and
+  `.set()` schedules its dependents itself. Drop the lock; keep the flush only
+  if the code after it needs the dependents to have run.
 
 ## The decision path
 
@@ -164,8 +177,9 @@ app.on_shutdown(pool.shutdown)                   # clean shutdown — don't skip
 - `ui.input_task_button` shows a busy label and disables itself — feedback
   instead of a frozen app.
 - While a task runs the rest of the session stays live: verify with a
-  ticking output (`reactive.invalidate_later(1)` clock) in another session
-  or another output.
+  ticking output (`reactive.invalidate_later(1)` clock) in the **same**
+  session. (On shiny > 1.8.0 a clock in *another* session keeps ticking even
+  during a slow async effect, so it doesn't prove the task works.)
 - Busy indicators for *outputs* (rendering-ui.md) complement task buttons:
   buttons for triggered work, spinners for render-time work.
 
