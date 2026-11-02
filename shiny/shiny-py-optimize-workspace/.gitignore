@@ -1,0 +1,11 @@
+# Iteration results from the skill-creator eval loop (skill-creator convention:
+# results live in <skill-name>-workspace/iteration-N/). Too bulky and too
+# regenerable to commit; re-run evals to reproduce.
+iteration-*/
+
+# Generated fixture data — reproduce with: python generate_data.py
+# (deterministic, seed 42)
+apps/sales-dashboard/sales.csv
+apps/model-explorer/survey.csv
+
+__pycache__/
