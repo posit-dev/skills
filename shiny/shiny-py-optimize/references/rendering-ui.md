@@ -81,6 +81,9 @@ entirely.
   virtualizes rows in the browser and is the right tool for anything sizable.
 - Only return the columns the user needs (select before returning; wide
   frames serialize slowly).
+- shiny ≥ 1.9.0 serializes `@render.data_frame` 2–3.5× faster with less
+  memory (most for pandas datetime/timedelta, `Decimal`, and `pd.NA`
+  columns). Upgrading is a free win for table-heavy apps.
 - Update without a full re-render: from an effect,
   `await grid.update_data(new_df)` replaces the data while keeping
   sort/filter state.
@@ -98,9 +101,10 @@ entirely.
   operations feel faster.
 - **Let the UI render first**: render the shell immediately and stream
   results in, rather than blocking on data before first paint.
-- One slow output holds up the flush that delivers *all* outputs of an
-  interaction — gate slow computes behind buttons or extended tasks so fast
-  outputs aren't held hostage.
+- One slow output holds up the session cycle that delivers *all* outputs of an
+  interaction (on shiny < 1.9.0, the flush for every session) — gate slow
+  computes behind buttons or extended tasks so fast outputs aren't held
+  hostage.
 
 ## Quick reference
 
