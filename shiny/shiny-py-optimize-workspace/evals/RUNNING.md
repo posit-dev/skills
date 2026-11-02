@@ -38,12 +38,16 @@ reactive effects run concurrently), so run each eval against both versions:
    ```
 
    A `git archive` export also guarantees no `.git` directory is reachable,
-   so the agent cannot recover the answer key from commit history.
+   so the agent cannot recover the answer key from commit history. Create
+   the `.venv` in the run's final location: moving it afterwards breaks the
+   `.venv/bin/shiny` script.
 3. **Export the skill the same way, to a separate temp directory** (e.g.
    `git archive <ref> shiny/shiny-py-optimize`), and give the agent that path.
    Use the base ref of the change for `old_skill`.
 4. **Give the agent only the temp dir path, the skill path, and the eval
-   prompt.** Ask it to write `report.md` in the app directory when done. Do
+   prompt.** Ask it to write `report.md` in the app directory when done.
+   Some harnesses block subagents from writing report files; if so, save
+   the report from the agent's final message yourself. Do
    not mention the skill workspace, `evals/`, `GRADING.md`, or other
    iterations.
 5. **Write `eval_metadata.json` for an eval only after its runs complete.**
