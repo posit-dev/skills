@@ -81,6 +81,9 @@ entirely.
   virtualizes rows in the browser and is the right tool for anything sizable.
 - Only return the columns the user needs (select before returning; wide
   frames serialize slowly).
+- shiny ≥ 1.9.0 serializes `@render.data_frame` 2–3.5× faster with less
+  memory (most for pandas datetime/timedelta, `Decimal`, and `pd.NA`
+  columns). Upgrading is a free win for table-heavy apps.
 - Update without a full re-render: from an effect,
   `await grid.update_data(new_df)` replaces the data while keeping
   sort/filter state.

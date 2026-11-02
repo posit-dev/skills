@@ -10,11 +10,11 @@ the cost of serialization overhead and harder debugging.
 Shiny for Python runs every session in a process on a single asyncio event
 loop. How `async def` reactives behave depends on the shiny version:
 
-- **shiny ≤ 1.8.0:** reactive functions run **serially, never concurrently —
+- **shiny < 1.9.0:** reactive functions run **serially, never concurrently —
   even when they are `async def`, even across sessions**. Two `async` effects
   that each `await asyncio.sleep(1)` run one after the other, and one user's
   slow async effect freezes every session in the process.
-- **shiny > 1.8.0:** effects run concurrently. `async` effects interleave at
+- **shiny ≥ 1.9.0:** effects run concurrently. `async` effects interleave at
   each `await`, and other sessions keep running while one awaits. But a
   session stays **busy** until all of its effects finish: it applies no input
   changes and sends no outputs until then.
@@ -25,7 +25,7 @@ Consequences:
   APIs (an async HTTP client, `session.send_custom_message`). **It does not
   make the computation faster or keep the user's session responsive.**
   Replacing `time.sleep(5)` with `await asyncio.sleep(5)` changes nothing on
-  shiny ≤ 1.8.0; on shiny > 1.8.0 it stops blocking *other* sessions, but
+  shiny < 1.9.0; on shiny ≥ 1.9.0 it stops blocking *other* sessions, but
   that user still waits 5 s with a frozen app.
 - A *synchronous* call in any reactive function (`time.sleep`, `requests`,
   a sync DuckDB/pandas query) blocks the event loop itself — nothing in the
@@ -34,9 +34,11 @@ Consequences:
   development with one user.
 - `async with reactive.lock():` around a `.set()` followed by
   `await reactive.flush()` (common in background-task code) is obsolete on
-  shiny > 1.8.0: `reactive.lock()` is deprecated and does nothing, and
+  shiny ≥ 1.9.0: `reactive.lock()` is deprecated and does nothing, and
   `.set()` schedules its dependents itself. Drop the lock; keep the flush only
-  if the code after it needs the dependents to have run.
+  if the code after it needs the dependents to have run. To wait until the
+  session's effects finish before changing state that a running effect still
+  reads, use `session.run_once_when_idle(fn)`.
 
 ## The decision path
 
@@ -178,7 +180,7 @@ app.on_shutdown(pool.shutdown)                   # clean shutdown — don't skip
   instead of a frozen app.
 - While a task runs the rest of the session stays live: verify with a
   ticking output (`reactive.invalidate_later(1)` clock) in the **same**
-  session. (On shiny > 1.8.0 a clock in *another* session keeps ticking even
+  session. (On shiny ≥ 1.9.0 a clock in *another* session keeps ticking even
   during a slow async effect, so it doesn't prove the task works.)
 - Busy indicators for *outputs* (rendering-ui.md) complement task buttons:
   buttons for triggered work, spinners for render-time work.
