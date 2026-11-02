@@ -160,8 +160,9 @@ def server(input, output, session):
   with a cheap check** (`@reactive.poll(lambda: SELECT MAX(updated_at)...)`)
   instead of re-reading on a timer.
 - Use async drivers (`asyncpg`, `aiosqlite`) only where you'd otherwise block
-  the loop — and remember async reactive code still runs serially
-  (async-tasks.md); extended tasks remain the responsiveness mechanism.
+  the loop — and remember a slow async reactive still holds its own session
+  (and every session on shiny < 1.9.0; async-tasks.md); extended tasks remain
+  the responsiveness mechanism.
 
 ## Downloads shouldn't recompute the dataset
 
