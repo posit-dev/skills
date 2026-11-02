@@ -28,10 +28,10 @@ supposed to find and fix them.
 10. 200k-point scatter rendered raw, no aggregation or sampling
 11. No caching anywhere
 
-Known quirk: matplotlib can print a one-off `OverflowError: Exceeded cell
-block limit in Agg` for `revenue_plot` while the page is first laid out. The
-output then renders correctly. Don't count it against a run unless an output
-stays in an error state.
+The detail table's card has a fixed height (`height="500px"`). Without it,
+the 200k-row table stretched every card in its grid row to millions of
+pixels, so each plot was drawn that tall (minutes per render, plus a
+matplotlib `OverflowError`). Iteration 1 ran before this cap was added.
 
 ## `apps/model-explorer` (eval 1)
 

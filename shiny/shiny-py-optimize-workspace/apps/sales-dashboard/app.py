@@ -136,7 +136,7 @@ with xui.layout_column_wrap(width=1 / 2):
             ax.legend()
             return fig
 
-    with xui.card():
+    with xui.card(height="500px"):
         xui.card_header("Detail table")
 
         @render.table
