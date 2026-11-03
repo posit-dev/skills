@@ -1,5 +1,5 @@
 ---
-name: lifecycle
+name: r-lifecycle
 description: "Guidance for managing R package lifecycle according to tidyverse principles using the lifecycle package. Use when: (1) Setting up lifecycle infrastructure in a package, (2) Deprecating functions or arguments, (3) Renaming functions or arguments, (4) Superseding functions, (5) Marking functions as experimental, (6) Understanding lifecycle stages (stable, experimental, deprecated, superseded), or (7) Writing deprecation helpers for complex scenarios."
 metadata:
   author: Garrick Aden-Buie (@gadenbuie)

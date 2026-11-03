@@ -115,7 +115,7 @@ Cross-reference production code changes against the test suite:
 
 Walk through the implementation and note every decision point — each `if`, `match`, `switch`, error handler, or early return. Check whether the test suite exercises both sides of that decision.
 
-When reviewing R tests using `testthat`, check if the `testing-r-packages` skill is available and invoke it for R-specific conventions and patterns.
+When reviewing R tests using `testthat`, check if the `r-testthat` skill is available and invoke it for R-specific conventions and patterns.
 
 ## Response Format
 

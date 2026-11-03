@@ -1,8 +1,8 @@
-# Posit Claude Skills
+# Posit Agent Skills
 
-A collection of Claude Skills from Posit!
+A collection of Agent Skills from Posit!
 
-Claude Skills extend Claude's capabilities with specialized knowledge and workflows. Skills are automatically activated by Claude based on your task and can be used in Claude.ai, Claude Code, or via the Claude API. Learn more at the [Claude Skills documentation](https://support.claude.com/en/articles/12512180-using-skills-in-claude).
+[Agent Skills](https://agentskills.io) are an open standard for extending coding agents with specialized knowledge and workflows. Skills are automatically activated by your coding assistant based on your task, and work across many harnesses — including Posit Assistant, Claude Code, Codex, Cursor, Cline, and more. If you use Posit Assistant, see the [Posit Assistant skills documentation](https://assistant.posit.co/docs/features/skills.md).
 
 ## Available Skills
 
@@ -36,12 +36,13 @@ Skills for open-source R and Python package developers, streamlining common work
 
 R package development skills for working with the r-lib ecosystem and modern R package workflows.
 
-- **[testing-r-packages](./r-lib/testing-r-packages/)** - Best practices for writing R package tests using testthat 3+, including test structure, expectations, fixtures, snapshots, mocking, and BDD-style testing
-- **[cli](./r-lib/cli/)** - Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication with inline markup, progress indicators, and theming
-- **[cran-extrachecks](./r-lib/cran-extrachecks/)** - Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`, including documentation standards, DESCRIPTION field formatting, and URL validation
-- **[lifecycle](./r-lib/lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
+- **[r-tidyverse-style](./r-lib/r-tidyverse-style/)** - Review and clean up R package code using the tidyverse style guide, separating mechanical style changes from behavior-sensitive refactors
+- **[r-testthat](./r-lib/r-testthat/)** - Best practices for writing R package tests using testthat 3+, including test structure, expectations, fixtures, snapshots, mocking, and BDD-style testing
+- **[r-cli](./r-lib/r-cli/)** - Comprehensive guidance for using the cli R package for command-line interface styling, semantic messaging, and user communication with inline markup, progress indicators, and theming
+- **[r-cran-extrachecks](./r-lib/r-cran-extrachecks/)** - Prepare R packages for CRAN submission by checking for common ad-hoc requirements not caught by `devtools::check()`, including documentation standards, DESCRIPTION field formatting, and URL validation
+- **[r-lifecycle](./r-lib/r-lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
 - **[r-package-development](./r-lib/r-package-development/)** - R package development with devtools, testthat, and roxygen2, covering key commands, coding conventions, testing, documentation, and NEWS.md practices
-- **[mirai](./r-lib/mirai/)** - Async, parallel, and distributed computing in R using mirai, covering explicit dependency passing, daemon setup, parallel mapping with `mirai_map()`, Shiny integration, remote/HPC launchers, and migration from future/parallel
+- **[r-mirai](./r-lib/r-mirai/)** - Async, parallel, and distributed computing in R using mirai, covering explicit dependency passing, daemon setup, parallel mapping with `mirai_map()`, Shiny integration, remote/HPC launchers, and migration from future/parallel
 - **[alt-text](./alt-text/)** - Generate and improve accessible alt text for data visualizations and images in pkgdown sites and Quarto documents, covering vignette code chunks (`fig.alt`), static markdown images, and multi-plot chunks
 
 ### ggsql
@@ -92,6 +93,20 @@ npx skills add posit-dev/skills --skill cli --skill lifecycle
 # Install to Claude Code only, globally
 npx skills add posit-dev/skills --agent claude-code --global
 ```
+
+### Posit Assistant
+
+Install skills into your Posit Assistant skills directory:
+
+```bash
+# User-level, shared with other harnesses that follow the Agent Skills spec
+npx skills add posit-dev/skills --agent posit-assistant
+
+# Or copy skills directly
+cp -r open-source/release-post ~/.posit/assistant/skills/
+```
+
+Skills can also be installed at the project level in `.posit/assistant/skills/`, or in the harness-agnostic `~/.agents/skills/` location. See the [Posit Assistant skills documentation](https://assistant.posit.co/docs/features/skills.md) for details, and [plugins](https://assistant.posit.co/docs/features/plugins/) for installing skills from a marketplace.
 
 ### Claude Code
 
@@ -146,27 +161,23 @@ For customization or offline use:
    done
    ```
 
-### Claude.ai
+### Claude.ai and the Claude API
 
-Skills can be uploaded to Claude.ai following the [Creating Custom Skills guide](https://support.claude.com/en/articles/12512198-creating-custom-skills).
-
-### Claude API
-
-Use the [Skills API](https://docs.claude.com/en/api/skills-guide) to programmatically load and manage skills in your applications.
+Skills can be uploaded to Claude.ai following the [Creating Custom Skills guide](https://support.claude.com/en/articles/12512198-creating-custom-skills), or loaded programmatically in your applications via the [Skills API](https://docs.claude.com/en/api/skills-guide).
 
 ## Using Skills
 
-Once installed, Claude will automatically activate relevant skills based on your task. You don't need to explicitly invoke them.
+Once installed, your coding assistant will automatically activate relevant skills based on your task. You don't need to explicitly invoke them.
 
 For example, with the `release-post` skill installed:
 
 ```
 You: Help me write a release post for dplyr 1.2.0
 
-Claude: I'll help you create a release post. First, let me gather some information...
+Assistant: I'll help you create a release post. First, let me gather some information...
 ```
 
-Claude will use the skill's knowledge to guide you through creating a properly formatted release post.
+The assistant will use the skill's knowledge to guide you through creating a properly formatted release post.
 
 ## Skill Categories
 
@@ -200,7 +211,9 @@ This repository is licensed under the MIT License. See [LICENSE](./LICENSE) for 
 
 ## Resources
 
-- [Claude Skills Overview](https://www.anthropic.com/news/skills)
+- [Agent Skills specification](https://agentskills.io/specification.md)
+- [Posit Assistant skills documentation](https://assistant.posit.co/docs/features/skills.md)
+- [Announcing Agent Skills](https://www.anthropic.com/news/skills)
 - [Using Skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude)
 - [Creating Custom Skills](https://support.claude.com/en/articles/12512198-creating-custom-skills)
 - [Skills API Documentation](https://docs.claude.com/en/api/skills-guide)
@@ -208,7 +221,7 @@ This repository is licensed under the MIT License. See [LICENSE](./LICENSE) for 
 
 ## Support
 
-If you have questions or encounter issues, check the [Claude Skills documentation](https://support.claude.com/en/articles/12512180-using-skills-in-claude) or [open an issue](https://github.com/posit-dev/skills/issues/new) on GitHub.
+If you have questions or encounter issues, check the [Agent Skills specification](https://agentskills.io/specification.md) or [open an issue](https://github.com/posit-dev/skills/issues/new) on GitHub.
 
 ---
 

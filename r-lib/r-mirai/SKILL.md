@@ -1,5 +1,5 @@
 ---
-name: mirai
+name: r-mirai
 description: Help users write correct R code for async, parallel, and distributed computing using mirai. Use when users need to run R code asynchronously or in parallel, write mirai code with correct dependency passing, set up parallel workers, convert from future or parallel, use mirai_map, integrate with Shiny or promises, or configure cluster/HPC computing.
 metadata:
   author: Charlie Gao (@shikokuchuo)

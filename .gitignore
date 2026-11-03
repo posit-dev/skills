@@ -1,4 +1,4 @@
-# Claude local settings
+# Local agent settings
 .claude/settings.local.json
 **/settings.local.json
 

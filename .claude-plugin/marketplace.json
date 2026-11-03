@@ -5,7 +5,7 @@
     "email": "garrick@posit.co"
   },
   "metadata": {
-    "description": "A collection of Claude Skills for Posit development teams, and open-source users including tools for tidyverse workflows.",
+    "description": "A collection of Agent Skills for Posit development teams, and open-source users including tools for tidyverse workflows.",
     "version": "0.1.0"
   },
   "plugins": [
@@ -50,14 +50,16 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./r-lib/testing-r-packages",
-        "./r-lib/cli",
-        "./r-lib/cran-extrachecks",
-        "./r-lib/lifecycle",
+        "./r-lib/r-testthat",
+        "./r-lib/r-tidyverse-style",
+        "./r-lib/r-cli",
+        "./r-lib/r-cran-extrachecks",
+        "./r-lib/r-lifecycle",
         "./r-lib/r-package-development",
         "./r-lib/r-cli-app",
-        "./r-lib/mirai",
-        "./alt-text"
+        "./r-lib/r-mirai",
+        "./alt-text",
+        "./r-lib/r-cran-status"
       ]
     },
     {
@@ -77,7 +79,9 @@
       "skills": [
         "./brand-yml",
         "./shiny/shiny-bslib",
-        "./shiny/shiny-bslib-theming"
+        "./shiny/shiny-bslib-theming",
+        "./shiny/shiny-r-optimize",
+        "./shiny/shiny-py-optimize"
       ]
     },
     {
