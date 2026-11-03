@@ -76,10 +76,11 @@ Comprehensive guidance for Quarto document authoring and R Markdown migration. W
 Create and use `_brand.yml` files for consistent branding across Quarto documents and Shiny applications. Use when working with brand styling, corporate identity, colors, fonts, or logos in Quarto projects.
 
 **Organization**: Main skill file includes workflows and decision tree. Reference files provide framework-specific integration guides:
-- `brand-yml-spec.md` - Complete brand.yml specification
-- `shiny-r.md` - Shiny for R integration with bslib
-- `shiny-python.md` - Shiny for Python integration with ui.Theme
-- `quarto.md` - Quarto integration for all formats (HTML, dashboards, RevealJS presentations, Typst PDFs, websites)
+
+- `brand-yml-spec.md` - Complete brand.yml specification.
+- `shiny-r.md` - Shiny for R integration with bslib.
+- `shiny-python.md` - Shiny for Python integration with ui.Theme.
+- `quarto.md` - Quarto integration for all formats (HTML, dashboards, RevealJS presentations, Typst PDFs, websites).
 
 **Note**: This skill is also registered in the shiny category since brand.yml works across both Shiny and Quarto projects.
 
@@ -89,6 +90,16 @@ Create and use `_brand.yml` files for consistent branding across Quarto document
 - [Quarto brand.yml docs](https://quarto.org/docs/authoring/brand.html)
 - [Shiny for R brand.yml guide](https://rstudio.github.io/bslib/articles/brand-yml/)
 - [Shiny for Python brand.yml docs](https://shiny.posit.co/py/api/core/ui.Theme.html#shiny.ui.Theme.from_brand)
+
+---
+
+### `quarto-lua`
+
+Write Lua shortcodes and filters for Quarto. Covers shortcode handlers, Pandoc AST filters, Lua coding conventions, Quarto-specific Lua APIs, and common patterns. Includes runtime access to Quarto's LLM-optimised documentation (`.llms.md` pages) for detailed API reference.
+
+#### Authors
+
+- [Mickaël CANOUIL](https://github.com/mcanouil)
 
 ---
 
@@ -105,13 +116,12 @@ Generate and improve accessible alt text for data visualizations and images in Q
 
 This category could include skills for:
 
-- Publishing workflows
-- Extension development
-- Template creation
-- Multi-format output
-- Parameterized reports
-- Website and book publishing
-- Presentation design
+- Publishing workflows.
+- Template creation.
+- Multi-format output.
+- Parameterized reports.
+- Website and book publishing.
+- Presentation design.
 
 ## Contributing
 
