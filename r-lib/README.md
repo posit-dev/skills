@@ -80,6 +80,15 @@ Comprehensive guidance for async, parallel, and distributed computing in R using
 - [mirai package documentation](https://mirai.r-lib.org/)
 - [mirai GitHub repository](https://github.com/r-lib/mirai)
 
+### `r-mizu`
+
+Guidance for async and parallel computing in R over shared memory using the mizu package. Use when running R code in parallel or in the background on one machine, speeding up a loop or `lapply()`, mapping in parallel with `mizu_map()`, using promises or Shiny `ExtendedTask`, sharing data with R or Python processes, or converting from future, parallel, or mirai. Defers to `r-mirai` for work spanning more than one machine.
+
+**Organization**: Single comprehensive SKILL.md file covering explicit dependency passing, pools, submit/collect, parallel map (templates, RNG, streaming), sentinels and classed conditions, promises and Shiny, channels, Python interop, and migration from other async frameworks.
+
+**Resources**: This skill synthesizes guidance from:
+- [mizu package documentation](https://shikokuchuo.net/mizu/)
+
 ### `r-cran-status`
 
 Look up an R package's live status on cran.r-project.org — submission/review state (queue, human review, waiting, archived, past version's fate) or `R CMD check` results (OK/NOTE/WARN/ERROR per platform). Use when asked whether a package/version was accepted, rejected, archived, or is passing CRAN checks.

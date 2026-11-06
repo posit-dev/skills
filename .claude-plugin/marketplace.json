@@ -58,6 +58,7 @@
         "./r-lib/r-package-development",
         "./r-lib/r-cli-app",
         "./r-lib/r-mirai",
+        "./r-lib/r-mizu",
         "./alt-text",
         "./r-lib/r-cran-status"
       ]
