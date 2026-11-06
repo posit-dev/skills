@@ -43,6 +43,7 @@ R package development skills for working with the r-lib ecosystem and modern R p
 - **[r-lifecycle](./r-lib/r-lifecycle/)** - Manage R package lifecycle according to tidyverse principles using the lifecycle package, covering deprecation workflows, function/argument renaming, superseding, and experimental stages
 - **[r-package-development](./r-lib/r-package-development/)** - R package development with devtools, testthat, and roxygen2, covering key commands, coding conventions, testing, documentation, and NEWS.md practices
 - **[r-mirai](./r-lib/r-mirai/)** - Async, parallel, and distributed computing in R using mirai, covering explicit dependency passing, daemon setup, parallel mapping with `mirai_map()`, Shiny integration, remote/HPC launchers, and migration from future/parallel
+- **[r-mizu](./r-lib/r-mizu/)** - Async and parallel computing in R over shared memory using mizu, covering task pools, parallel mapping with `mizu_map()`, channels, promises and Shiny `ExtendedTask`, Python interop, and migration from future/parallel/mirai
 - **[alt-text](./alt-text/)** - Generate and improve accessible alt text for data visualizations and images in pkgdown sites and Quarto documents, covering vignette code chunks (`fig.alt`), static markdown images, and multi-plot chunks
 
 ### ggsql
