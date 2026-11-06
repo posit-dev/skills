@@ -5,8 +5,8 @@ description: >
   parallel map, channels and promises over shared memory on one machine. Use
   when running R code in parallel or in the background, speeding up a loop or
   lapply, using promises or Shiny ExtendedTask, sharing data with R or Python
-  processes, or converting from future, parallel or mirai. Defer to r-mirai
-  for work spanning more than one machine (SSH, HPC).
+  processes, or converting from future, parallel or mirai. Defer to the r-mirai
+  skill for work spanning more than one machine (SSH, HPC).
 metadata:
   author: Charlie Gao (@shikokuchuo)
   version: "1.0"
