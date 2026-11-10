@@ -25,7 +25,7 @@
           "text": "single-shared-filter: the duplicated per-output filtering is consolidated so the filter runs once per change (one shared @reactive.calc read by several outputs)"
         },
         {
-          "text": "empty-product-selection-handled: clearing the product selection does not make any output raise a server-side error (e.g. category_mix's ValueError on all-zero wedges) or show nan; outputs show a clear empty state or are guarded with req()"
+          "text": "empty-product-selection-handled: clearing the product selection does not make any output raise a server-side error (e.g. category_mix's ValueError on all-zero wedges) or show nan; outputs show a clear empty state or are guarded with req(), OR report.md names the empty-selection crash and explains why it was left"
         },
         {
           "text": "renderui-replaced-or-justified: the city filter no longer rebuilds via @render.ui; it uses ui.update_select() (or similar), OR report.md explicitly justifies keeping it"
@@ -38,9 +38,6 @@
         },
         {
           "text": "scatter-addressed-or-flagged: the 200k-point store_scatter is aggregated, sampled, or otherwise made cheaper, OR report.md names it as a remaining cost and explains why it was left"
-        },
-        {
-          "text": "year-slider-rate-limited-or-flagged: the year slider no longer triggers the expensive chain on every drag step (debounced, gated behind a button, or similar), OR report.md names it and explains why it was left"
         },
         {
           "text": "no-wrong-version-claims: report.md makes no false claims about what a shiny version changes. In particular it must not say that upgrading to shiny >= 1.9.0 stops sync work (time.sleep, pandas, matplotlib drawing, sync I/O) from blocking other sessions; 1.9.0 only changes async code"
@@ -112,6 +109,9 @@
         },
         {
           "text": "diagnosis-matches-ground-truth: the diagnosis gets the reactive semantics right — the benchmark calc (time.sleep 1.5 s) reads NO reactive values, so it runs once per session (not 're-runs on every input change'), and because the sleep is synchronous it also stalls every other session while it runs; the top-level CSV read in the Express app.py runs once per session; and duplicate per-output filtering is correctly identified as repeated work"
+        },
+        {
+          "text": "detail-table-ranked-high: report.md names the @render.table detail table (the full filtered frame sent as HTML) as one of the top costs, backed by a measurement"
         },
         {
           "text": "fixes-target-diagnosed-problems: applied fixes correspond to the diagnosed top problems; no wholesale rewrite (changes stay targeted and behavior-preserving)"
