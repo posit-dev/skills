@@ -42,7 +42,10 @@ reactive blocks depends on the shiny version (check with
   finishes); other sessions keep running.
 
 Either way, `async`/`await` alone never keeps the *same* session responsive;
-only `@reactive.extended_task` does.
+only `@reactive.extended_task` does. And 1.9.0 changes nothing for sync code:
+`time.sleep`, pandas, matplotlib drawing, or a sync DB call still freezes
+every session on every version. Don't recommend upgrading shiny to fix a
+freeze caused by sync work.
 
 ## Workflow
 

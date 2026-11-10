@@ -149,7 +149,8 @@ One Shiny for Python process = one asyncio event loop = one Python thread:
 - **One sync blocking call ties up every session on the process.** On
   shiny < 1.9.0 a slow `async` reactive does too (reactive functions run
   serially across sessions); on shiny ≥ 1.9.0 it holds only its own session.
-  This is why code fixes come first (async-tasks.md).
+  Upgrading to 1.9.0 does not help sync work (plot drawing, pandas,
+  `time.sleep`). This is why code fixes come first (async-tasks.md).
 - **Sessions hold state in memory**, so a browser must keep talking to the
   *same* process: sticky-session load balancing is mandatory whenever more
   than one app process serves a URL. This rules out `uvicorn --workers >1`,
