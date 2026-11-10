@@ -117,6 +117,11 @@ app support", load test the deployed app with `shinyloadtest` (record →
 replay with N workers → report). Tool selection and reading guides:
 [diagnosis.md](references/diagnosis.md).
 
+For a freeze, measure who it hits before saying so: open two tabs, each
+with a ticking clock, start the slow action in one, and watch the other's
+clock. If it keeps ticking only that user is stuck; if it stops, everyone
+is. Report what you saw, not what the version rules predict.
+
 ### 4. Diagnose what the scan didn't catch
 
 | Symptom | Most likely causes | Start here |
@@ -136,7 +141,8 @@ Work the ladder for the diagnosed category; stop when measurements say it's
 fast enough. Every rung preserves app behavior.
 
 **Reactive recomputation** → [reactive-graph.md](references/reactive-graph.md)
-1. `req()` guards — nothing computes on not-ready inputs.
+1. `req()` guards — nothing computes on not-ready or emptied inputs (a
+   cleared multi-select must not crash an output).
 2. Shared `@reactive.calc`s — each derived value computed once per change.
 3. Narrow dependencies: `@reactive.event()`, `reactive.isolate()`,
    `reactive.value.freeze()` for update loops.

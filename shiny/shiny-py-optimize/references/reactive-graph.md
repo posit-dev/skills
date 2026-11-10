@@ -81,6 +81,10 @@ def dist():
 
 - Falsy values (`None`, `""`, `0`, `False`, empty containers) halt; anything
   else passes through as its value.
+- Guard inputs a user can empty, not just startup: a multi-select with
+  nothing picked filters to zero rows, and plots like a pie chart then crash
+  (`ValueError`) or show `nan`. `req(input.products())` before the filter
+  fixes it. Clear each such input once and watch the server log.
 - `req(x, cancel_output=True)` keeps the **last rendered output** visible
   instead of blanking it — often the better UX for transient invalid states.
 
