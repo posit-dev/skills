@@ -54,6 +54,25 @@ air format .
 - Avoid `expect_true()` and `expect_false()` in favour of a specific expectation which will give a better failure message.
 - When testing errors and warnings, don't use `expect_error()` or `expect_warning()`. Instead, use `expect_snapshot(error = TRUE)` for errors and `expect_snapshot()` for warnings because these allow the user to review the full text of the output.
 
+## Test coverage
+
+```
+# Coverage of the whole package, with the uncovered lines of each function
+Rscript -e "devtools::test_coverage()"
+
+# Coverage of R/{name}.R from tests/testthat/test-{name}.R
+Rscript -e "devtools::test_coverage_active_file('R/{name}.R')"
+
+# Missed lines (and branches) of each file, as ranges
+Rscript -e "options(covr.branch_coverage = TRUE); print(covr::package_coverage(), missing = TRUE)"
+
+# Source of the missed lines in one file
+Rscript -e "covr::annotate_coverage(covr::package_coverage(), files = 'R/{name}.R')"
+```
+
+- Use these instead of filtering `covr::zero_coverage()` by hand.
+- `print(missing = TRUE)`, `annotate_coverage()` and branch coverage need covr (>= 4.0.0).
+
 ## Documentation
 
 - Every user-facing function should be exported and have roxygen2 documentation.
