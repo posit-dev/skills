@@ -25,7 +25,7 @@
           "text": "single-shared-filter: the duplicated per-output filtering is consolidated so the filter runs once per change (one shared @reactive.calc read by several outputs)"
         },
         {
-          "text": "outputs-gate-invalid-inputs: outputs do not error or do heavy work when the product selection is empty or the city input does not exist yet (judge from code and startup behavior, not from whether req() specifically is present)"
+          "text": "empty-product-selection-handled: clearing the product selection does not make any output raise a server-side error (e.g. category_mix's ValueError on all-zero wedges) or show nan; outputs show a clear empty state or are guarded with req()"
         },
         {
           "text": "renderui-replaced-or-justified: the city filter no longer rebuilds via @render.ui; it uses ui.update_select() (or similar), OR report.md explicitly justifies keeping it"
@@ -35,6 +35,15 @@
         },
         {
           "text": "detail-table-not-full-html: the detail table no longer sends the full filtered frame through @render.table; it uses @render.data_frame (or limits the rows), OR report.md explicitly justifies keeping it"
+        },
+        {
+          "text": "scatter-addressed-or-flagged: the 200k-point store_scatter is aggregated, sampled, or otherwise made cheaper, OR report.md names it as a remaining cost and explains why it was left"
+        },
+        {
+          "text": "year-slider-rate-limited-or-flagged: the year slider no longer triggers the expensive chain on every drag step (debounced, gated behind a button, or similar), OR report.md names it and explains why it was left"
+        },
+        {
+          "text": "no-wrong-version-claims: report.md makes no false claims about what a shiny version changes. In particular it must not say that upgrading to shiny >= 1.9.0 stops sync work (time.sleep, pandas, matplotlib drawing, sync I/O) from blocking other sessions; 1.9.0 only changes async code"
         },
         {
           "text": "behavior-preserved: all seven original outputs still exist (revenue_plot, revenue_summary, top_products, category_mix, store_scatter, benchmark_plot, detail_table) with the same UI structure and filters; any user-visible change is explicitly flagged in report.md"
@@ -71,10 +80,13 @@
           "text": "data-loaded-outside-server: survey.csv is no longer read inside server()"
         },
         {
-          "text": "fit-consumed-once: the outputs no longer each recompute predictions/residuals from the fit; one shared calc derives them from the task result"
+          "text": "fit-consumed-once: the fitted values (predictions) are computed once per fit in one shared calc or in the task, not rebuilt separately in each output; residuals derived cheaply from those shared fitted values are fine"
         },
         {
           "text": "clock-keeps-ticking: the clock output keeps updating while a fit runs, in the same session and in other sessions (shown by a test or argued correctly from Shiny's async behavior)"
+        },
+        {
+          "text": "no-wrong-version-claims: report.md makes no false claims about what a shiny version changes. In particular it must not say that upgrading to shiny >= 1.9.0 stops sync work (time.sleep, pandas, matplotlib drawing, sync I/O) from blocking other sessions; 1.9.0 only changes async code"
         },
         {
           "text": "no-multi-worker-scaling: neither the code nor report.md recommends uvicorn --workers > 1, WEB_CONCURRENCY, or multi-worker Gunicorn"
@@ -112,6 +124,9 @@
         },
         {
           "text": "behavior-preserved: all seven original outputs still exist (revenue_plot, revenue_summary, top_products, category_mix, store_scatter, benchmark_plot, detail_table) with the same UI structure and filters; any user-visible change is explicitly flagged in report.md"
+        },
+        {
+          "text": "no-wrong-version-claims: report.md makes no false claims about what a shiny version changes. In particular it must not say that upgrading to shiny >= 1.9.0 stops sync work (time.sleep, pandas, matplotlib drawing, sync I/O) from blocking other sessions; 1.9.0 only changes async code"
         }
       ]
     },
@@ -138,10 +153,13 @@
           "text": "clock-keeps-ticking-during-refresh: the clock keeps updating and the service dropdown keeps working in the SAME session while a refresh runs (shown by a test or argued correctly from Shiny's async behavior)"
         },
         {
-          "text": "freeze-scope-matches-version: report.md says which sessions the original freeze affected, and it matches the installed shiny version: on >= 1.9.0 only the session that clicked; on < 1.9.0 every session in the process. FAILS if on >= 1.9.0 it claims async reactives run one at a time across all sessions, or if on < 1.9.0 it claims other sessions were unaffected"
+          "text": "freeze-scope-matches-version: report.md says which sessions the original freeze affected, it matches the installed shiny version (>= 1.9.0: only the session that clicked; < 1.9.0: every session in the process), AND the claim is backed by a measurement with at least two sessions open (e.g. a second tab's clock during a refresh), not stated from reasoning alone"
         },
         {
           "text": "lock-handled-for-version: on shiny >= 1.9.0, `async with reactive.lock()` is removed from the background volume feed and the value is set directly (`await reactive.flush()` removed or justified); on shiny < 1.9.0, the feed still updates the volume output (keeping the lock + flush is correct there)"
+        },
+        {
+          "text": "no-wrong-version-claims: report.md makes no false claims about what a shiny version changes. In particular it must not say that upgrading to shiny >= 1.9.0 stops sync work (time.sleep, pandas, matplotlib drawing, sync I/O) from blocking other sessions; 1.9.0 only changes async code"
         },
         {
           "text": "behavior-preserved: the volume, report, and clock outputs, the service select, and a refresh control all still exist; the volume output keeps updating every few seconds; any user-visible change (e.g. a task button in place of the action button) is explicitly flagged in report.md"

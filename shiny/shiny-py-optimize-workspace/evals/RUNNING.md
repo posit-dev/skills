@@ -15,6 +15,7 @@ reactive effects run concurrently), so run each eval against both versions:
 | `with_skill` | current skill | 1.9.0 (or latest) |
 | `with_skill_shiny18` | current skill | 1.8.0 |
 | `old_skill` (when changing the skill) | the skill before the change | 1.9.0 (or latest) |
+| `old_skill_shiny18` (when the change is about 1.8.0 behavior) | the skill before the change | 1.8.0 |
 
 ## Isolation rules
 
