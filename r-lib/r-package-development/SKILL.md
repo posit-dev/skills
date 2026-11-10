@@ -68,13 +68,10 @@ Rscript -e "options(covr.branch_coverage = TRUE); print(covr::package_coverage()
 
 # Source of the missed lines in one file
 Rscript -e "covr::annotate_coverage(covr::package_coverage(), files = 'R/{name}.R')"
-
-# Coverage of the lines changed relative to main, including uncommitted edits
-Rscript -e "covr::diff_coverage(covr::package_coverage(), base = 'main')"
 ```
 
 - Use these instead of filtering `covr::zero_coverage()` by hand.
-- `print(missing = TRUE)`, `annotate_coverage()`, `diff_coverage()` and branch coverage need covr (>= 4.0.0).
+- `print(missing = TRUE)`, `annotate_coverage()` and branch coverage need covr (>= 4.0.0).
 
 ## Documentation
 
