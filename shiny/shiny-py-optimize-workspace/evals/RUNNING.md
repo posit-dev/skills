@@ -35,13 +35,16 @@ reactive effects run concurrently), so run each eval against both versions:
    cd "$TMPRUN"
    uv venv -q .venv --python 3.12
    VIRTUAL_ENV=.venv uv pip install -q "shiny==1.9.0" pandas numpy matplotlib jinja2 playwright
+   .venv/bin/python -m playwright install chromium   # browser build must match this playwright version
    .venv/bin/python generate_data.py   # sales-dashboard and model-explorer only
    ```
 
    A `git archive` export also guarantees no `.git` directory is reachable,
    so the agent cannot recover the answer key from commit history. Create
    the `.venv` in the run's final location: moving it afterwards breaks the
-   `.venv/bin/shiny` script.
+   `.venv/bin/shiny` script. Skipping the `playwright install` step makes
+   agents and graders fail to launch a browser, or fall back to an older
+   build already on the machine.
 3. **Export the skill the same way, to a separate temp directory** (e.g.
    `git archive <ref> shiny/shiny-py-optimize`), and give the agent that path.
    Use the base ref of the change for `old_skill`.
