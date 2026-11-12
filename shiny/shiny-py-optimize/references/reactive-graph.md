@@ -84,7 +84,9 @@ def dist():
 - Guard inputs a user can empty, not just startup: a multi-select with
   nothing picked filters to zero rows, and plots like a pie chart then crash
   (`ValueError`) or show `nan`. `req(input.products())` before the filter
-  fixes it. Clear each such input once and watch the server log.
+  fixes it. Put the guard in the shared calc so every output is covered,
+  then clear each such input once and check every output, not just the
+  server log: a summary showing `nan` is a miss too.
 - `req(x, cancel_output=True)` keeps the **last rendered output** visible
   instead of blanking it — often the better UX for transient invalid states.
 
