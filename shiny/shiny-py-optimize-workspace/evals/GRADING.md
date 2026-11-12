@@ -19,7 +19,8 @@ supposed to find and fix them.
 5. No guard for an empty product selection — clearing the selectize makes
    outputs error or do pointless work
 6. Seven heavy outputs all visible on the landing page (no tabs)
-7. Year slider feeds expensive chains directly (no debounce)
+7. Year slider feeds expensive chains directly (no debounce). Not graded:
+   the slider already waits 250 ms in the browser, so leaving it alone is fine
 8. Simulated slow API (`time.sleep(1.5)`) in a `@reactive.calc` that reads no
    reactive values — runs once per session, and since the sleep is sync, it
    stalls every session in the process while it runs
